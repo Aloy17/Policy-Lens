@@ -15,6 +15,58 @@ The canonical questions are in `questions.csv`. The evaluator's page fields use 
 | Gold page ranges | q01, q04, q13–q20, q25 have focused source evidence | Verify remaining KYC and Digital Lending page references against the exact corpus PDFs |
 | Page convention | 1-based PDF page indices | Confirmed for reviewed KYC pages; printed page = PDF page minus one in these locations |
 
+## Structured 25-question audit — 2026-11-07
+
+This pass checked the canonical CSV against the manifest and the existing source-review evidence in this register. It verifies record structure, document identity, page-range bounds, question intent, and category semantics. It does **not** replace a page-by-page inspection of the exact 37 local corpus PDFs. Therefore the final local page-alignment status remains open for every question, even where official-source page mapping is already documented.
+
+### Structural and manifest checks
+
+- Exactly 25 unique, sequential IDs are present (q01–q25).
+- All three expected document IDs exist in data/manifest.csv.
+- Every inclusive page range is positive, ordered, and within the manifest page count: KYC 107 pages, Digital Lending 12 pages, and NBFC filing 3 pages.
+- Category totals are exactly five table questions (q16–q20) and five paraphrased questions (q02, q08, q14, q21, q23).
+- No question references a document outside the three intended RBI sources.
+- These checks establish metadata consistency only; they do not establish that a passage is present on its labelled local PDF page.
+
+### Question-by-question audit disposition
+
+| ID | Gold reference | Semantic / label review | Disposition before local PDF check |
+|---|---|---|---|
+| q01 | KYC PDF p19 | Existing KYC customer opening another service; distinct from third-party CDD and CKYCR retrieval. | Content scope accepted; page provisional |
+| q02 | KYC PDF p22 | Customer-identification triggers in paragraph 13; paraphrased label is reasonable. | Content and label accepted; page provisional |
+| q03 | KYC PDF pp22–23 | Conditions for reliance on third-party CDD in paragraph 14; distinct from q02's identification triggers. | Content scope accepted; page split provisional |
+| q04 | KYC PDF p38 | Beneficial-owner identification, paragraph 34; focused source check documented above. | Source-level accepted; page alignment locally provisional |
+| q05 | KYC PDF pp45–46 | Enhanced due diligence for non-face-to-face onboarding; verify that the complete answer-bearing passage is covered by both pages. | Content scope accepted; page range provisional |
+| q06 | KYC PDF p57 | Customer-information confidentiality; distinct from q15's CKYCR resubmission rule. | Content scope accepted; page provisional |
+| q07 | KYC PDF p58 | Initial CKYCR upload deadline; distinct operation from q08 and q15. | Content scope accepted; page provisional |
+| q08 | KYC PDF p59 | Retrieval and update after CKYCR notification; paraphrased label is reasonable. | Content and label accepted; page provisional |
+| q09 | KYC PDF pp64–67 | Cross-border wire-transfer originator/beneficiary information; broad multi-paragraph scope makes both endpoints important. | Content scope accepted; exact local range provisional |
+| q10 | KYC PDF p68 | PAN/Form 60 requirement for applicable transactions. | Content scope accepted; page provisional |
+| q11 | KYC PDF p71 | Digital-KYC application authentication and access controls. | Distinct from q12; page provisional |
+| q12 | KYC PDF p72 | Customer OTP validation/signature role; distinct from q11's official access controls. | Content scope accepted; page provisional |
+| q13 | KYC PDF p70 | Staff screening and KYC/AML-CFT training, paragraph 70; source-level check documented above. | Source-level accepted; page alignment locally provisional |
+| q14 | KYC PDF p47 | PEP-specific identification, source-of-funds/wealth, senior approval, and monitoring; paraphrased label is reasonable. | Content and label accepted; page provisional |
+| q15 | KYC PDF pp58–59 | CKYCR retrieval and exceptions to requesting resubmission; distinct from q06–q08. | Content scope accepted; page range provisional |
+| q16 | KYC PDF p94 | Constitutive-documents row asks for a table value (Category I: Mandatory). | Table label justified; page/cell alignment provisional |
+| q17 | KYC PDF pp94–95 | Proof-of-address table value for Category III; retain the Power of Attorney qualification. | Table label justified; exact cell alignment and page range provisional |
+| q18 | KYC PDF p95 | Photograph exemption across FPI categories requires reading a table row and its footnote. | Table label justified; footnote/page alignment provisional |
+| q19 | KYC PDF p95 | UBO proof-of-identity value for Category III requires the UBO table row. | Table label justified; page/cell alignment provisional |
+| q20 | KYC PDF p95 | Authorized-signatory list/signature requirement for Category III requires the table row and category-specific qualification. | Table label justified; page/cell alignment provisional |
+| q21 | Digital Lending PDF pp1–4 | RE responsibility when using an LSP/DLA; paraphrased label is reasonable. | Content and label accepted; local page range provisional |
+| q22 | Digital Lending PDF p2 | Compliance deadline for existing digital loans; verify exact wording and date against local PDF. | Content scope accepted; page provisional |
+| q23 | Digital Lending PDF pp4–5 | Allocation of LSP fees/charges to the RE rather than borrower; paraphrased label is reasonable. | Content and label accepted; page range provisional |
+| q24 | Digital Lending PDF p5 | KFS disclosure contents; verify the answer-bearing Annex I passage is on the recorded local page. | Content scope accepted; page provisional |
+| q25 | NBFC filing PDF p1 | Commercial-bank row; five-working-day deadline from auditor-report signature. The question is deliberately narrowed to avoid conflating NBFC timelines. | Source-level accepted; page provisional |
+
+### Category quality assessment
+
+**Table questions (q16–q20):** all five require reading a specific row/column intersection or its associated footnote in Annex IV. The category label is justified. q17, q18, and q20 are especially sensitive to row/column association and footnote handling; do not treat extracted linear text alone as proof of correct cell mapping.
+
+**Paraphrased questions (q02, q08, q14, q21, q23):** all five ask for the same underlying rule using question wording rather than copying a distinctive source sentence. They are materially rephrased at the question level. q02 and q08 are close to the source's legal concepts but do not reproduce the source clause wording. The labels are accepted.
+
+### Current audit conclusion
+
+The metadata and semantic/category audit passes. No CSV correction is justified by the evidence currently available. **The gold set is not yet fully page-validated:** local PDF page alignment remains outstanding for all 25 records, including records with official-source checks. q17 also retains a specific table-cell association caveat. Do not rerun or overwrite the benchmark merely because this review was expanded; rerun only if a verified gold document/page label changes.
 ## Per-question evidence log
 
 | ID | PDF page verified? | Printed page / section | Evidence description | Label accepted? | Reviewer note |
