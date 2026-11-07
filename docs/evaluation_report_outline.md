@@ -15,7 +15,7 @@
 - Ingestion architecture: PyMuPDF parsing, table extraction, OCR triage, cleaning, two chunking strategies, local sentence-transformer embeddings, Chroma.
 - Corpus composition: 37 manifest documents; add document types, issuers, page counts, and scanned/mixed share from the final manifest.
 - Versions and configuration: Python, package versions, embedding model, Chroma version, chunk sizes/overlap, collection names.
-- Index evidence: fixed/structure-aware chunk counts are 5,973 and 14,157; database directory sizes remain to be recorded.
+- Index evidence: benchmark collections contain 5,973 fixed-size and 14,157 structure-aware chunks. The current packaged Chroma database occupies 259 MB total (224 MB SQLite file plus segment directories of 25 MB and 9.9 MB); per-collection disk attribution is pending.
 
 ## 3. Evaluation design
 - Gold-set composition: 25 questions, exactly five table-dependent and five materially paraphrased questions.
@@ -53,11 +53,11 @@
 - Before/after cleaning example with source-page provenance remains to be added.
 
 ## 7. Efficiency, robustness, and scaling
-- Ingestion time per 100 pages; total pages and elapsed time.
-- Index directory size for both collections.
+- Packaged ingestion log (2026-11-07): 37 documents in manifest; 33 ingested, 4 skipped, 0 failed/missing; 4,670 pages, 216 OCR pages; 5,320 fixed-size and 12,920 structure-aware chunks; 897.46 seconds total (about 14 min 57 sec). A later unchanged rerun skipped all 37 documents in 1.92 seconds. These ingestion counts are from the packaged ingestion log and should not be conflated with the retrieval benchmark's indexed chunk counts.
+- Current combined Chroma database footprint: 259 MB (224 MB SQLite plus two segment directories of 25 MB and 9.9 MB); per-collection attribution remains pending.
 - Per-strategy Chroma search latency is measured (median/p95: fixed-size 2.648/4.808 ms; structure-aware 2.318/3.104 ms), excluding query embedding and model loading.
 - Embedding/API cost: local Sentence Transformers inference; no hosted embedding API charge for this benchmark.
-- Idempotent rerun evidence: unchanged documents skipped, zero unintended additions/failures.
+- Idempotent rerun evidence: 37 unchanged documents skipped in 1.92 seconds, with zero failures or missing documents.
 - Failed/skipped document handling and rerun behavior.
 - Scaling to 100,000 documents: batching, incremental ingestion, metadata filters, persistence/backup, monitoring, and operational bottlenecks.
 
