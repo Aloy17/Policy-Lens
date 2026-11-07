@@ -72,15 +72,18 @@ The latest run uses revised q02/q03 wording and page ranges, so the two runs are
 - The gold set is only 25 questions, concentrated in a small number of RBI documents, and was not a blind holdout.
 - These are retrieval-layer results, not answer accuracy or regulatory-compliance guarantees.
 
-## Still required before Phase 3 closure
+## Remaining work before Phase 3 closure
 
-1. Run `eval/analyze_results.py` on the newly generated local retrieval log and commit its per-question and disagreement outputs.
-2. Inspect the latest selected disagreements using full retrieved passages and source PDFs; the earlier q04/q17/q13 analysis predates this revised benchmark and should not be reused without checking.
-3. Commit the raw retrieval log, metrics, run metadata, and analysis outputs from this run.
-4. Complete the local PDF page-alignment review for all 25 gold references.
-5. Complete the four outstanding visual checks (S03, S05, S06, S07), including the distorted S03 multiplier and table association/layout concerns.
-6. Record a before/after cleaning example.
-7. OCR accuracy remains unmeasured: the ten sampled pages were all native-text pages and did not trigger OCR. A representative scanned page and manual transcription are required for an accuracy estimate.
-8. Record database directory size, median/p95 latency, and packaged ingestion timing evidence.
+The benchmark, raw retrieval outputs, per-question analysis, selected disagreement evidence, and revised q04/q17/q13 interpretation are committed. The remaining work is validation and operational evidence:
 
-Phase 3 remains open until the evidence above is either completed or explicitly reported as an assignment limitation with an agreed disposition.
+1. Complete the exact local-corpus PDF page-alignment review for all 25 gold references and record corrections in `gold_set_review.md`.
+2. Confirm the five table questions genuinely depend on table values and the five paraphrased questions are materially paraphrased.
+3. Complete or explicitly disposition the four visual checks (S03, S05, S06, S07). The documented concerns include S03's distorted multiplier and S05/S07's table layout/association.
+4. Add one source-linked before/after cleaning example.
+5. OCR accuracy remains unmeasured. Either test a representative scanned page against a manually transcribed reference or explicitly retain OCR accuracy as an unmeasured limitation for this phase.
+6. Record fixed-size and structure-aware Chroma directory sizes, packaged ingestion elapsed time, total pages processed, and rerun/skip/failure behaviour.
+7. Update the evaluation report with the final limitations and a chunking recommendation that considers retrieval quality, index footprint, and measured latency.
+
+Per-strategy query latency is already recorded above (median/p95: fixed-size 2.648/4.808 ms; structure-aware 2.318/3.104 ms). The raw retrieval log, metrics, run metadata, per-question results, disagreements, and selected evidence are already committed; these are not outstanding tasks.
+
+Phase 3 remains open until the remaining evidence is completed or each item is explicitly accepted as a documented limitation with an agreed scope.
