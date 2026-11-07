@@ -64,3 +64,24 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 ## Interpretation limits
 
 The gold set currently concentrates on three RBI documents, rather than representing all 37 corpus documents. It was assembled after ingestion work began, so it is not a fully blind holdout. The fixed-vs-structure result is conditional on this question set and current parser/chunker/index settings. It is not evidence of universal superiority or production compliance coverage.
+
+
+## Export the sampled pages for inspection
+
+After pulling the latest branch and generating the deterministic sample template, export the ten sampled pages into a single review bundle. This reads the local PDFs and does not change the source files or sampling template.
+
+```bash
+PYTHONPATH=. python eval/export_sampled_pages.py --pdf-dir "dist/PolicyLens/PolicyLens Data/PDFs"
+```
+
+Replace the `--pdf-dir` value if your local corpus PDFs are stored elsewhere. The directory must contain files named `<doc_id>.pdf`, matching `data/manifest.csv`.
+
+The helper creates a new `eval/manual_inspection/` directory containing:
+
+- `inspection_report.md`: native extracted text, OCR text when OCR is run, and cleaned text for each sampled page, alongside extraction/layout metadata.
+- `inspection_metadata.csv`: page dimensions, text-block and image counts, estimated image coverage, table count, word counts, and OCR triage status.
+- `sampled_pages_review.pdf`: the original sampled PDF pages combined in sample order for visual inspection.
+
+OCR is run only on sampled pages that meet the same text-density/image-coverage triage thresholds configured for ingestion (20-word minimum; 50% image coverage with fewer than 120 words). Use `--no-ocr` to inspect native extraction only. OCR candidacy is a heuristic and does not establish OCR accuracy. The script does not estimate OCR word accuracy; that requires manually comparing OCR output with a human-transcribed reference.
+
+The PDF review bundle copies the original pages, preserving their vector/text content. The report's printed-page hint is tentative and must be checked visually. After reviewing the bundle, complete the corresponding human-judgment fields in `manual_inspection_template.csv`; do not infer table completeness, reading-order correctness, or legitimate-text loss from metadata alone.
