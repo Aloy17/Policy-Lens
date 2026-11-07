@@ -60,6 +60,10 @@ streamlit run ui/app.py
 CLI options include `--top_k N`, `--strategy fixed|structure`, and repeated
 `--filter KEY=VALUE` arguments.
 
+## Retrieval evaluation (Phase 3)
+
+See [eval/README.md](eval/README.md) for the 25-question gold-set protocol, packaged-index evaluation command, metrics, disagreement analysis, manual parsing audit, and evidence still required before reporting final results.
+
 ## Tests
 
 ```bash
