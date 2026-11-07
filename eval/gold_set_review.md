@@ -147,3 +147,6 @@ The RBI notification dated September 2, 2022 confirms that the 2022 Guidelines r
 - **q14 corrected:** the PEP controls in paragraph 41 are on KYC PDF page 46, not page 47. `eval/questions.csv` now records `expected_page_start=46` and `expected_page_end=46`.
 - **q13 remains under review:** the exported PDF page 70 begins mid-sentence in the staff-training passage. PDF page 69 was not included in the export, so the exact local gold range cannot yet be finalized. Export and inspect page 69 before deciding whether q13 should cover pages 69–70.
 - The corrected q14 gold label changes the benchmark target. Rerun the retrieval benchmark after q13's page range is finalized; do not compare the new run as if the gold set were unchanged.
+
+
+- **q13 finalized:** the local KYC PDF page 69 begins paragraph 70, “Hiring of Employees and Employee training,” including screening, staff qualifications, and the start of the ongoing-training requirement. Page 70 continues the training provisions. The gold range is therefore **69–70**, not 70 alone.
