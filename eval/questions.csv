@@ -3,11 +3,11 @@ q01,"When may an existing KYC-compliant customer open another account or use ano
 q02,"When must a regulated entity identify a customer?",rbi_kyc_2024,22,24,false,true
 q03,"What is the customer identification procedure under the KYC direction?",rbi_kyc_2024,22,24,false,false
 q04,"How should the beneficial owner of a legal person be identified?",rbi_kyc_2024,38,38,false,false
-q05,"What are the requirements for enhanced due diligence?",rbi_kyc_2024,45,47,false,false
+q05,"What are the requirements for enhanced due diligence?",rbi_kyc_2024,46,48,false,false
 q06,"What confidentiality obligations apply to customer information?",rbi_kyc_2024,57,57,false,false
 q07,"How quickly must KYC records be uploaded to CKYCR after starting an account-based relationship?",rbi_kyc_2024,58,58,false,false
 q08,"What must an RE do when CKYCR provides an updated KYC record?",rbi_kyc_2024,59,59,false,true
-q09,"What information is required for cross-border wire transfers?",rbi_kyc_2024,63,66,false,false
+q09,"What information is required for cross-border wire transfers?",rbi_kyc_2024,64,67,false,false
 q10,"What are the requirements for PAN or Form 60 when carrying out applicable transactions?",rbi_kyc_2024,68,68,false,false
 q11,"What controls apply to the digital KYC application used at customer touch points?",rbi_kyc_2024,71,71,false,false
 q12,"What is the role of OTP in the digital KYC process?",rbi_kyc_2024,72,72,false,false
