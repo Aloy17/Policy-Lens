@@ -268,6 +268,12 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--manifest",
+        default="data/manifest.csv",
+        help="Corpus manifest used to validate gold document IDs and page bounds.",
+    )
+
+    parser.add_argument(
         "--collection",
         default="policylens_v1",
         help="Base Chroma collection name.",
@@ -331,6 +337,25 @@ def main() -> None:
         raise ValueError("Gold page numbers must be positive and 1-based.")
     if (questions["expected_page_end"].astype(int) < questions["expected_page_start"].astype(int)).any():
         raise ValueError("Gold page end must be >= page start.")
+
+    manifest = pd.read_csv(args.manifest)
+    if not {"doc_id", "page_count"}.issubset(manifest.columns):
+        raise ValueError("Manifest must contain doc_id and page_count columns.")
+    if manifest["doc_id"].astype(str).duplicated().any():
+        raise ValueError("Manifest contains duplicate doc_id values.")
+    page_counts = dict(zip(
+        manifest["doc_id"].astype(str),
+        pd.to_numeric(manifest["page_count"], errors="raise").astype(int),
+    ))
+    for row in questions.to_dict("records"):
+        doc_id = str(row["expected_doc_id"])
+        if doc_id not in page_counts:
+            raise ValueError(f"{row['id']}: gold document {doc_id!r} is absent from manifest.")
+        if int(row["expected_page_end"]) > page_counts[doc_id]:
+            raise ValueError(
+                f"{row['id']}: gold page {row['expected_page_end']} exceeds "
+                f"{doc_id} page_count {page_counts[doc_id]}."
+            )
 
     embedder = Embedder(
         model_name=config["embedding"]["model"],
