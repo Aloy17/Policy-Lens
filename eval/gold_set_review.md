@@ -1,6 +1,6 @@
 # Gold-set review register
 
-Status: **source audit in progress; q04, q13, q15–q20, and q25 have focused source evidence. q01–q03, q05–q12, and q14 remain unaudited; q21–q24 have official source-text checks but still need local PDF page-alignment validation.**
+Status: **source audit in progress; q04, q13–q20, and q25 have focused source evidence. q01–q03, q05–q12 remain under source/page audit; q21–q24 have official source-text checks but still need local PDF page-alignment validation.**
 
 The canonical questions are in `questions.csv`. The evaluator's page fields use **1-based PDF page indices**, not the printed page numbers visible in the RBI document. In the RBI KYC PDF checked here, the printed page number is one less than the PDF page index for the reviewed passages (for example, PDF page 38 carries printed page 37). Keep this distinction explicit in all evidence notes.
 
@@ -12,7 +12,7 @@ The canonical questions are in `questions.csv`. The evaluator's page fields use 
 | Table questions | 5 labels (q16–q20) | Verify all five depend on table cells/values |
 | Paraphrased questions | 5 labels (q02, q08, q14, q21, q23) | Count preserved; q15 remains non-paraphrased |
 | Gold document IDs | Three RBI documents | Confirm exact document version and title |
-| Gold page ranges | q04, q13, q15–q20, q25 have focused source evidence | Verify remaining KYC and Digital Lending page references against the exact corpus PDFs |
+| Gold page ranges | q04, q13–q20, q25 have focused source evidence | Verify remaining KYC and Digital Lending page references against the exact corpus PDFs |
 | Page convention | 1-based PDF page indices | Confirmed for reviewed KYC pages; printed page = PDF page minus one in these locations |
 
 ## Per-question evidence log
@@ -48,7 +48,7 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 | q10 | PAN or Form 60 | Distinct identification-document requirement; confirm the exact transaction scope and any exemptions in the cited passage. | Provisional; local PDF check required |
 | q11 | Digital KYC application controls | Annex I requires an authenticated RE application at customer touch points and restricts access to authorized officials through RE-controlled login/password or Live OTP/Time OTP. | Printed page 70; evaluator PDF page 71. Source text confirmed; local PDF copy check remains required |
 | q12 | OTP in digital KYC | Annex I clause I sends an OTP to the customer's own mobile number; successful validation is treated as the customer's signature on the Customer Application Form. The authorized officer's registered mobile number must not be used for the customer signature. This is distinct from q11's official access-control mechanism. | Printed page 71; evaluator PDF page 72. Source text confirmed; local PDF copy check remains required |
-| q14 | Politically exposed persons (PEPs) | Paragraph 41 permits establishing/continuing a PEP relationship subject to additional controls: PEP identification, source-of-funds/wealth measures, senior-management approval, and enhanced ongoing monitoring; the rules also extend to family members and close associates. | Proposed PDF page 46 (source printed page 45); local PDF check required |
+| q14 | Politically exposed persons (PEPs) | Paragraph 41 permits establishing/continuing a PEP relationship subject to additional controls: PEP identification, source-of-funds/wealth measures, senior-management approval, and enhanced ongoing monitoring; the rules also extend to family members and close associates. | PDF page 47 / printed page 46 / paragraph 41; source page verified, local corpus page confirmation remains required |
 
 ### Redundancy risks to resolve during local page review
 
@@ -59,7 +59,7 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 
 ## Source-version caveats
 
-- The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The PEP provision in paragraph 41 is printed on page 45; with the established one-page offset in this PDF, its evaluator page is 46. The manifest now records `issue_date=2016-02-25` and `updated_as_of=2025-08-14`. The historical `doc_id` remains `rbi_kyc_2024` to preserve compatibility with existing indexed metadata; it is a legacy identifier, not the document issue year. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
+- The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The PEP provision in paragraph 41 is printed on page 46; with the established one-page offset in this PDF, its evaluator page is 47. The manifest now records `issue_date=2016-02-25` and `updated_as_of=2025-08-14`. The historical `doc_id` remains `rbi_kyc_2024` to preserve compatibility with existing indexed metadata; it is a legacy identifier, not the document issue year. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
 - The Digital Lending Guidelines dated September 2, 2022 are retained as a historical source for this test set. RBI issued the consolidated Digital Lending Directions, 2025 on May 8, 2025; do not present the 2022 document as current policy.
 - A retrieval hit is judged against the selected gold document/page only; an equivalent answer in a later or superseding circular is not counted unless explicitly added to the gold set.
 
