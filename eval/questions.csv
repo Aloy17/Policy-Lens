@@ -13,7 +13,7 @@ q11,"What controls apply to the digital KYC application used at customer touch p
 q12,"What is the role of OTP in the digital KYC process?",rbi_kyc_2024,72,72,false,false
 q13,"What training requirements apply to staff involved in KYC and AML/CFT activities?",rbi_kyc_2024,70,70,false,false
 q14,"What enhanced due diligence is expected for customers or transactions associated with high-risk jurisdictions?",rbi_kyc_2024,56,56,false,true
-q15,"What are the requirements for maintaining secrecy of customer information?",rbi_kyc_2024,57,57,false,false
+q15,"When may an RE require a customer to resubmit KYC records already available through CKYCR?",rbi_kyc_2024,58,59,false,false
 q16,"For Category I FPIs, are constitutive documents mandatory according to the KYC table?",rbi_kyc_2024,94,94,true,false
 q17,"According to the FPI KYC table, is proof of address mandatory for Category III entities?",rbi_kyc_2024,94,95,true,false
 q18,"What does the KYC table specify about photographs for eligible FPIs?",rbi_kyc_2024,95,95,true,false
