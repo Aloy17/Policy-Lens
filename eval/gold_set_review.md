@@ -12,7 +12,7 @@ The canonical questions are in `questions.csv`. The evaluator's page fields use 
 | Table questions | 5 labels (q16–q20) | Verify all five depend on table cells/values |
 | Paraphrased questions | 5 labels (q02, q08, q14, q21, q23) | Count preserved; q15 remains non-paraphrased |
 | Gold document IDs | Three RBI documents | Confirm exact document version and title |
-| Gold page ranges | q04, q13–q20, q25 have focused source evidence | Verify remaining KYC and Digital Lending page references against the exact corpus PDFs |
+| Gold page ranges | q01, q04, q13–q20, q25 have focused source evidence | Verify remaining KYC and Digital Lending page references against the exact corpus PDFs |
 | Page convention | 1-based PDF page indices | Confirmed for reviewed KYC pages; printed page = PDF page minus one in these locations |
 
 ## Per-question evidence log
@@ -62,7 +62,6 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 - The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The PEP provision in paragraph 41 is printed on page 46; with the established one-page offset in this PDF, its evaluator page is 47. The manifest now records `issue_date=2016-02-25` and `updated_as_of=2025-08-14`. The historical `doc_id` remains `rbi_kyc_2024` to preserve compatibility with existing indexed metadata; it is a legacy identifier, not the document issue year. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
 - The Digital Lending Guidelines dated September 2, 2022 are retained as a historical source for this test set. RBI issued the consolidated Digital Lending Directions, 2025 on May 8, 2025; do not present the 2022 document as current policy.
 - A retrieval hit is judged against the selected gold document/page only; an equivalent answer in a later or superseding circular is not counted unless explicitly added to the gold set.
-
 
 ## CKYCR source check (q15)
 
