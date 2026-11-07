@@ -22,7 +22,13 @@
 | Recall@10 | 0.76 | 0.76 |
 | MRR | 0.527762 | 0.558667 |
 
-Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Database directory footprint remains unmeasured, so no final operational recommendation is made.
+Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Current local packaged Chroma database footprint: 259 MB total (224 MB `chroma.sqlite3`, plus two collection segment directories of 25 MB and 9.9 MB). Per-collection attribution is pending segment-to-collection mapping; these sizes are from the current local database, not a per-strategy allocation yet.
+
+Packaged ingestion log (2026-11-07): 37 manifest documents; 33 ingested, 4 skipped, 0 failed, 0 missing; 4,670 pages processed; 216 OCR pages; 5,320 fixed-size chunks; 12,920 structure-aware chunks; elapsed time 897.46 seconds (14 min 57 sec). This log is distinct from the later 1.92-second unchanged rerun and from earlier November 3 logs.
+
+The later packaged rerun (2026-11-07) reports 0 ingested, 37 skipped, 0 failed, 0 missing in 1.92 seconds, supporting idempotent unchanged-source handling.
+
+The packaged corpus directory is `dist/PolicyLens/PolicyLens Data/corpus/pdfs` and contains 37 PDFs. Total PDF directory size has not yet been measured.
 
 ## Table-question subset
 
