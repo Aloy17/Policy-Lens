@@ -9,7 +9,7 @@
 - Retrieval depth: top 10.
 - Model loading completed; the only emitted PyTorch message was the informational macOS distributed-redirect warning.
 - Output files generated locally: `eval/retrieval_log_phase3.csv`, `eval/metrics_phase3.csv`, `eval/run_metadata_phase3.json`.
-- The raw log, metrics CSV, and metadata JSON still need to be committed from the local run so the benchmark is reproducible from the repository.
+- Raw retrieval log, metrics, run metadata, per-question results, disagreements, and selected ranked-passage evidence are committed on this branch.
 
 ## Overall results
 
@@ -22,7 +22,7 @@
 | Recall@10 | 0.76 | 0.76 |
 | MRR | 0.527762 | 0.558667 |
 
-Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973), which must be considered alongside index size and latency before making a final operational recommendation.
+Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Database directory footprint remains unmeasured, so no final operational recommendation is made.
 
 ## Table-question subset
 
