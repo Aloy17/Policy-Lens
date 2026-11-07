@@ -1,7 +1,7 @@
 id,question,expected_doc_id,expected_page_start,expected_page_end,is_table_question,is_paraphrased
 q01,"When may an existing KYC-compliant customer open another account or use another service at the same RE without repeating customer identification?",rbi_kyc_2024,19,19,false,false
-q02,"When must a regulated entity identify a customer?",rbi_kyc_2024,22,24,false,true
-q03,"What is the customer identification procedure under the KYC direction?",rbi_kyc_2024,22,24,false,false
+q02,"In which circumstances must a regulated entity identify a customer under the KYC Direction?",rbi_kyc_2024,22,22,false,true
+q03,"What conditions must a regulated entity satisfy when relying on a third party to perform customer due diligence?",rbi_kyc_2024,22,23,false,false
 q04,"How should the beneficial owner of a legal person be identified?",rbi_kyc_2024,38,38,false,false
 q05,"What are the requirements for enhanced due diligence?",rbi_kyc_2024,45,46,false,false
 q06,"What confidentiality obligations apply to customer information?",rbi_kyc_2024,57,57,false,false
