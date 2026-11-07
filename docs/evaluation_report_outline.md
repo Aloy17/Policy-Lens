@@ -1,13 +1,14 @@
 # PolicyLens evaluation report — working outline
 
-> Status: planning template only. Do not submit this document as the final report. Replace every bracketed item with measured evidence after Phase 3 validation and rerun.
+> Status: working report outline. Measured retrieval results from 2026-11-07 are recorded in `eval/benchmark_run_2026-11-07.md`; gold-page audit, manual parsing checks, efficiency evidence, and refreshed disagreement analysis remain incomplete.
 
 ## 1. Executive summary
 - Evaluation objective: compare fixed-size and structure-aware chunking for retrieval over the PolicyLens corpus.
 - Corpus: [37 documents; verify final manifest and ingestion snapshot].
 - Evaluation set: [25 questions; report final validated gold-set version].
-- Main result: [Recall@3/5/10 and MRR for both strategies].
-- Recommendation: [select based on measured retrieval quality, latency, index size, and limitations].
+- Main result (2026-11-07): fixed-size Recall@3/5/10 = 0.52/0.56/0.76, MRR = 0.527762; structure-aware = 0.56/0.68/0.76, MRR = 0.558667.
+- Subset signal: structure-aware leads on table questions; fixed-size leads on paraphrased questions (n=5 each).
+- Recommendation: defer final selection until disagreement review, index size, and latency are reconciled. See `eval/benchmark_run_2026-11-07.md`.
 
 ## 2. System and corpus
 - Ingestion architecture: PyMuPDF parsing, table extraction, OCR triage, cleaning, two chunking strategies, local sentence-transformer embeddings, Chroma.
@@ -26,13 +27,13 @@
 ## 4. Results
 | Metric | Fixed-size | Structure-aware |
 |---|---:|---:|
-| Recall@3 | [ ] | [ ] |
-| Recall@5 | [ ] | [ ] |
-| Recall@10 | [ ] | [ ] |
-| MRR | [ ] | [ ] |
+| Recall@3 | 0.52 | 0.56 |
+| Recall@5 | 0.56 | 0.68 |
+| Recall@10 | 0.76 | 0.76 |
+| MRR | 0.527762 | 0.558667 |
 | Median query latency (ms) | [ ] | [ ] |
 | Index size (MB) | [ ] | [ ] |
-| Indexed chunks | [ ] | [ ] |
+| Indexed chunks | 5,973 | 14,157 |
 
 Include table-question and paraphrased-subset metrics, with denominators and exact question IDs.
 
