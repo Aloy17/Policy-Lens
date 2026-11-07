@@ -69,6 +69,7 @@ def main():
         "",
         "PDF page numbers are 1-based. Printed-page hints are tentative and must be checked visually.",
         "OCR candidacy is a heuristic, not proof of a scan or OCR accuracy.",
+        "Cleaning preview is applied to the sampled pages only; repeated-header detection therefore uses this sample, not the full source document. Treat it as an inspection aid, not a byte-for-byte reproduction of full-document ingestion cleaning.",
         "",
     ]
     metadata_rows = []
