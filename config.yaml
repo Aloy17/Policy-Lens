@@ -16,7 +16,7 @@ ocr:
   enabled: true
   min_words_per_page: 20
   image_coverage_threshold: 0.5
-  image_text_word_limit: 120
+  image_text_word_limit: 400
   language: "eng"
 
 vector_store:
