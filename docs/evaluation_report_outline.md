@@ -9,7 +9,7 @@
 - Main result (2026-11-07): fixed-size Recall@3/5/10 = 0.52/0.56/0.76, MRR = 0.527762; structure-aware = 0.56/0.68/0.76, MRR = 0.558667.
 - Subset signal: structure-aware leads on table questions; fixed-size leads on paraphrased questions (n=5 each).
 - Selected disagreement review: q04 and q17 favour structure-aware; q13 favours fixed-size. See `eval/disagreement_analysis.md`.
-- No final operational chunking recommendation until index footprint and comparable latency are recorded.
+- A final operational recommendation remains pending index disk footprint and packaged-ingestion measurements; per-strategy query latency is now available.
 
 ## 2. System and corpus
 - Ingestion architecture: PyMuPDF parsing, table extraction, OCR triage, cleaning, two chunking strategies, local sentence-transformer embeddings, Chroma.
@@ -36,7 +36,7 @@
 
 - Table subset (n=5): fixed Recall@3/5/10 = 0.40/0.40/0.80, MRR 0.453571; structure-aware = 0.80/0.80/0.80, MRR 0.800000.
 - Paraphrased subset (n=5): fixed = 0.60/0.60/1.00, MRR 0.653571; structure-aware = 0.40/0.40/0.60, MRR 0.433333.
-- Structure-aware has about 2.37x as many indexed chunks. Query latency is recorded in run metadata as an aggregate across both strategies; separate comparable per-strategy median/p95 and index disk sizes are still needed.
+- Structure-aware has about 2.37x as many indexed chunks. Per-strategy Chroma search latency (25 queries each): fixed-size median/p95 2.648/4.808 ms; structure-aware 2.318/3.104 ms. These exclude query embedding and model loading. Index disk sizes remain to be measured.
 
 ## 5. Disagreement analysis
 - Revised ranked evidence for q04, q17, q13 is documented in `eval/disagreement_analysis.md`.
@@ -55,7 +55,7 @@
 ## 7. Efficiency, robustness, and scaling
 - Ingestion time per 100 pages; total pages and elapsed time.
 - Index directory size for both collections.
-- Per-strategy query latency distribution (median and p95); clarify whether embedding/model loading is excluded.
+- Per-strategy Chroma search latency is measured (median/p95: fixed-size 2.648/4.808 ms; structure-aware 2.318/3.104 ms), excluding query embedding and model loading.
 - Embedding/API cost: local Sentence Transformers inference; no hosted embedding API charge for this benchmark.
 - Idempotent rerun evidence: unchanged documents skipped, zero unintended additions/failures.
 - Failed/skipped document handling and rerun behavior.
