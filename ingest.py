@@ -95,6 +95,11 @@ def process_document(pdf_path: Path, document: dict, config: dict, embedder: Emb
     structure_chunks = attach_metadata(structure_chunks, document, source_hash, "structure")
     logger.info("CHUNKS | %s | fixed=%d structure=%d", doc_id,
                 len(fixed_chunks), len(structure_chunks))
+    if not fixed_chunks or not structure_chunks:
+        raise ValueError(
+            f"{doc_id}: parsing produced no chunks for one or both strategies; "
+            "the existing indexed version has been preserved."
+        )
     fixed_chunks = embedder.embed_chunks(fixed_chunks)
     structure_chunks = embedder.embed_chunks(structure_chunks)
     # Store the new version before removing the previous indexed version.
