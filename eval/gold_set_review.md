@@ -140,3 +140,10 @@ The August 14, 2025 consolidated RBI KYC Master Direction states in paragraph 56
 
 The RBI notification dated September 2, 2022 confirms that the 2022 Guidelines required REs to retain responsibility despite outsourcing to LSPs/DLAs (paragraph 2), gave until November 30, 2022 for existing digital loans to comply (paragraph 3), and required LSP fees/charges to be paid by the RE rather than directly by the borrower (Annex I, paragraph 3.2). The KFS disclosure requirement is in Annex I, paragraph 5.1. These are historical requirements: RBI's official Master Directions page explicitly marks the 2022 circular repealed and directs readers to the Digital Lending Directions, 2025. The local corpus PDF is 12 pages; the precise evaluator page mapping for q21–q24 still requires checking against that exact file.
 
+
+
+## Local PDF audit correction — 2026-11-07
+
+- **q14 corrected:** the PEP controls in paragraph 41 are on KYC PDF page 46, not page 47. `eval/questions.csv` now records `expected_page_start=46` and `expected_page_end=46`.
+- **q13 remains under review:** the exported PDF page 70 begins mid-sentence in the staff-training passage. PDF page 69 was not included in the export, so the exact local gold range cannot yet be finalized. Export and inspect page 69 before deciding whether q13 should cover pages 69–70.
+- The corrected q14 gold label changes the benchmark target. Rerun the retrieval benchmark after q13's page range is finalized; do not compare the new run as if the gold set were unchanged.
