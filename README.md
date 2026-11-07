@@ -32,8 +32,8 @@ The application retrieves relevant passages with document names, page numbers an
 Clone the repository:
 
 ```bash
-git clone https://github.com/mathur458/PolicyLens.git
-cd PolicyLens
+git clone https://github.com/Aloy17/Policy-Lens.git
+cd Policy-Lens
 ```
 
 Create a virtual environment:
@@ -129,11 +129,24 @@ http://localhost:8501
 
 ## Search from the command line
 
-Example:
+Basic search (structure-aware collection, top 5 results):
 
 ```bash
 PYTHONPATH=. python search.py "What are the KYC requirements for regulated entities?"
 ```
+
+Search with a metadata filter and a custom number of results:
+
+```bash
+PYTHONPATH=. python search.py "customer identification procedure" --top_k 5 --filter issuer=RBI
+```
+
+Options:
+- `--top_k N` (or `--top-k N`): number of results to return
+- `--filter KEY=VALUE`: restrict by metadata; repeat to combine filters. Keys: `issuer`, `doc_id`, `title`, `issue_date`, `document_type`. `issuer=RBI` is accepted as a shortcut for Reserve Bank of India.
+- `--strategy fixed|structure`: which chunking collection to search (default `structure`)
+
+Each result shows rank, score, document title, page range, section and the first 200 characters of the chunk.
 
 ## Run evaluation
 
@@ -177,6 +190,7 @@ PolicyLens/
 │   ├── chunker.py
 │   ├── metadata.py
 │   ├── embedder.py
+│   ├── filters.py
 │   └── vector_store.py
 ├── tests/
 ├── ui/

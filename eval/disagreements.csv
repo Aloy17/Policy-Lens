@@ -1,0 +1,15 @@
+question_id,question,expected,is_table_question,is_paraphrased,fixed_first_hit_rank,structure_first_hit_rank,winner,rank_gap,fixed_top1,structure_top1,report_example
+q20,What does the table specify about authorized-signatory lists for eligible FPIs?,rbi_kyc_2024 p.95-95,True,False,1,,fixed,10.0,rbi_kyc_2024 p.95-98,sebi_master_circular_for_registrars_to_an_issue_and_share_transfer_agents p.158-165,True
+q10,What are the requirements for PAN or Form 60 when carrying out applicable transactions?,rbi_kyc_2024 p.68-68,False,False,,1,structure,10.0,sebi_master_circular_for_registrar_and_share_transfer_agents p.35-37,rbi_kyc_2024 p.65-70,True
+q24,What information must be disclosed through the Key Fact Statement for a digital loan?,rbi_digital_lending_2022 p.5-5,False,False,,1,structure,10.0,sebi_master_circular_for_non_convertible_securities p.27-29,rbi_digital_lending_2022 p.3-11,True
+q03,What is the customer identification procedure under the KYC direction?,rbi_kyc_2024 p.22-24,False,False,10,1,structure,9.0,pfrda_master_circular_kyc_aml_cft p.19-19,rbi_kyc_2024 p.22-24,False
+q12,What is the role of OTP in the digital KYC process?,rbi_kyc_2024 p.72-72,False,False,,3,structure,8.0,pfrda_master_circular_kyc_aml_cft p.10-11,pfrda_master_circular_kyc_aml_cft p.6-14,False
+q19,"For Category III FPIs, is proof of identity mandatory?",rbi_kyc_2024 p.95-95,True,True,3,,fixed,8.0,sebi_master_circular_for_mutual_funds p.281-283,sebi_master_circular_for_mutual_funds p.277-286,False
+q01,What are the requirements for customer identification and verification?,rbi_kyc_2024 p.22-24,False,False,,4,structure,7.0,rbi_kyc_2024 p.71-73,sebi_master_circular_for_registrars_to_an_issue_and_share_transfer_agents p.165-167,False
+q05,What are the requirements for enhanced due diligence?,rbi_kyc_2024 p.45-47,False,True,6,1,structure,5.0,rbi_kyc_2024 p.22-24,rbi_kyc_2024 p.45-45,False
+q02,When must a regulated entity identify a customer?,rbi_kyc_2024 p.22-24,False,True,6,2,structure,4.0,rbi_kyc_2024 p.61-62,pfrda_master_circular_kyc_aml_cft p.21-25,False
+q06,What confidentiality obligations apply to customer information?,rbi_kyc_2024 p.57-57,False,False,,8,structure,3.0,sebi_master_circular_for_depositories p.56-57,pfrda_master_circular_kyc_aml_cft p.21-25,False
+q04,How should the beneficial owner of a legal person be identified?,rbi_kyc_2024 p.38-38,False,False,3,1,structure,2.0,rbi_kyc_2024 p.6-7,rbi_kyc_2024 p.38-38,False
+q07,How quickly must KYC records be uploaded to CKYCR after starting an account-based relationship?,rbi_kyc_2024 p.58-58,False,False,3,1,structure,2.0,sebi_master_circular_for_depositories p.61-62,rbi_kyc_2024 p.58-60,False
+q13,What training requirements apply to staff involved in KYC and AML/CFT activities?,rbi_kyc_2024 p.70-70,False,False,2,3,fixed,1.0,pfrda_master_circular_kyc_aml_cft p.9-10,rbi_kyc_2024 p.15-18,False
+q25,What deadline applies to the submission of audited returns under the revised filing requirements?,rbi_nbfc_filing_2024 p.1-1,True,True,2,1,structure,1.0,sebi_master_circular_for_depositories p.148-150,rbi_nbfc_filing_2024 p.1-3,False

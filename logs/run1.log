@@ -1,0 +1,100 @@
+2026-11-03 18:52:53,389 | INFO | ======================================================================
+2026-11-03 18:52:53,389 | INFO | PolicyLens ingestion started
+2026-11-03 18:52:53,389 | INFO | ======================================================================
+2026-11-03 18:52:53,391 | INFO | Manifest documents: 30
+2026-11-03 18:52:55,076 | INFO | PROCESSING | rbi_kyc_2024.pdf
+2026-11-03 18:52:55,142 | INFO | SKIP | rbi_kyc_2024 | unchanged source_hash=e525b18753fd
+2026-11-03 18:52:55,142 | INFO | PROCESSING | rbi_digital_lending_2022.pdf
+2026-11-03 18:52:55,144 | INFO | SKIP | rbi_digital_lending_2022 | unchanged source_hash=2bb30a786e1b
+2026-11-03 18:52:55,144 | INFO | PROCESSING | rbi_hfc_directions_2021.pdf
+2026-11-03 18:52:55,167 | INFO | SKIP | rbi_hfc_directions_2021 | unchanged source_hash=3af47f901d47
+2026-11-03 18:52:55,167 | INFO | PROCESSING | rbi_nbfc_filing_2024.pdf
+2026-11-03 18:52:55,168 | INFO | SKIP | rbi_nbfc_filing_2024 | unchanged source_hash=99886ea2da3c
+2026-11-03 18:52:55,168 | INFO | PROCESSING | sebi_master_circular_for_listing_obligations_and_disclosure_requirements.pdf
+2026-11-03 18:52:55,511 | INFO | CHUNKS | sebi_master_circular_for_listing_obligations_and_disclosure_requirements | fixed=146 structure=130
+2026-11-03 18:52:58,374 | INFO | INGESTED | sebi_master_circular_for_listing_obligations_and_disclosure_requirements | pages=230 ocr_pages=0 fixed_chunks=146 structure_chunks=130 time=3.21s
+2026-11-03 18:52:58,375 | INFO | PROCESSING | sebi_master_circular_for_non_convertible_securities.pdf
+2026-11-03 18:53:03,451 | INFO | CHUNKS | sebi_master_circular_for_non_convertible_securities | fixed=103 structure=89
+2026-11-03 18:53:04,852 | INFO | INGESTED | sebi_master_circular_for_non_convertible_securities | pages=196 ocr_pages=6 fixed_chunks=103 structure_chunks=89 time=6.48s
+2026-11-03 18:53:04,853 | INFO | PROCESSING | sebi_master_circular_for_depositories.pdf
+2026-11-03 18:53:20,678 | INFO | CHUNKS | sebi_master_circular_for_depositories | fixed=251 structure=236
+2026-11-03 18:53:24,082 | INFO | INGESTED | sebi_master_circular_for_depositories | pages=392 ocr_pages=33 fixed_chunks=251 structure_chunks=236 time=19.23s
+2026-11-03 18:53:24,083 | INFO | PROCESSING | sebi_master_circular_for_custodians.pdf
+2026-11-03 18:53:25,081 | INFO | CHUNKS | sebi_master_circular_for_custodians | fixed=17 structure=14
+2026-11-03 18:53:25,443 | INFO | INGESTED | sebi_master_circular_for_custodians | pages=38 ocr_pages=7 fixed_chunks=17 structure_chunks=14 time=1.36s
+2026-11-03 18:53:25,443 | INFO | PROCESSING | sebi_master_circular_for_registrar_and_share_transfer_agents.pdf
+2026-11-03 18:53:25,748 | INFO | CHUNKS | sebi_master_circular_for_registrar_and_share_transfer_agents | fixed=143 structure=128
+2026-11-03 18:53:27,748 | INFO | INGESTED | sebi_master_circular_for_registrar_and_share_transfer_agents | pages=236 ocr_pages=0 fixed_chunks=143 structure_chunks=128 time=2.31s
+2026-11-03 18:53:27,749 | INFO | PROCESSING | sebi_master_circular_for_research_analysts.pdf
+2026-11-03 18:53:27,806 | INFO | CHUNKS | sebi_master_circular_for_research_analysts | fixed=26 structure=23
+2026-11-03 18:53:28,274 | INFO | INGESTED | sebi_master_circular_for_research_analysts | pages=53 ocr_pages=0 fixed_chunks=26 structure_chunks=23 time=0.52s
+2026-11-03 18:53:28,274 | INFO | PROCESSING | sebi_master_circular_for_online_dispute_resolution.pdf
+2026-11-03 18:53:28,318 | INFO | CHUNKS | sebi_master_circular_for_online_dispute_resolution | fixed=22 structure=20
+2026-11-03 18:53:28,734 | INFO | INGESTED | sebi_master_circular_for_online_dispute_resolution | pages=29 ocr_pages=0 fixed_chunks=22 structure_chunks=20 time=0.46s
+2026-11-03 18:53:28,734 | INFO | PROCESSING | sebi_master_circular_for_stock_exchanges_and_clearing_corporations.pdf
+2026-11-03 18:53:28,740 | INFO | CHUNKS | sebi_master_circular_for_stock_exchanges_and_clearing_corporations | fixed=2 structure=1
+2026-11-03 18:53:28,888 | INFO | INGESTED | sebi_master_circular_for_stock_exchanges_and_clearing_corporations | pages=4 ocr_pages=0 fixed_chunks=2 structure_chunks=1 time=0.15s
+2026-11-03 18:53:28,889 | INFO | PROCESSING | pfrda_master_circular_kyc_aml_cft.pdf
+2026-11-03 18:53:32,383 | INFO | CHUNKS | pfrda_master_circular_kyc_aml_cft | fixed=33 structure=31
+2026-11-03 18:53:32,967 | INFO | INGESTED | pfrda_master_circular_kyc_aml_cft | pages=34 ocr_pages=8 fixed_chunks=33 structure_chunks=31 time=4.08s
+2026-11-03 18:53:32,967 | INFO | PROCESSING | ifsca_master_circular_for_investment_advisers_in_the_ifsc.pdf
+2026-11-03 18:53:32,991 | INFO | CHUNKS | ifsca_master_circular_for_investment_advisers_in_the_ifsc | fixed=10 structure=7
+2026-11-03 18:53:33,301 | INFO | INGESTED | ifsca_master_circular_for_investment_advisers_in_the_ifsc | pages=21 ocr_pages=0 fixed_chunks=10 structure_chunks=7 time=0.33s
+2026-11-03 18:53:33,301 | INFO | PROCESSING | sebi_master_circular_for_mutual_funds.pdf
+2026-11-03 18:53:34,334 | INFO | CHUNKS | sebi_master_circular_for_mutual_funds | fixed=396 structure=353
+2026-11-03 18:53:40,170 | INFO | INGESTED | sebi_master_circular_for_mutual_funds | pages=748 ocr_pages=1 fixed_chunks=396 structure_chunks=353 time=6.87s
+2026-11-03 18:53:40,171 | INFO | PROCESSING | sebi_sebi_master_circular_current_circular.pdf
+2026-11-03 18:53:40,375 | INFO | CHUNKS | sebi_sebi_master_circular_current_circular | fixed=99 structure=90
+2026-11-03 18:53:41,766 | INFO | INGESTED | sebi_sebi_master_circular_current_circular | pages=153 ocr_pages=0 fixed_chunks=99 structure_chunks=90 time=1.59s
+2026-11-03 18:53:41,766 | INFO | PROCESSING | sebi_master_circular_for_merchant_bankers.pdf
+2026-11-03 18:53:41,896 | INFO | CHUNKS | sebi_master_circular_for_merchant_bankers | fixed=60 structure=51
+2026-11-03 18:53:42,713 | INFO | INGESTED | sebi_master_circular_for_merchant_bankers | pages=105 ocr_pages=0 fixed_chunks=60 structure_chunks=51 time=0.95s
+2026-11-03 18:53:42,714 | INFO | PROCESSING | sebi_master_circular_for_debenture_trustees.pdf
+2026-11-03 18:53:42,981 | INFO | CHUNKS | sebi_master_circular_for_debenture_trustees | fixed=56 structure=51
+2026-11-03 18:53:43,759 | INFO | INGESTED | sebi_master_circular_for_debenture_trustees | pages=126 ocr_pages=1 fixed_chunks=56 structure_chunks=51 time=1.04s
+2026-11-03 18:53:43,759 | INFO | PROCESSING | sebi_master_circular_for_issue_of_capital_and_disclosure_requirements.pdf
+2026-11-03 18:53:53,648 | INFO | CHUNKS | sebi_master_circular_for_issue_of_capital_and_disclosure_requirements | fixed=82 structure=79
+2026-11-03 18:53:54,787 | INFO | INGESTED | sebi_master_circular_for_issue_of_capital_and_disclosure_requirements | pages=144 ocr_pages=11 fixed_chunks=82 structure_chunks=79 time=11.03s
+2026-11-03 18:53:54,787 | INFO | PROCESSING | sebi_master_circular_for_registrars_to_an_issue_and_share_transfer_agents.pdf
+2026-11-03 18:53:55,094 | INFO | CHUNKS | sebi_master_circular_for_registrars_to_an_issue_and_share_transfer_agents | fixed=141 structure=124
+2026-11-03 18:53:56,933 | INFO | INGESTED | sebi_master_circular_for_registrars_to_an_issue_and_share_transfer_agents | pages=294 ocr_pages=0 fixed_chunks=141 structure_chunks=124 time=2.15s
+2026-11-03 18:53:56,934 | INFO | PROCESSING | sebi_master_circular_for_investment_advisers_2026.pdf
+2026-11-03 18:53:57,046 | INFO | CHUNKS | sebi_master_circular_for_investment_advisers_2026 | fixed=51 structure=50
+2026-11-03 18:53:57,778 | INFO | INGESTED | sebi_master_circular_for_investment_advisers_2026 | pages=99 ocr_pages=0 fixed_chunks=51 structure_chunks=50 time=0.84s
+2026-11-03 18:53:57,778 | INFO | PROCESSING | sebi_master_circular_for_research_analysts_2026.pdf
+2026-11-03 18:53:57,904 | INFO | CHUNKS | sebi_master_circular_for_research_analysts_2026 | fixed=59 structure=53
+2026-11-03 18:53:58,710 | INFO | INGESTED | sebi_master_circular_for_research_analysts_2026 | pages=107 ocr_pages=0 fixed_chunks=59 structure_chunks=53 time=0.93s
+2026-11-03 18:53:58,710 | INFO | PROCESSING | sebi_master_circular_on_surveillance_of_securities_market_2026.pdf
+2026-11-03 18:53:58,764 | INFO | CHUNKS | sebi_master_circular_on_surveillance_of_securities_market_2026 | fixed=18 structure=18
+2026-11-03 18:53:59,048 | INFO | INGESTED | sebi_master_circular_on_surveillance_of_securities_market_2026 | pages=38 ocr_pages=0 fixed_chunks=18 structure_chunks=18 time=0.34s
+2026-11-03 18:53:59,049 | INFO | PROCESSING | sebi_master_circular_for_infrastructure_investment_trusts.pdf
+2026-11-03 18:53:59,413 | INFO | CHUNKS | sebi_master_circular_for_infrastructure_investment_trusts | fixed=124 structure=112
+2026-11-03 18:54:01,118 | INFO | INGESTED | sebi_master_circular_for_infrastructure_investment_trusts | pages=237 ocr_pages=1 fixed_chunks=124 structure_chunks=112 time=2.07s
+2026-11-03 18:54:01,119 | INFO | PROCESSING | sebi_master_circular_for_portfolio_managers.pdf
+2026-11-03 18:54:01,989 | INFO | CHUNKS | sebi_master_circular_for_portfolio_managers | fixed=66 structure=60
+2026-11-03 18:54:02,978 | INFO | INGESTED | sebi_master_circular_for_portfolio_managers | pages=207 ocr_pages=3 fixed_chunks=66 structure_chunks=60 time=1.86s
+2026-11-03 18:54:02,978 | INFO | PROCESSING | sebi_master_circular_for_stock_brokers.pdf
+2026-11-03 18:54:04,667 | INFO | CHUNKS | sebi_master_circular_for_stock_brokers | fixed=265 structure=240
+2026-11-03 18:54:08,280 | INFO | INGESTED | sebi_master_circular_for_stock_brokers | pages=399 ocr_pages=3 fixed_chunks=265 structure_chunks=240 time=5.30s
+2026-11-03 18:54:08,281 | INFO | PROCESSING | sebi_master_circular_for_credit_rating_agencies.pdf
+2026-11-03 18:54:08,404 | INFO | CHUNKS | sebi_master_circular_for_credit_rating_agencies | fixed=55 structure=49
+2026-11-03 18:54:09,158 | INFO | INGESTED | sebi_master_circular_for_credit_rating_agencies | pages=109 ocr_pages=0 fixed_chunks=55 structure_chunks=49 time=0.88s
+2026-11-03 18:54:09,158 | INFO | PROCESSING | sebi_master_circular_for_esg_rating_providers.pdf
+2026-11-03 18:54:09,239 | INFO | CHUNKS | sebi_master_circular_for_esg_rating_providers | fixed=37 structure=36
+2026-11-03 18:54:09,977 | INFO | INGESTED | sebi_master_circular_for_esg_rating_providers | pages=68 ocr_pages=0 fixed_chunks=37 structure_chunks=36 time=0.82s
+2026-11-03 18:54:09,978 | INFO | PROCESSING | sebi_master_circular_for_social_stock_exchange.pdf
+2026-11-03 18:54:10,017 | INFO | CHUNKS | sebi_master_circular_for_social_stock_exchange | fixed=16 structure=18
+2026-11-03 18:54:10,279 | INFO | INGESTED | sebi_master_circular_for_social_stock_exchange | pages=31 ocr_pages=0 fixed_chunks=16 structure_chunks=18 time=0.30s
+2026-11-03 18:54:10,279 | INFO | PROCESSING | sebi_master_circular_for_listing_obligations_and_disclosure_requirements_20.pdf
+2026-11-03 18:54:10,888 | INFO | CHUNKS | sebi_master_circular_for_listing_obligations_and_disclosure_requirements_20 | fixed=178 structure=161
+2026-11-03 18:54:13,537 | INFO | INGESTED | sebi_master_circular_for_listing_obligations_and_disclosure_requirements_20 | pages=291 ocr_pages=1 fixed_chunks=178 structure_chunks=161 time=3.26s
+2026-11-03 18:54:13,545 | INFO | ======================================================================
+2026-11-03 18:54:13,545 | INFO | PolicyLens ingestion complete
+2026-11-03 18:54:13,545 | INFO | ======================================================================
+2026-11-03 18:54:13,545 | INFO | Documents | ingested=26 skipped=4 failed=0 missing=0
+2026-11-03 18:54:13,545 | INFO | Processed pages=4389 | OCR pages=75
+2026-11-03 18:54:13,545 | INFO | Chunks | fixed=2456 structure=2224
+2026-11-03 18:54:13,545 | INFO | Collections | fixed=2691 structure=2423
+2026-11-03 18:54:13,545 | INFO | Total ingestion time: 80.15 seconds
+2026-11-03 18:54:13,545 | INFO | Ingestion speed: 1.83 seconds / 100 pages
+2026-11-03 18:54:13,545 | INFO | ======================================================================

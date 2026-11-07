@@ -3,6 +3,7 @@ import argparse
 import yaml
 
 from src.embedder import Embedder
+from src.filters import parse_filters
 from src.vector_store import VectorStore
 
 
@@ -19,6 +20,7 @@ def search_collection(
     query: str,
     top_k: int,
     preview_chars: int,
+    where: dict | None = None,
 ) -> None:
     """Search a collection and display the ranked results."""
 
@@ -27,6 +29,7 @@ def search_collection(
     results = store.search(
         query_embedding=query_embedding,
         top_k=top_k,
+        where=where,
     )
 
     documents = results.get("documents", [[]])[0]
@@ -82,13 +85,32 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--top_k",
         "--top-k",
+        dest="top_k",
         type=int,
         default=None,
         help="Number of results to return.",
     )
 
+    parser.add_argument(
+        "--filter",
+        action="append",
+        default=None,
+        metavar="KEY=VALUE",
+        help=(
+            "Restrict results by metadata, e.g. issuer=RBI. "
+            "Repeat to combine filters. Keys: issuer, doc_id, "
+            "title, issue_date, document_type."
+        ),
+    )
+
     args = parser.parse_args()
+
+    try:
+        where = parse_filters(args.filter)
+    except ValueError as error:
+        parser.error(str(error))
 
     config = load_config()
 
@@ -114,12 +136,16 @@ def main() -> None:
     print(f"\nSearching {args.strategy} collection...")
     print(f"Query: {args.query}")
 
+    if where:
+        print(f"Filter: {where}")
+
     search_collection(
         store=store,
         embedder=embedder,
         query=args.query,
         top_k=top_k,
         preview_chars=preview_chars,
+        where=where,
     )
 
 
