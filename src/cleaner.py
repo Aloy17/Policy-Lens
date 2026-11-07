@@ -49,9 +49,8 @@ def clean_page_text(text: str, repeated_lines: set[str] | None = None) -> str:
     text = fix_hyphenation(text)
     lines = text.splitlines()
     if repeated_lines:
-        for index in sorted(set(list(range(min(3, len(lines))) +
-                                     list(range(max(0, len(lines)-3), len(lines))))),
-                            reverse=True):
+        indices = list(range(min(3, len(lines)))) + list(range(max(0, len(lines) - 3), len(lines)))
+        for index in sorted(set(indices), reverse=True):
             if lines[index].strip() in repeated_lines:
                 lines.pop(index)
     text = remove_page_numbers("\n".join(lines))
