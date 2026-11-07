@@ -22,6 +22,8 @@ The validator has focused regression tests covering a valid 25-question set, a p
 pytest -q tests/test_gold_set_validation.py
 ```
 
+A lightweight GitHub Actions workflow at `.github/workflows/evaluation-validation.yml` runs these checks on pushes and pull requests that change the gold set, manifest, validator, tests, or workflow itself. It installs only `pytest`; it does not install the retrieval stack or access the local packaged Chroma database.
+
 ## Run against the packaged index
 
 From the repository root, with the packaged app database present:
