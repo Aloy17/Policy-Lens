@@ -78,6 +78,7 @@ def parse_pdf(pdf_path: str | Path) -> list[dict[str, Any]]:
                     "word_count": len(text.split()),
                     "has_text": bool(text.strip()),
                     "table_count": len(tables),
+                    "table_text": "\n\n".join(tables),
                     "image_coverage": _image_coverage(page),
                 }
             )
