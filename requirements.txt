@@ -1,0 +1,11 @@
+beautifulsoup4
+chromadb
+pandas
+Pillow
+PyMuPDF
+pytesseract
+pytest
+PyYAML
+requests
+sentence-transformers
+torch

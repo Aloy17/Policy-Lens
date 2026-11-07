@@ -1,0 +1,26 @@
+id,question,is_table_question,is_paraphrased
+q01,"What are the requirements for customer identification and verification?",false,false
+q02,"When must a regulated entity identify a customer?",false,true
+q03,"What is the customer identification procedure under the KYC direction?",false,false
+q04,"How should the beneficial owner of a legal person be identified?",false,false
+q05,"What are the requirements for enhanced due diligence?",false,true
+q06,"What confidentiality obligations apply to customer information?",false,false
+q07,"How quickly must KYC records be uploaded to CKYCR after starting an account-based relationship?",false,false
+q08,"What must an RE do when CKYCR provides an updated KYC record?",false,true
+q09,"What information is required for cross-border wire transfers?",false,false
+q10,"What are the requirements for PAN or Form 60 when carrying out applicable transactions?",false,false
+q11,"What controls apply to the digital KYC application used at customer touch points?",false,true
+q12,"What is the role of OTP in the digital KYC process?",false,false
+q13,"What training requirements apply to staff involved in KYC and AML/CFT activities?",false,false
+q14,"What enhanced due diligence is expected for customers or transactions associated with high-risk jurisdictions?",false,true
+q15,"What are the requirements for maintaining secrecy of customer information?",false,false
+q16,"For Category I FPIs, are constitutive documents mandatory according to the KYC table?",true,false
+q17,"According to the FPI KYC table, is proof of address mandatory for Category III entities?",true,false
+q18,"What does the KYC table specify about photographs for eligible FPIs?",true,false
+q19,"For Category III FPIs, is proof of identity mandatory?",true,true
+q20,"What does the table specify about authorized-signatory lists for eligible FPIs?",true,false
+q21,"Who remains responsible for compliance when an RE uses a Lending Service Provider or Digital Lending App?",false,true
+q22,"By what date were REs required to put systems in place for existing digital loans to comply with the 2022 guidelines?",false,false
+q23,"Who should pay fees or charges payable to a Lending Service Provider in the digital lending process?",false,true
+q24,"What information must be disclosed through the Key Fact Statement for a digital loan?",false,false
+q25,"What deadline applies to the submission of audited returns under the revised filing requirements?",true,true

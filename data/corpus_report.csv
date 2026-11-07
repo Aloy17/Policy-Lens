@@ -1,0 +1,31 @@
+doc_id,issuer,title,page_count,word_count,low_text_pages,document_type
+rbi_kyc_2024,Reserve Bank of India,Master Direction - Know Your Customer (KYC) Direction,107,33950,0,text_native
+rbi_digital_lending_2022,Reserve Bank of India,Guidelines on Digital Lending,12,3262,0,text_native
+rbi_hfc_directions_2021,Reserve Bank of India,Master Direction - NBFC Housing Finance Company Directions 2021,258,69123,1,text_native
+rbi_nbfc_filing_2024,Reserve Bank of India,Filing of Annual Financial Statements and Other Regulatory Requirements,3,756,0,text_native
+sebi_master_circular_for_listing_obligations_and_disclosure_requirements,SEBI,Master Circular for Listing Obligations and Disclosure Requirements,230,72456,0,text_native
+sebi_master_circular_for_non_convertible_securities,SEBI,Master Circular for Non Convertible Securities,196,47122,6,text_native
+sebi_master_circular_for_depositories,SEBI,Master Circular for Depositories,392,110732,33,text_native
+sebi_master_circular_for_custodians,SEBI,Master Circular for Custodians,38,7561,7,scanned_or_mixed
+sebi_master_circular_for_registrar_and_share_transfer_agents,SEBI,Master Circular for Registrar and Share Transfer Agents,236,65393,0,text_native
+sebi_master_circular_for_research_analysts,SEBI,Master Circular for Research Analysts,53,11792,0,text_native
+sebi_master_circular_for_online_dispute_resolution,SEBI,Master Circular for Online Dispute Resolution,29,9921,0,text_native
+sebi_master_circular_for_stock_exchanges_and_clearing_corporations,SEBI,Master Circular for Stock Exchanges and Clearing Corporations,4,555,0,text_native
+pfrda_master_circular_kyc_aml_cft,PFRDA,Master Circular - KYC AML CFT,34,12889,8,scanned_or_mixed
+ifsca_master_circular_for_investment_advisers_in_the_ifsc,IFSCA,Master Circular for Investment Advisers in the IFSC,21,4127,0,text_native
+sebi_master_circular_for_mutual_funds,SEBI,Master Circular for Mutual Funds,748,204060,1,text_native
+sebi_sebi_master_circular_current_circular,SEBI,SEBI Master Circular - current circular,153,45869,0,text_native
+sebi_master_circular_for_merchant_bankers,SEBI,Master Circular for Merchant Bankers,105,29866,0,text_native
+sebi_master_circular_for_debenture_trustees,SEBI,Master Circular for Debenture Trustees,126,25408,1,text_native
+sebi_master_circular_for_issue_of_capital_and_disclosure_requirements,SEBI,Master Circular for Issue of Capital and Disclosure Requirements,144,33930,11,text_native
+sebi_master_circular_for_registrars_to_an_issue_and_share_transfer_agents,SEBI,Master Circular for Registrars to an Issue and Share Transfer Agents,294,64892,0,text_native
+sebi_master_circular_for_investment_advisers_2026,SEBI,Master Circular for Investment Advisers 2026,99,23455,0,text_native
+sebi_master_circular_for_research_analysts_2026,SEBI,Master Circular for Research Analysts 2026,107,26823,0,text_native
+sebi_master_circular_on_surveillance_of_securities_market_2026,SEBI,Master Circular on Surveillance of Securities Market 2026,38,8074,0,text_native
+sebi_master_circular_for_infrastructure_investment_trusts,SEBI,Master Circular for Infrastructure Investment Trusts,237,57676,1,text_native
+sebi_master_circular_for_portfolio_managers,SEBI,Master Circular for Portfolio Managers,207,33485,3,text_native
+sebi_master_circular_for_stock_brokers,SEBI,Master Circular for Stock Brokers,399,121218,3,text_native
+sebi_master_circular_for_credit_rating_agencies,SEBI,Master Circular for Credit Rating Agencies,109,25118,0,text_native
+sebi_master_circular_for_esg_rating_providers,SEBI,Master Circular for ESG Rating Providers,68,16377,0,text_native
+sebi_master_circular_for_social_stock_exchange,SEBI,Master Circular for Social Stock Exchange,31,7168,0,text_native
+sebi_master_circular_for_listing_obligations_and_disclosure_requirements_20,SEBI,Master Circular for Listing Obligations and Disclosure Requirements 2026,291,88421,1,text_native

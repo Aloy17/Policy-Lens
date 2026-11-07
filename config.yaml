@@ -1,0 +1,31 @@
+embedding:
+  model: "sentence-transformers/multi-qa-MiniLM-L6-cos-v1"
+  batch_size: 32
+  normalize_embeddings: true
+
+chunking:
+  fixed:
+    chunk_size: 500
+    overlap: 50
+  structure:
+    target_size: 500
+    max_size: 800
+    min_size: 300
+
+ocr:
+  enabled: true
+  min_words_per_page: 20
+  language: "eng"
+
+vector_store:
+  path: "chroma_db"
+  fixed_collection: "policylens_fixed"
+  structure_collection: "policylens_structure"
+
+search:
+  default_top_k: 5
+  preview_chars: 200
+
+logging:
+  ingestion_log: "logs/ingestion.log"
+  error_log: "logs/errors.log"
