@@ -2,7 +2,7 @@
 
 Status: **latest ranked evidence reviewed; source-PDF visual verification remains incomplete**.
 
-Evidence: `eval/rebenchmark_2026-11-07/selected_disagreement_evidence.csv` contains the top 10 results for each strategy for q04, q17, and q13 (60 rows). `eval/rebenchmark_2026-11-07/q14_evidence.csv` contains the top 10 results for each strategy for q14 (20 rows). The previews are truncated; conclusions are limited to the visible ranked evidence and gold-page-hit flags. Previews are truncated; conclusions below are limited to the visible ranked evidence and gold-page-hit flags.
+Evidence: `eval/rebenchmark_2026-11-07/selected_disagreement_evidence.csv` contains the top 10 results for each strategy for q04, q17, and q13 (60 rows). `eval/rebenchmark_2026-11-07/q14_evidence.csv` contains the top 10 results for each strategy for q14 (20 rows). The previews are truncated; conclusions are limited to the visible ranked evidence and gold-page-hit flags.
 
 ## q04 — Beneficial-owner identification
 
@@ -32,16 +32,18 @@ Gold reference: `rbi_kyc_2024`, PDF pages 69–70.
 
 **Interpretation:** this is a counterexample to the overall structure-aware lead: fixed-size retrieves the expected passage at rank 5; structure-aware misses it within top 10. The result demonstrates that the aggregate advantage is not uniform and cannot be explained from these previews alone.
 
-## q14 — Politically exposed person controls\n\nGold reference: `rbi_kyc_2024`, PDF page 46.\n\n- **Fixed-size:** first gold-page hit at rank 7 (RBI KYC pages 45–47; score 0.4245). Ranks 1–6 are other documents, largely containing semantically similar conflict-of-interest material.\n- **Structure-aware:** first gold-page hit at rank 2 (RBI KYC pages 45–46; score 0.4805). Rank 1 is a SEBI Research Analysts conflict-of-interest passage (score 0.4837).\n\n**Interpretation:** structure-aware improves the first gold-page rank from 7 to 2, but neither strategy retrieves the gold page at rank 1. The visible rank-2 preview begins with simplified-due-diligence material and does not itself expose the PEP controls. The evidence supports a ranking improvement, not a claim that the complete PEP answer was retrieved at rank 2. Inspect the full passage/source page before making a stronger content-level attribution.\n\n## Summary
+## q14 — Politically exposed person controls
+
+Gold reference: `rbi_kyc_2024`, PDF page 46.\n\n- **Fixed-size:** first gold-page hit at rank 7 (RBI KYC pages 45–47; score 0.4245). Ranks 1–6 are other documents, largely containing semantically similar conflict-of-interest material.\n- **Structure-aware:** first gold-page hit at rank 2 (RBI KYC pages 45–46; score 0.4805). Rank 1 is a SEBI Research Analysts conflict-of-interest passage.\n\n**Interpretation:** structure-aware improves the first gold-page rank from 7 to 2, but neither strategy retrieves the gold page at rank 1. The visible rank-2 preview begins with simplified-due-diligence material and does not itself expose the PEP controls. The evidence supports a ranking improvement, not a claim that the complete PEP answer was retrieved at rank 2. Inspect the full passage/source page before making a stronger content-level attribution.\n\n## Summary
 
 The selected cases show **two clear structure-aware wins (q04, q17), one fixed-size win (q13), and one structure-aware ranking improvement (q14)**. This is consistent with, but does not independently prove, the aggregate results:
 
 | Metric | Fixed-size | Structure-aware |
 |---|---:|---:|
-| Recall@3 | 0.52 | 0.56 |
-| Recall@5 | 0.56 | 0.68 |
-| Recall@10 | 0.76 | 0.76 |
-| MRR | 0.527762 | 0.558667 |
+| Recall@3 | 0.52 | 0.60 |
+| Recall@5 | 0.56 | 0.72 |
+| Recall@10 | 0.76 | 0.80 |
+| MRR | 0.527762 | 0.578667 |
 
 Structure-aware leads early retrieval and MRR overall and on the five table-labelled questions; fixed-size leads on the five paraphrased questions. Structure-aware indexes 14,157 chunks versus 5,973 for fixed-size (about 2.37x). Do not claim universal superiority or select a production strategy without reconciling storage and latency.
 
