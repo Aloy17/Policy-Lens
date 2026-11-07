@@ -67,6 +67,7 @@ def evaluate_strategy(
         questions.to_dict("records"),
         start=1,
     ):
+        question_id = str(row.get("id", question_number))
         query = row["question"]
 
         query_embedding = embedder.embed_texts([query])[0]
@@ -102,7 +103,7 @@ def evaluate_strategy(
 
             logs.append(
                 {
-                    "question_id": question_number,
+                    "question_id": question_id,
                     "question": query,
                     "strategy": strategy,
                     "rank": rank,
@@ -175,14 +176,16 @@ def calculate_subset_metrics(
         return None
 
     subset_ids = set(
-        subset.index + 1
+        subset["id"].astype(str)
+    ) if "id" in subset.columns else set(
+        str(index + 1) for index in subset.index
     )
 
     strategy_logs = [
         log
         for log in logs
         if log["strategy"] == strategy
-        and log["question_id"] in subset_ids
+        and str(log["question_id"]) in subset_ids
     ]
 
     reciprocal_ranks = []
@@ -192,7 +195,7 @@ def calculate_subset_metrics(
         question_logs = [
             log
             for log in strategy_logs
-            if log["question_id"] == question_id
+            if str(log["question_id"]) == str(question_id)
         ]
 
         correct_ranks = [
@@ -281,6 +284,7 @@ def main() -> None:
     questions = pd.read_csv(args.questions)
 
     required_columns = {
+        "id",
         "question",
         "expected_doc_id",
         "expected_page_start",
@@ -360,6 +364,11 @@ def main() -> None:
         all_metrics,
     )
 
+    metrics_rows = [
+        {"subset": "overall", **metrics}
+        for metrics in all_metrics
+    ]
+
     for column, title in [
         ("is_table_question", "Table-question results"),
         ("is_paraphrased", "Paraphrased-question results"),
@@ -379,6 +388,20 @@ def main() -> None:
 
         if subset_metrics:
             print_metrics(title, subset_metrics)
+            subset_name = (
+                "table_questions"
+                if column == "is_table_question"
+                else "paraphrased_questions"
+            )
+            metrics_rows.extend(
+                {"subset": subset_name, **metrics}
+                for metrics in subset_metrics
+            )
+
+    metrics_path = output_path.with_name("metrics_phase3.csv")
+    pd.DataFrame(metrics_rows).to_csv(metrics_path, index=False)
+    print("Saved metrics:")
+    print(metrics_path)
 
     print("\nSaved retrieval log:")
     print(output_path)
