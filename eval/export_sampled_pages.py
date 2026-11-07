@@ -45,7 +45,7 @@ def printed_page_hint(text):
 
 def main():
     args = parse_args()
-    template = pd.read_csv(args.template).fillna("")
+    template = pd.read_csv(args.template, dtype=str).fillna("")
     required = {"sample_id", "doc_id", "pdf_page"}
     if not required.issubset(template.columns):
         raise SystemExit("Sample template must contain sample_id, doc_id, and pdf_page.")
