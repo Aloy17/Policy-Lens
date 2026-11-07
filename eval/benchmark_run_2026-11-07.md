@@ -22,13 +22,13 @@
 | Recall@10 | 0.76 | 0.76 |
 | MRR | 0.527762 | 0.558667 |
 
-Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Current local packaged Chroma database footprint: 259 MB total (224 MB `chroma.sqlite3`, plus two collection segment directories of 25 MB and 9.9 MB). Per-collection attribution is pending segment-to-collection mapping; these sizes are from the current local database, not a per-strategy allocation yet.
+Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Current local packaged Chroma database footprint: 259 MB total (224 MB shared `chroma.sqlite3` plus vector segment directories). SQLite segment mapping identifies the 9.9 MB vector directory (`92e355cb…`) as `policylens_v1_fixed` and the 25 MB vector directory (`00eb27ae…`) as `policylens_v1_structure`. The structure-aware vector segment is about 2.53× the fixed-size vector segment. The shared SQLite file cannot be apportioned reliably between collections from directory sizes alone.
 
 Packaged ingestion log (2026-11-07): 37 manifest documents; 33 ingested, 4 skipped, 0 failed, 0 missing; 4,670 pages processed; 216 OCR pages; 5,320 fixed-size chunks; 12,920 structure-aware chunks; elapsed time 897.46 seconds (14 min 57 sec). This log is distinct from the later 1.92-second unchanged rerun and from earlier November 3 logs.
 
 The later packaged rerun (2026-11-07) reports 0 ingested, 37 skipped, 0 failed, 0 missing in 1.92 seconds, supporting idempotent unchanged-source handling.
 
-The packaged corpus directory is `dist/PolicyLens/PolicyLens Data/corpus/pdfs` and contains 37 PDFs. Total PDF directory size has not yet been measured.
+The packaged corpus directory is `dist/PolicyLens/PolicyLens Data/corpus/pdfs` and contains 37 PDFs. The 37-PDF corpus directory occupies 102 MB.
 
 ## Table-question subset
 
@@ -87,7 +87,7 @@ The benchmark, raw retrieval outputs, per-question analysis, selected disagreeme
 3. Complete or explicitly disposition the four visual checks (S03, S05, S06, S07). The documented concerns include S03's distorted multiplier and S05/S07's table layout/association.
 4. Add one source-linked before/after cleaning example.
 5. OCR accuracy remains unmeasured. Either test a representative scanned page against a manually transcribed reference or explicitly retain OCR accuracy as an unmeasured limitation for this phase.
-6. Record fixed-size and structure-aware Chroma directory sizes, packaged ingestion elapsed time, total pages processed, and rerun/skip/failure behaviour.
+6. Record fixed-size and structure-aware vector-segment sizes, packaged ingestion elapsed time, total pages processed, corpus size, and rerun/skip/failure behaviour. These measurements are now recorded; the shared SQLite storage remains unallocated by collection.
 7. Update the evaluation report with the final limitations and a chunking recommendation that considers retrieval quality, index footprint, and measured latency.
 
 Per-strategy query latency is already recorded above (median/p95: fixed-size 2.648/4.808 ms; structure-aware 2.318/3.104 ms). The raw retrieval log, metrics, run metadata, per-question results, disagreements, and selected evidence are already committed; these are not outstanding tasks.
