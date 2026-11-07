@@ -31,6 +31,32 @@ The canonical questions are in `questions.csv`. The evaluator's page fields use 
 | q25 | Yes | PDF 1 / revised filing requirements, commercial-bank row | The first page states that all audited returns for commercial banks are due within five working days from signing of the Auditor’s report. | Yes, narrowed | The original question was overbroad. It is now explicitly scoped to commercial banks and “all audited returns”. The separate NBFC filing table has different periodicity-based timelines; do not conflate them. |
 \nQuestions q01–q03, q05–q12, and q14 still require individual verification against the exact corpus PDFs. The official RBI notification page and an accessible copy of the original circular provide source text for q21–q24; however, the local corpus PDF page alignment still needs confirmation before the gold page ranges are accepted. Do not treat this register as a completed gold-set audit.
 
+## Remaining KYC question review (semantic/source-text pass)
+
+The official RBI Master Direction page for the August 14, 2025 consolidated version was checked for the subject matter of the remaining KYC questions. This is a **content-level review only**; it does not establish that the current local corpus PDF contains each passage on the evaluator's recorded page range. Those page ranges remain provisional until checked against the exact local PDF.
+
+| ID | Topic checked | Content-level assessment | Page-alignment status |
+|---|---|---|---|
+| q01 | Customer identification and verification requirements | Broad umbrella question. Retain only if its answer is anchored to the substantive CDD/CIP requirements rather than repeating q03. | Provisional; local PDF check required |
+| q02 | Circumstances requiring customer identification | Distinct from the procedure itself: paragraph 13 lists triggering circumstances, including commencement of an account-based relationship, specified transfers/products, and doubts about identification data. | Provisional; local PDF check required |
+| q03 | Customer identification procedure | Related to q01 but can test the defined CDD process and its constituent steps. Keep separate only if the gold passage clearly tests the process rather than the same broad list as q01. | Provisional; local PDF check required |
+| q05 | Enhanced due diligence | Distinct risk-based control topic; verify the selected range captures the applicable EDD measures, not merely the heading. | Provisional; local PDF check required |
+| q06 | Confidentiality of customer information | Distinct from q15 after q15 was changed to CKYCR resubmission exceptions. | Provisional; local PDF check required |
+| q07 | Initial CKYCR upload deadline | Paragraph 56(b) specifies upload within 10 days of commencement of an account-based relationship. This is an initial-upload requirement. | Provisional; local PDF check required |
+| q08 | Action after CKYCR updates an existing record | Paragraph 56(h) requires retrieval of updated records after CKYCR notification and updating the RE's own record. Distinct from q07's initial upload and q15's resubmission restrictions. | Provisional; local PDF check required |
+| q09 | Cross-border wire-transfer information | Distinct wire-transfer information requirements; confirm the selected four-page range includes the relevant originator/beneficiary data requirements and applicable thresholds/exceptions. | Provisional; local PDF check required |
+| q10 | PAN or Form 60 | Distinct identification-document requirement; confirm the exact transaction scope and any exemptions in the cited passage. | Provisional; local PDF check required |
+| q11 | Digital KYC application controls | Distinct technical/process safeguards for the application used at customer touch points. | Provisional; local PDF check required |
+| q12 | OTP in digital KYC | Narrower authentication mechanism question; retain only if the source passage specifically describes the OTP role and is not merely a restatement of q11. | Provisional; local PDF check required |
+| q14 | High-risk jurisdictions | Distinct enhanced-due-diligence scenario; check overlap with q05 and ensure the gold passage covers jurisdiction-related controls specifically. | Provisional; local PDF check required |
+
+### Redundancy risks to resolve during local page review
+
+- **q01/q03:** Closely related. Inspect their exact gold passages side by side. If both resolve to the same CDD/CIP text, replace one with a distinct, source-grounded KYC topic and update its page range.
+- **q05/q14:** Both concern enhanced due diligence. Retain both only if q14 is specifically about high-risk jurisdictions and q05 tests the general EDD measures.
+- **q07/q08/q15:** These are now three separate CKYCR operations: initial upload, responding to an updated record, and exceptions to re-requesting documents. Keep the distinctions explicit in answer keys.
+- **q11/q12:** Related digital-KYC topics, but application security controls and OTP authentication are not interchangeable. Verify that their source passages are materially distinct.
+
 ## Source-version caveats
 
 - The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The manifest now records `issue_date=2016-02-25` and `updated_as_of=2025-08-14`. The historical `doc_id` remains `rbi_kyc_2024` to preserve compatibility with existing indexed metadata; it is a legacy identifier, not the document issue year. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
