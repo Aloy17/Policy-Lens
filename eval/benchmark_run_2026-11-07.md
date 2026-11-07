@@ -8,10 +8,10 @@
 - Collections/strategies: fixed-size (5,973 chunks) and structure-aware (14,157 chunks).
 - Retrieval depth: top 10.
 - Model loading completed; the only emitted PyTorch message was the informational macOS distributed-redirect warning.
-- Output files generated locally: `eval/retrieval_log_phase3.csv`, `eval/metrics_phase3.csv`, `eval/run_metadata_phase3.json`.
+- Output files generated locally: `eval/rebenchmark_2026-11-07/retrieval_log_phase3.csv`, `eval/rebenchmark_2026-11-07/metrics_phase3.csv`, `eval/rebenchmark_2026-11-07/run_metadata_phase3.json`.
 - Raw retrieval log, metrics, run metadata, per-question results, disagreements, and selected ranked-passage evidence are committed on this branch.
 
-## Overall results
+## Corrected benchmark rerun — 2026-11-07\n\nThe gold-set validator passed for all 25 questions against the 37-document manifest. `python -m pytest -q tests/test_gold_set_validation.py` passed (3 tests). The rerun used the corrected q13 PDF-page range 69–70 and q14 page 46. Outputs were saved to `eval/rebenchmark_2026-11-07/` to preserve earlier artifacts.\n\n## Overall results
 
 | Metric | Fixed-size | Structure-aware |
 |---|---:|---:|
@@ -22,7 +22,7 @@
 | Recall@10 | 0.76 | 0.76 |
 | MRR | 0.527762 | 0.558667 |
 
-Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 is tied. It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Current local packaged Chroma database footprint: 259 MB total (224 MB shared `chroma.sqlite3` plus vector segment directories). SQLite segment mapping identifies the 9.9 MB vector directory (`92e355cb…`) as `policylens_v1_fixed` and the 25 MB vector directory (`00eb27ae…`) as `policylens_v1_structure`. The structure-aware vector segment is about 2.53× the fixed-size vector segment. The shared SQLite file cannot be apportioned reliably between collections from directory sizes alone.
+Structure-aware chunking has a modest overall lead in Recall@3, Recall@5, and MRR. Recall@10 also leads slightly (0.80 vs 0.76). It uses approximately 2.37 times as many chunks (14,157 / 5,973). Query latency is measured per query across 25 questions per strategy: fixed-size median 2.648 ms, p95 4.808 ms; structure-aware median 2.318 ms, p95 3.104 ms. These figures cover the Chroma search call only and exclude model loading and query embedding. Current local packaged Chroma database footprint: 259 MB total (224 MB shared `chroma.sqlite3` plus vector segment directories). SQLite segment mapping identifies the 9.9 MB vector directory (`92e355cb…`) as `policylens_v1_fixed` and the 25 MB vector directory (`00eb27ae…`) as `policylens_v1_structure`. The structure-aware vector segment is about 2.53× the fixed-size vector segment. The shared SQLite file cannot be apportioned reliably between collections from directory sizes alone.
 
 Packaged ingestion log (2026-11-07): 37 manifest documents; 33 ingested, 4 skipped, 0 failed, 0 missing; 4,670 pages processed; 216 OCR pages; 5,320 fixed-size chunks; 12,920 structure-aware chunks; elapsed time 897.46 seconds (14 min 57 sec). This log is distinct from the later 1.92-second unchanged rerun and from earlier November 3 logs.
 
@@ -80,7 +80,7 @@ The latest run uses revised q02/q03 wording and page ranges, so the two runs are
 
 ## Remaining work before Phase 3 closure
 
-The benchmark, raw retrieval outputs, per-question analysis, selected disagreement evidence, and revised q04/q17/q13 interpretation are committed. The remaining work is validation and operational evidence:
+The corrected benchmark, raw retrieval outputs, per-question analysis, and selected disagreement evidence were generated locally under `eval/rebenchmark_2026-11-07/`. The corrected q04/q17/q13/q14 interpretations are documented in `disagreement_analysis.md`. The remaining work is validation and operational evidence:
 
 1. Complete the exact local-corpus PDF page-alignment review for all 25 gold references and record corrections in `gold_set_review.md`.
 2. Confirm the five table questions genuinely depend on table values and the five paraphrased questions are materially paraphrased.
