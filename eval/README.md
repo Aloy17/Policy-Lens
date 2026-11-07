@@ -4,7 +4,7 @@
 
 This evaluation compares fixed-size and structure-aware chunking on the same 25-question gold set, embedding model, Chroma collections, and retrieval depth. A result is relevant only when its `doc_id` equals the gold document and its inclusive page range overlaps the gold page range. This is a retrieval-layer evaluation; it does not evaluate answer generation.
 
-The current question set has exactly five records marked as table questions and five marked as paraphrased. The paraphrase labels and gold page references are **provisional until checked against the exact local PDF pages**. Do not present the evaluation as fully gold-validated before that review.
+The current question set has five table questions and five paraphrased questions. The KYC source metadata has been corrected to the 2016 issue date and 2025-08-14 consolidation date while retaining the legacy `rbi_kyc_2024` ID for index compatibility. q16–q20 have been checked against the official FPI annex; q21–q24 have been checked against the official 2022 Digital Lending notification; q25 has been narrowed to the commercial-bank audited-return row. The remaining KYC page references and all local PDF page alignment still require a final validation pass. Do not present the evaluation as fully gold-validated yet.
 
 ## Run against the packaged index
 
@@ -53,7 +53,7 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 
 ## Required manual validation before reporting
 
-1. Open every gold PDF/page in `questions.csv`; confirm the cited content is present on the specified page range. Record any correction and reason in `gold_set_review.md`.
+1. Complete the local PDF page-alignment pass for every gold reference in `questions.csv`; confirm the cited content is present on the specified page range. Record any correction and reason in `gold_set_review.md`. Official source-text checks are documented there, but they do not replace checking the exact local corpus files.
 2. Confirm that exactly five questions genuinely require table values and exactly five are materially paraphrased from source wording. A label count alone does not prove category quality.
 3. Inspect the three most informative strategy disagreements. Explain the retrieved content and page evidence, not merely the rank difference.
 4. Inspect ten deterministically sampled PDF pages using `sample_inspection_pages.py`; record extraction/OCR/table/layout quality in `manual_inspection_template.csv`.
