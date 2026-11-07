@@ -33,7 +33,7 @@ echo "[2/6] Creating the ARM64 runtime..."
 "$MAMBA" run -p "$BUILD_DIR/env" conda-pack -p "$BUILD_DIR/env" -o "$BUILD_DIR/runtime.tar.gz"
 mkdir -p "$RUNTIME"
 tar -xzf "$BUILD_DIR/runtime.tar.gz" -C "$RUNTIME"
-"$RUNTIME/bin/conda-unpack"
+"$RUNTIME/bin/python" "$RUNTIME/bin/conda-unpack"
 echo "[3/6] Copying application and corpus..."
 for item in src ui ingest.py search.py config.yaml; do cp -R "$REPO_ROOT/$item" "$CODE/"; done
 cp "$REPO_ROOT/data/manifest.csv" "$DATA/corpus/manifest.csv"
