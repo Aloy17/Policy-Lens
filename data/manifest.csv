@@ -1,5 +1,5 @@
-doc_id,title,issuer,issue_date,url,page_count,document_type
-rbi_kyc_2024,Master Direction - Know Your Customer (KYC) Direction,Reserve Bank of India,2024-01-01,https://www.rbi.org.in/commonman/Upload/English/Notification/PDFs/MD18KYCF6E92C82E1E1419D87323E3869BC9F13.pdf,107,text_native
+doc_id,title,issuer,issue_date,updated_as_of,url,page_count,document_type
+rbi_kyc_2024,Master Direction - Know Your Customer (KYC) Direction,Reserve Bank of India,2016-02-25,2025-08-14,https://www.rbi.org.in/commonman/Upload/English/Notification/PDFs/MD18KYCF6E92C82E1E1419D87323E3869BC9F13.pdf,107,text_native
 rbi_digital_lending_2022,Guidelines on Digital Lending,Reserve Bank of India,2022-09-02,https://rbidocs.rbi.org.in/rdocs/notification/PDFs/GUIDELINESDIGITALLENDINGD5C35A71D8124A0E92AEB940A7D25BB3.PDF,12,text_native
 rbi_hfc_directions_2021,Master Direction - NBFC Housing Finance Company Directions 2021,Reserve Bank of India,2021-02-17,https://rbi.org.in/hindi1/Upload/content/PDFs/73MD17022021_AN.pdf,258,text_native
 rbi_nbfc_filing_2024,Filing of Annual Financial Statements and Other Regulatory Requirements,Reserve Bank of India,2024-05-15,https://www.rbi.org.in/hindi1/Upload/content/PDFs/110MDFiling15052024_AN1.pdf,3,text_native
