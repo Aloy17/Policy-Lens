@@ -17,10 +17,10 @@ q15,"What are the requirements for maintaining secrecy of customer information?"
 q16,"For Category I FPIs, are constitutive documents mandatory according to the KYC table?",rbi_kyc_2024,94,94,true,false
 q17,"According to the FPI KYC table, is proof of address mandatory for Category III entities?",rbi_kyc_2024,94,95,true,false
 q18,"What does the KYC table specify about photographs for eligible FPIs?",rbi_kyc_2024,95,95,true,false
-q19,"For Category III FPIs, is proof of identity mandatory?",rbi_kyc_2024,95,95,true,false
-q20,"What does the table specify about authorized-signatory lists for eligible FPIs?",rbi_kyc_2024,95,95,true,false
+q19,"For Category III FPIs, is proof of identity mandatory for the ultimate beneficial owner (UBO)?",rbi_kyc_2024,95,95,true,false
+q20,"For Category III FPIs, what does the table require for the list of authorized signatories and their signatures?",rbi_kyc_2024,95,95,true,false
 q21,"Who remains responsible for compliance when an RE uses a Lending Service Provider or Digital Lending App?",rbi_digital_lending_2022,1,4,false,true
 q22,"By what date were REs required to put systems in place for existing digital loans to comply with the 2022 guidelines?",rbi_digital_lending_2022,2,2,false,false
 q23,"Who should pay fees or charges payable to a Lending Service Provider in the digital lending process?",rbi_digital_lending_2022,4,5,false,true
 q24,"What information must be disclosed through the Key Fact Statement for a digital loan?",rbi_digital_lending_2022,5,5,false,false
-q25,"What deadline applies to the submission of audited returns under the revised filing requirements?",rbi_nbfc_filing_2024,1,1,false,false
+q25,"For commercial banks, what is the deadline for submitting all audited returns under the revised filing requirements?",rbi_nbfc_filing_2024,1,1,false,false
