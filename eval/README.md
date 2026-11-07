@@ -52,6 +52,20 @@ Outputs:
 
 Historical `retrieval_log.csv`, `retrieval_log_final.csv`, `metrics.csv`, and `disagreements.csv` are retained as historical outputs and are not overwritten.
 
+## Latest benchmark snapshot (2026-11-07)
+
+The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall Recall@10 is tied at 0.76; structure-aware leads on Recall@3, Recall@5, and MRR, while fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Do not make a final strategy recommendation until latency, database footprint, and the updated disagreement cases are reviewed.
+
+After the run, generate the current per-question and disagreement summaries:
+
+```bash
+PYTHONPATH=. python eval/analyze_results.py \\
+  --log eval/retrieval_log_phase3.csv \\
+  --questions eval/questions.csv
+```
+
+The 2026-11-07 benchmark report is a run record, not a claim that all Phase 3 validation is complete. The raw local CSV/JSON outputs must be committed to preserve reproducibility.
+
 ## Selected disagreement evidence
 
 After the Phase 3 evaluation and disagreement analysis, export the three report examples with their retrieved passage previews:
