@@ -6,6 +6,16 @@ This evaluation compares fixed-size and structure-aware chunking on the same 25-
 
 The current question set has five table questions and five paraphrased questions. The KYC source metadata has been corrected to the 2016 issue date and 2025-08-14 consolidation date while retaining the legacy `rbi_kyc_2024` ID for index compatibility. q16–q20 have been checked against the official FPI annex; q21–q24 have been checked against the official 2022 Digital Lending notification; q25 has been narrowed to the commercial-bank audited-return row. The remaining KYC page references and all local PDF page alignment still require a final validation pass. Do not present the evaluation as fully gold-validated yet.
 
+## Validate the gold-set file structure
+
+Before running retrieval evaluation, validate the CSV schema, ordered IDs, positive inclusive page ranges, and required category counts:
+
+```bash
+PYTHONPATH=. python eval/validate_gold_set.py
+```
+
+This is a structural check only. It does **not** validate source correctness, page alignment, table-question quality, or paraphrase quality; those remain documented manual review requirements below.
+
 ## Run against the packaged index
 
 From the repository root, with the packaged app database present:
