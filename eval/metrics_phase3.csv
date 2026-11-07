@@ -1,0 +1,7 @@
+subset,strategy,questions,recall_at_3,recall_at_5,recall_at_10,mrr
+overall,fixed,25,0.52,0.56,0.76,0.5277619047619048
+overall,structure,25,0.56,0.68,0.76,0.5586666666666666
+table_questions,fixed,5,0.4,0.4,0.8,0.45357142857142857
+table_questions,structure,5,0.8,0.8,0.8,0.8
+paraphrased_questions,fixed,5,0.6,0.6,1.0,0.6535714285714286
+paraphrased_questions,structure,5,0.4,0.4,0.6,0.4333333333333333
