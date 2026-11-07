@@ -29,7 +29,7 @@ The canonical questions are in `questions.csv`. The evaluator's page fields use 
 | q20 | Yes | PDF 95 / Annex IV, Authorized Signatories | The authorized-signatories list and signatures are Mandatory for Category III. Categories I and II permit the Global Custodian signatory list when there is a PoA to the Global Custodian. | Yes, provisional | Question now names Category III and the exact row; the Category I/II caveat belongs in the answer. |
 
 | q25 | Yes | PDF 1 / revised filing requirements, commercial-bank row | The first page states that all audited returns for commercial banks are due within five working days from signing of the Auditor’s report. | Yes, narrowed | The original question was overbroad. It is now explicitly scoped to commercial banks and “all audited returns”. The separate NBFC filing table has different periodicity-based timelines; do not conflate them. |
-\nQuestions q01–q03, q05–q12, and q14 still require individual verification against the exact corpus PDFs. The official RBI notification page and an accessible copy of the original circular provide source text for q21–q24; however, the local corpus PDF page alignment still needs confirmation before the gold page ranges are accepted. Do not treat this register as a completed gold-set audit.
+\nQuestions q01–q03, q05–q12, and q14 still require local PDF page verification; q01 and q14 now have distinct, source-grounded target passages. The official RBI notification page and an accessible copy of the original circular provide source text for q21–q24; however, the local corpus PDF page alignment still needs confirmation before the gold page ranges are accepted. Do not treat this register as a completed gold-set audit.
 
 ## Remaining KYC question review (semantic/source-text pass)
 
@@ -37,7 +37,7 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 
 | ID | Topic checked | Content-level assessment | Page-alignment status |
 |---|---|---|---|
-| q01 | Customer identification and verification requirements | Broad umbrella question. Retain only if its answer is anchored to the substantive CDD/CIP requirements rather than repeating q03. | Provisional; local PDF check required |
+| q01 | Existing KYC-compliant customer opening another account/service at the same RE | Paragraph 10(f) says a fresh CDD exercise is not needed for customer identification when an existing KYC-compliant customer seeks another account or product/service from the same RE. | Proposed PDF page 19; local PDF check required |
 | q02 | Circumstances requiring customer identification | Distinct from the procedure itself: paragraph 13 lists triggering circumstances, including commencement of an account-based relationship, specified transfers/products, and doubts about identification data. | Provisional; local PDF check required |
 | q03 | Customer identification procedure | Related to q01 but can test the defined CDD process and its constituent steps. Keep separate only if the gold passage clearly tests the process rather than the same broad list as q01. | Provisional; local PDF check required |
 | q05 | Enhanced due diligence | Distinct risk-based control topic; verify the selected range captures the applicable EDD measures, not merely the heading. | Provisional; local PDF check required |
@@ -48,12 +48,12 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 | q10 | PAN or Form 60 | Distinct identification-document requirement; confirm the exact transaction scope and any exemptions in the cited passage. | Provisional; local PDF check required |
 | q11 | Digital KYC application controls | Distinct technical/process safeguards for the application used at customer touch points. | Provisional; local PDF check required |
 | q12 | OTP in digital KYC | Narrower authentication mechanism question; retain only if the source passage specifically describes the OTP role and is not merely a restatement of q11. | Provisional; local PDF check required |
-| q14 | High-risk jurisdictions | Distinct enhanced-due-diligence scenario; check overlap with q05 and ensure the gold passage covers jurisdiction-related controls specifically. | Provisional; local PDF check required |
+| q14 | Politically exposed persons (PEPs) | Paragraph 41 permits establishing/continuing a PEP relationship subject to additional controls: PEP identification, source-of-funds/wealth measures, senior-management approval, and enhanced ongoing monitoring; the rules also extend to family members and close associates. | Proposed PDF page 46; local PDF check required |
 
 ### Redundancy risks to resolve during local page review
 
-- **q01/q03:** Closely related. Inspect their exact gold passages side by side. If both resolve to the same CDD/CIP text, replace one with a distinct, source-grounded KYC topic and update its page range.
-- **q05/q14:** Both concern enhanced due diligence. Retain both only if q14 is specifically about high-risk jurisdictions and q05 tests the general EDD measures.
+- **q01/q03:** The overlap has been addressed. q01 now tests the same-RE repeat-account exception in paragraph 10(f); q03 continues to test the customer identification procedure. Confirm the proposed q01 PDF page locally.
+- **q05/q14:** The overlap has been addressed by changing q14 to the distinct PEP-specific controls in paragraph 41. Confirm the proposed q14 PDF page locally.
 - **q07/q08/q15:** These are now three separate CKYCR operations: initial upload, responding to an updated record, and exceptions to re-requesting documents. Keep the distinctions explicit in answer keys.
 - **q11/q12:** Related digital-KYC topics, but application security controls and OTP authentication are not interchangeable. Verify that their source passages are materially distinct.
 
