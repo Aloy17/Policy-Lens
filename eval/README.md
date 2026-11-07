@@ -54,7 +54,7 @@ Historical `retrieval_log.csv`, `retrieval_log_final.csv`, `metrics.csv`, and `d
 
 ## Latest benchmark snapshot (2026-11-07)
 
-The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall Recall@10 is tied at 0.76; structure-aware leads on Recall@3, Recall@5, and MRR, while fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Do not make a final strategy recommendation until latency, database footprint, and the updated disagreement cases are reviewed.
+The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall Recall@10 is tied at 0.76; structure-aware leads on Recall@3, Recall@5, and MRR, while fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Per-strategy query latency and the selected disagreement cases have now been reviewed and documented. Database directory footprint and packaged-ingestion measurements remain outstanding before a final operational recommendation.
 
 After the run, generate the current per-question and disagreement summaries:
 
@@ -83,7 +83,7 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 - MRR is the mean reciprocal rank over all questions in the evaluated subset.
 - The two chunking strategies are compared with identical queries and index/model settings. Query latency measures the Chroma search call only; it excludes model loading and query embedding time.
 
-## Required manual validation before reporting
+## Remaining validation before Phase 3 closure
 
 1. Complete the local PDF page-alignment pass for every gold reference in `questions.csv`; confirm the cited content is present on the specified page range. Record any correction and reason in `gold_set_review.md`. Official source-text checks are documented there, but they do not replace checking the exact local corpus files.
 2. Confirm that exactly five questions genuinely require table values and exactly five are materially paraphrased from source wording. A label count alone does not prove category quality.
