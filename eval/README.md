@@ -54,7 +54,7 @@ Historical `retrieval_log.csv`, `retrieval_log_final.csv`, `metrics.csv`, and `d
 
 ## Latest benchmark snapshot (2026-11-07)
 
-The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall Recall@10 is tied at 0.76; structure-aware leads on Recall@3, Recall@5, and MRR, while fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Per-strategy query latency, disagreement evidence, database footprint, and packaged-ingestion measurements are documented in the benchmark run record.
+The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall structure-aware results are Recall@3 0.60, Recall@5 0.72, Recall@10 0.80, and MRR 0.578667; fixed-size results are 0.52, 0.56, 0.76, and 0.527762 respectively. Fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Corrected-run query latency (median/p95: fixed-size 2.318/4.987 ms; structure-aware 2.352/2.893 ms), disagreement evidence, database footprint, and packaged-ingestion measurements are documented in the benchmark run record.
 
 After the run, generate the current per-question and disagreement summaries:
 
