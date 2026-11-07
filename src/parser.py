@@ -87,7 +87,7 @@ def _extract_page_text(page: pymupdf.Page) -> str:
     middle = sorted([b for b in spanning if b not in top and b not in bottom],
                     key=lambda b: (b[1], b[0]))
     ordered = top + left + middle + right + bottom
-    return "\\n".join(block[4] for block in ordered)
+    return "\n".join(block[4] for block in ordered)
 
 
 def parse_pdf(pdf_path: str | Path) -> list[dict[str, Any]]:
