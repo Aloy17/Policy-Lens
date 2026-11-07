@@ -63,35 +63,45 @@ def process_document(pdf_path: Path, document: dict, config: dict, embedder: Emb
     logger.info("PROCESSING | %s", pdf_path.name)
     source_hash = calculate_file_hash(pdf_path)
     existing_hash = get_existing_source_hash(structure_store, doc_id)
-    if existing_hash == source_hash:
-        logger.info("SKIP | %s | unchanged", doc_id)
+    fixed_hash = get_existing_source_hash(fixed_store, doc_id)
+    if existing_hash == source_hash and fixed_hash == source_hash:
+        logger.info("SKIP | %s | unchanged in both indexes", doc_id)
         return {"status": "skipped", "doc_id": doc_id, "pages": 0, "ocr_pages": 0,
                 "fixed_chunks": 0, "structure_chunks": 0,
                 "seconds": time.perf_counter() - start_time}
-    if existing_hash is not None:
-        logger.info("UPDATE | %s | source hash changed", doc_id)
-        fixed_store.delete_document(doc_id)
-        structure_store.delete_document(doc_id)
+    if existing_hash is not None or fixed_hash is not None:
+        logger.info("UPDATE | %s | source hash changed or index incomplete", doc_id)
     pages = parse_pdf(pdf_path)
-    pages = apply_ocr_to_pages(pdf_path, pages,
-        min_words=config["ocr"]["min_words_per_page"], language=config["ocr"]["language"])
+    pages = apply_ocr_to_pages(
+        pdf_path, pages,
+        min_words=config["ocr"]["min_words_per_page"],
+        language=config["ocr"]["language"],
+        enabled=config["ocr"].get("enabled", True),
+        image_coverage_threshold=config["ocr"].get("image_coverage_threshold", 0.5),
+        image_text_word_limit=config["ocr"].get("image_text_word_limit", 120),
+    )
     ocr_pages = sum(1 for page in pages if page.get("ocr_used", False))
     pages = clean_pages(pages)
     fixed_chunks = fixed_size_chunks(pages,
         chunk_size=config["chunking"]["fixed"]["chunk_size"],
-        overlap=config["chunking"]["fixed"]["overlap"])
+        overlap=config["chunking"]["fixed"]["overlap"],
+        tokenizer=embedder.tokenizer)
     fixed_chunks = attach_metadata(fixed_chunks, document, source_hash, "fixed")
     structure_chunks = structure_aware_chunks(pages,
         target_size=config["chunking"]["structure"]["target_size"],
         max_size=config["chunking"]["structure"]["max_size"],
-        min_size=config["chunking"]["structure"]["min_size"])
+        min_size=config["chunking"]["structure"]["min_size"],
+        tokenizer=embedder.tokenizer)
     structure_chunks = attach_metadata(structure_chunks, document, source_hash, "structure")
     logger.info("CHUNKS | %s | fixed=%d structure=%d", doc_id,
                 len(fixed_chunks), len(structure_chunks))
     fixed_chunks = embedder.embed_chunks(fixed_chunks)
     structure_chunks = embedder.embed_chunks(structure_chunks)
+    # Store the new version before removing the previous indexed version.
     fixed_store.add_chunks(fixed_chunks)
     structure_store.add_chunks(structure_chunks)
+    fixed_store.delete_old_versions(doc_id, source_hash)
+    structure_store.delete_old_versions(doc_id, source_hash)
     elapsed = time.perf_counter() - start_time
     logger.info("INGESTED | %s | pages=%d ocr_pages=%d fixed_chunks=%d structure_chunks=%d time=%.2fs",
                 doc_id, len(pages), ocr_pages, len(fixed_chunks), len(structure_chunks), elapsed)
