@@ -85,6 +85,16 @@ fi
 export TESSDATA_PREFIX="$(dirname "$TESSDATA")"
 if [[ ! -f "$DATA/.index-ready" ]]; then
   "$RUNTIME/bin/python" "$CODE/ingest.py" --input "$DATA/corpus/pdfs" --manifest "$DATA/corpus/manifest.csv" --collection policylens_v1
+  "$RUNTIME/bin/python" - <<'PY'
+import chromadb
+from pathlib import Path
+database = Path(__import__("os").environ["POLICYLENS_DATA_DIR"]) / "chroma_db"
+client = chromadb.PersistentClient(path=str(database))
+for name in ("policylens_v1_fixed", "policylens_v1_structure"):
+    collection = client.get_collection(name)
+    if collection.count() == 0:
+        raise SystemExit(f"Index validation failed: {name} is empty")
+PY
   touch "$DATA/.index-ready"
 fi
 exec "$RUNTIME/bin/python" -m streamlit run "$CODE/ui/app.py" --server.headless=false --server.port=8501 --browser.gatherUsageStats=false

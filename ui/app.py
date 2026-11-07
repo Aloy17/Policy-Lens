@@ -1,11 +1,17 @@
+import os
 import sys
+from pathlib import Path
+
 import streamlit as st
 import yaml
 
-from src.runtime_paths import APP_ROOT, app_path, data_path
-
-ROOT = APP_ROOT
+ROOT = Path(os.environ.get(
+    "POLICYLENS_APP_DIR",
+    Path(__file__).resolve().parent.parent,
+)).expanduser().resolve()
 sys.path.insert(0, str(ROOT))
+
+from src.runtime_paths import APP_ROOT, app_path, data_path
 from src.embedder import Embedder
 from src.vector_store import VectorStore
 
