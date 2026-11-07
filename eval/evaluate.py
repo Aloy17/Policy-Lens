@@ -263,9 +263,15 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--db-path",
+        default=None,
+        help="Chroma database directory. Defaults to vector_store.path in config.yaml.",
+    )
+
+    parser.add_argument(
         "--output",
-        default="eval/retrieval_log.csv",
-        help="Output retrieval log.",
+        default="eval/retrieval_log_phase3.csv",
+        help="Output retrieval log (kept separate from historical logs).",
     )
 
     args = parser.parse_args()
@@ -296,6 +302,20 @@ def main() -> None:
         normalize_embeddings=config["embedding"]["normalize_embeddings"],
     )
 
+    if len(questions) != 25:
+        raise ValueError(f"Expected exactly 25 evaluation questions; found {len(questions)}.")
+
+    for column, expected_count in [("is_table_question", 5), ("is_paraphrased", 5)]:
+        actual_count = int(
+            questions[column].astype(str).str.lower().eq("true").sum()
+        )
+        if actual_count != expected_count:
+            raise ValueError(
+                f"Expected exactly {expected_count} {column} records; found {actual_count}."
+            )
+
+    db_path = args.db_path or config["vector_store"]["path"]
+
     all_logs = []
     all_metrics = []
 
@@ -303,9 +323,18 @@ def main() -> None:
         print(f"\nEvaluating {strategy} strategy...")
 
         store = VectorStore(
-            path=config["vector_store"]["path"],
+            path=db_path,
             collection_name=f"{args.collection}_{strategy}",
         )
+
+        count = store.count()
+        if count == 0:
+            raise RuntimeError(
+                f"Collection '{args.collection}_{strategy}' at '{db_path}' is empty. "
+                "Check --db-path and --collection before evaluating."
+            )
+
+        print(f"Indexed chunks: {count}")
 
         logs, metrics = evaluate_strategy(
             questions=questions,
