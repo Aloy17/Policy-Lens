@@ -27,6 +27,6 @@ All other questions q01–q03, q05–q12, q14–q16, and q18–q25 remain pendin
 
 ## Source-version caveats
 
-- The RBI KYC PDF in the corpus is the consolidated Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The manifest's `issue_date` should preserve the original issue date; add a separate `updated_as_of` field if the manifest schema is extended. Do not label this source as a 2024-issued document.
+- The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The manifest currently labels it `issue_date=2024-01-01`; that is incorrect as an original issue date and must be corrected or replaced with explicit `issue_date=2016-02-25` and `updated_as_of=2025-08-14` metadata. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
 - The Digital Lending Guidelines dated September 2, 2022 are retained as a historical source for this test set. RBI issued the consolidated Digital Lending Directions, 2025 on May 8, 2025; do not present the 2022 document as current policy.
 - A retrieval hit is judged against the selected gold document/page only; an equivalent answer in a later or superseding circular is not counted unless explicitly added to the gold set.
