@@ -1,4 +1,9 @@
 import argparse
+import json
+import os
+import platform
+import statistics
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -72,10 +77,12 @@ def evaluate_strategy(
 
         query_embedding = embedder.embed_texts([query])[0]
 
+        query_started = time.perf_counter()
         results = store.search(
             query_embedding=query_embedding,
             top_k=top_k,
         )
+        query_latency_ms = (time.perf_counter() - query_started) * 1000
 
         documents = results.get("documents", [[]])[0]
         metadatas = results.get("metadatas", [[]])[0]
@@ -108,6 +115,7 @@ def evaluate_strategy(
                     "strategy": strategy,
                     "rank": rank,
                     "score": round(1 - distance, 4),
+                    "query_latency_ms": round(query_latency_ms, 3),
                     "doc_id": metadata.get("doc_id", ""),
                     "title": metadata.get("title", ""),
                     "page_start": metadata.get("page_start", ""),
@@ -272,6 +280,19 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--top-k",
+        type=int,
+        default=10,
+        help="Number of retrieved chunks per question (minimum 10).",
+    )
+
+    parser.add_argument(
+        "--metrics-output",
+        default=None,
+        help="Metrics CSV path. Defaults beside --output.",
+    )
+
+    parser.add_argument(
         "--output",
         default="eval/retrieval_log_phase3.csv",
         help="Output retrieval log (kept separate from historical logs).",
@@ -300,11 +321,25 @@ def main() -> None:
             f"Missing required columns: {sorted(missing_columns)}"
         )
 
+    if questions["id"].astype(str).duplicated().any():
+        raise ValueError("Question IDs must be unique.")
+
+    if questions[list(required_columns)].isna().any().any():
+        raise ValueError("Evaluation questions contain blank required fields.")
+
+    if (questions["expected_page_start"].astype(int) < 1).any():
+        raise ValueError("Gold page numbers must be positive and 1-based.")
+    if (questions["expected_page_end"].astype(int) < questions["expected_page_start"].astype(int)).any():
+        raise ValueError("Gold page end must be >= page start.")
+
     embedder = Embedder(
         model_name=config["embedding"]["model"],
         batch_size=config["embedding"]["batch_size"],
         normalize_embeddings=config["embedding"]["normalize_embeddings"],
     )
+
+    if args.top_k < 10:
+        raise ValueError("--top-k must be at least 10 for Recall@10.")
 
     if len(questions) != 25:
         raise ValueError(f"Expected exactly 25 evaluation questions; found {len(questions)}.")
@@ -345,7 +380,7 @@ def main() -> None:
             store=store,
             embedder=embedder,
             strategy=strategy,
-            top_k=10,
+            top_k=args.top_k,
         )
 
         all_logs.extend(logs)
@@ -398,10 +433,45 @@ def main() -> None:
                 for metrics in subset_metrics
             )
 
-    metrics_path = output_path.with_name("metrics_phase3.csv")
+    metrics_path = Path(args.metrics_output) if args.metrics_output else output_path.with_name("metrics_phase3.csv")
     pd.DataFrame(metrics_rows).to_csv(metrics_path, index=False)
     print("Saved metrics:")
     print(metrics_path)
+
+    latency_values = [
+        row["query_latency_ms"] for row in all_logs if row["rank"] == 1
+    ]
+    run_metadata = {
+        "database_path": str(Path(db_path).expanduser().resolve()),
+        "collection_base": args.collection,
+        "collection_counts": {
+            strategy: VectorStore(
+                path=db_path,
+                collection_name=f"{args.collection}_{strategy}",
+            ).count()
+            for strategy in ["fixed", "structure"]
+        },
+        "embedding_model": config["embedding"]["model"],
+        "embedding_batch_size": config["embedding"]["batch_size"],
+        "normalized_embeddings": config["embedding"]["normalize_embeddings"],
+        "top_k": args.top_k,
+        "question_count": len(questions),
+        "table_question_count": int(questions["is_table_question"].astype(str).str.lower().eq("true").sum()),
+        "paraphrased_question_count": int(questions["is_paraphrased"].astype(str).str.lower().eq("true").sum()),
+        "mean_query_latency_ms": round(statistics.mean(latency_values), 3) if latency_values else None,
+        "median_query_latency_ms": round(statistics.median(latency_values), 3) if latency_values else None,
+        "python_version": platform.python_version(),
+        "platform": platform.platform(),
+        "processor": platform.processor(),
+        "cpu_count": os.cpu_count(),
+        "embedding_api_cost": 0,
+        "embedding_api_cost_currency": "USD",
+        "embedding_cost_note": "Local Sentence Transformers inference; no hosted embedding API charge.",
+    }
+    metadata_path = output_path.with_name("run_metadata_phase3.json")
+    metadata_path.write_text(json.dumps(run_metadata, indent=2), encoding="utf-8")
+    print("\nSaved run metadata:")
+    print(metadata_path)
 
     print("\nSaved retrieval log:")
     print(output_path)
