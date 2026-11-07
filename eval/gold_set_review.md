@@ -48,7 +48,7 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 | q10 | PAN or Form 60 | Distinct identification-document requirement; confirm the exact transaction scope and any exemptions in the cited passage. | Provisional; local PDF check required |
 | q11 | Digital KYC application controls | Distinct technical/process safeguards for the application used at customer touch points. | Provisional; local PDF check required |
 | q12 | OTP in digital KYC | Narrower authentication mechanism question; retain only if the source passage specifically describes the OTP role and is not merely a restatement of q11. | Provisional; local PDF check required |
-| q14 | Politically exposed persons (PEPs) | Paragraph 41 permits establishing/continuing a PEP relationship subject to additional controls: PEP identification, source-of-funds/wealth measures, senior-management approval, and enhanced ongoing monitoring; the rules also extend to family members and close associates. | Proposed PDF page 46; local PDF check required |
+| q14 | Politically exposed persons (PEPs) | Paragraph 41 permits establishing/continuing a PEP relationship subject to additional controls: PEP identification, source-of-funds/wealth measures, senior-management approval, and enhanced ongoing monitoring; the rules also extend to family members and close associates. | Proposed PDF page 47 (source printed page 46); local PDF check required |
 
 ### Redundancy risks to resolve during local page review
 
@@ -59,7 +59,7 @@ The official RBI Master Direction page for the August 14, 2025 consolidated vers
 
 ## Source-version caveats
 
-- The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The manifest now records `issue_date=2016-02-25` and `updated_as_of=2025-08-14`. The historical `doc_id` remains `rbi_kyc_2024` to preserve compatibility with existing indexed metadata; it is a legacy identifier, not the document issue year. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
+- The RBI KYC PDF in the corpus is the Master Direction dated February 25, 2016, **updated as on August 14, 2025**. The PEP provision in paragraph 41 is printed on page 46; with the established one-page offset in this PDF, its evaluator page is 47. The manifest now records `issue_date=2016-02-25` and `updated_as_of=2025-08-14`. The historical `doc_id` remains `rbi_kyc_2024` to preserve compatibility with existing indexed metadata; it is a legacy identifier, not the document issue year. The RBI subsequently repealed the 2016 Master Direction with immediate effect on November 28, 2025 for Payment System Providers and Payment System Participants, and issued entity-specific 2025 KYC Directions. Treat this corpus PDF as a historical consolidated snapshot, not a current universal KYC rulebook.
 - The Digital Lending Guidelines dated September 2, 2022 are retained as a historical source for this test set. RBI issued the consolidated Digital Lending Directions, 2025 on May 8, 2025; do not present the 2022 document as current policy.
 - A retrieval hit is judged against the selected gold document/page only; an equivalent answer in a later or superseding circular is not counted unless explicitly added to the gold set.
 
