@@ -16,6 +16,12 @@ PYTHONPATH=. python eval/validate_gold_set.py
 
 This checks structure and catches page ranges that exceed the manifest's declared PDF page count. It does **not** prove that a passage appears on the labelled page, validate source correctness, or assess table-question/paraphrase quality; those still require manual review.
 
+The validator has focused regression tests covering a valid 25-question set, a page range beyond the manifest page count, and an incorrect table-question count. Run them with:
+
+```bash
+pytest -q tests/test_gold_set_validation.py
+```
+
 ## Run against the packaged index
 
 From the repository root, with the packaged app database present:
