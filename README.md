@@ -46,6 +46,10 @@ python ingest.py --input data/pdfs --manifest data/manifest.csv --collection pol
 The first run downloads the configured Sentence Transformer model unless a
 local model path is configured. ChromaDB data and logs are stored locally.
 
+## Ingestion design decisions
+
+See [docs/ingestion_design.md](docs/ingestion_design.md) for the parser, OCR, cleaning, chunking, embedding and vector-index rationale.
+
 ## Search
 
 ```bash

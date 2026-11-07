@@ -8,13 +8,15 @@ chunking:
     chunk_size: 500
     overlap: 50
   structure:
-    target_size: 500
-    max_size: 800
+    target_size: 400
+    max_size: 500
     min_size: 300
 
 ocr:
   enabled: true
   min_words_per_page: 20
+  image_coverage_threshold: 0.5
+  image_text_word_limit: 400
   language: "eng"
 
 vector_store:
