@@ -26,7 +26,18 @@ On macOS, install Tesseract with `brew install tesseract`. On Ubuntu/Debian use
 
 ## Corpus and indexing
 
-The source PDFs and `data/manifest.csv` are required. Build the vector index:
+The repository tracks the source URLs and metadata in `data/manifest.csv`; PDF binaries are not committed. Download the configured corpus locally, then refresh the corpus report:
+
+```bash
+python3 data/download_corpus.py
+python3 data/build_corpus.py
+```
+
+The supplemental `data/corpus_annotations.csv` records observed table evidence, layout evidence and a mutually exclusive `primary_corpus_category` for the approximate 60/20/20 corpus-mix calculation. The manifest's `document_type` remains the technical extraction classification (`text_native` or `scanned_or_mixed`); a text-native PDF may also contain tables or use a two-column layout.
+
+The source PDFs are publicly accessible at their recorded URLs. Public access does not itself grant redistribution rights; no PDF binaries are committed, and reuse terms should be checked before redistributing source material.
+
+Build the vector index:
 
 ```bash
 python ingest.py --input data/pdfs --manifest data/manifest.csv --collection policylens_v1
