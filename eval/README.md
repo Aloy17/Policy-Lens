@@ -4,7 +4,7 @@
 
 This evaluation compares fixed-size and structure-aware chunking on the same 25-question gold set, embedding model, Chroma collections, and retrieval depth. A result is relevant only when its `doc_id` equals the gold document and its inclusive page range overlaps the gold page range. This is a retrieval-layer evaluation; it does not evaluate answer generation.
 
-The current question set has five table questions and five paraphrased questions. The KYC source metadata has been corrected to the 2016 issue date and 2025-08-14 consolidation date while retaining the legacy `rbi_kyc_2024` ID for index compatibility. q16–q20 have been checked against the official FPI annex; q21–q24 have been checked against the official 2022 Digital Lending notification; q25 has been narrowed to the commercial-bank audited-return row. The remaining KYC page references and all local PDF page alignment still require a final validation pass. Do not present the evaluation as fully gold-validated yet.
+The current question set has five table questions and five materially paraphrased questions. A structured semantic/category audit of all 25 questions is recorded in `gold_set_review.md`; the three document IDs and all inclusive page ranges pass manifest-bound checks. Official-source content checks cover q01–q25, including the FPI annex, Digital Lending notification, and commercial-bank filing row. This does not establish exact local-corpus PDF page alignment. Do not present the evaluation as fully gold-validated yet.
 
 ## Validate the gold-set file structure
 
@@ -54,7 +54,7 @@ Historical `retrieval_log.csv`, `retrieval_log_final.csv`, `metrics.csv`, and `d
 
 ## Latest benchmark snapshot (2026-11-07)
 
-The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall Recall@10 is tied at 0.76; structure-aware leads on Recall@3, Recall@5, and MRR, while fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Per-strategy query latency and the selected disagreement cases have now been reviewed and documented. Database directory footprint and packaged-ingestion measurements remain outstanding before a final operational recommendation.
+The revised 25-question gold set was evaluated locally against the packaged Chroma database. The measured results and provenance are recorded in [`benchmark_run_2026-11-07.md`](benchmark_run_2026-11-07.md). Overall Recall@10 is tied at 0.76; structure-aware leads on Recall@3, Recall@5, and MRR, while fixed-size leads on the five-question paraphrased subset. Structure-aware also has 14,157 indexed chunks versus 5,973 for fixed-size. Per-strategy query latency, disagreement evidence, database footprint, and packaged-ingestion measurements are documented in the benchmark run record.
 
 After the run, generate the current per-question and disagreement summaries:
 
@@ -85,13 +85,14 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 
 ## Remaining validation before Phase 3 closure
 
-1. Complete the local PDF page-alignment pass for every gold reference in `questions.csv`; confirm the cited content is present on the specified page range. Record any correction and reason in `gold_set_review.md`. Official source-text checks are documented there, but they do not replace checking the exact local corpus files.
-2. Confirm that exactly five questions genuinely require table values and exactly five are materially paraphrased from source wording. A label count alone does not prove category quality.
-3. Inspect the three most informative strategy disagreements. Explain the retrieved content and page evidence, not merely the rank difference.
-4. Inspect ten deterministically sampled PDF pages using `sample_inspection_pages.py`; record extraction/OCR/table/layout quality in `manual_inspection_template.csv`.
-5. Capture before/after cleaning for one page and estimate OCR word accuracy on an image-backed page using a manually transcribed reference sample.
-6. Record ingestion elapsed time and total pages from the actual packaged run; record database directory size and machine/runtime metadata. Local embedding API charges are zero; local compute is not cost-free.
-7. Treat the 2022 Digital Lending Guidelines as a historical circular: RBI's later Digital Lending Directions, 2025 supersede the earlier framework. Do not imply the 2022 circular is current policy.
+1. **Exact local PDF page alignment remains open.** The semantic audit and official-source text checks are recorded in `gold_set_review.md`, but the exact local corpus PDFs must be checked before accepting every page label. The PDF files are not stored as repository text files, so this check must run against the local packaged corpus.
+2. **Category review completed at the semantic level.** q16–q20 each require a table row/value or footnote; q02, q08, q14, q21, and q23 are materially paraphrased. The remaining risk is rendered table-cell fidelity, not the category count.
+3. **Disagreement review completed.** q04, q17, and q13 are documented in `eval/disagreement_analysis.md`; do not infer causality from rank differences alone.
+4. **Ten-page extraction sample completed.** Findings and limitations are recorded in `manual_inspection_findings.md`. Visual confirmation of S03, S05, S06, and S07 remains incomplete; treat the findings as extraction-output observations, not visually confirmed defects.
+5. **Before/after cleaning evidence is still absent.** Add one source-linked example or explicitly retain it as a report limitation.
+6. **OCR accuracy is unmeasured.** The ten-page sample had no OCR candidates and OCR was not run. A separate manually transcribed scan test is needed for an accuracy estimate; otherwise report this as unmeasured.
+7. **Operational measurements are complete** and recorded in `benchmark_run_2026-11-07.md`: packaged ingestion, unchanged rerun, corpus/database footprint, collection vector-segment sizes, and query latency.
+8. Treat the 2022 Digital Lending Guidelines as a historical circular: RBI's later Digital Lending Directions, 2025 supersede the earlier framework. Do not imply the 2022 circular is current policy.
 
 ## Interpretation limits
 
