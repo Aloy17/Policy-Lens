@@ -38,7 +38,7 @@
 3. For high-impact numeric or regulatory answers, verify the value against the original PDF page or a separately validated table representation.
 4. Keep the native extracted text alongside table serialization so that retrieval and answer validation can fall back to the original reading-order text.
 5. Report OCR accuracy as **not evaluated** for this sample. A separate representative scan sample with manually transcribed ground truth is required to calculate OCR word accuracy.
-6. Complete visual checks of S03, S05, S06, and S07 before treating these page-level findings as fully human-verified.
+6. Visual verification of S03, S05, S06, and S07 against rendered PDF pages was not completed in this review. Treat the table/layout observations as extraction-output findings and unresolved visual-validation items, not visually confirmed defects.
 
 ## Interpretation
 
