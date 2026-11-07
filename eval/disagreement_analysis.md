@@ -1,31 +1,46 @@
 # Phase 3 — selected retrieval disagreement analysis
 
-Status: **retrieval evidence export prepared; passage-level interpretation pending**.
+Status: **ranked passage previews inspected; source-page and gold-label verification still pending**.
 
-This review uses the Phase 3 disagreement summary supplied from the local evaluation run. The underlying `retrieval_log_phase3.csv` was not committed to the repository, so the retrieved passage previews cannot yet be independently inspected from this branch.
+Evidence source: the committed `selected_disagreement_evidence.csv`, generated from the user's successful Phase 3 run. It contains the top 10 results for each strategy for q04, q17, and q13 (60 rows total). Each preview is truncated to 200 characters; this supports a preliminary passage-level interpretation, not a full source audit.
 
-## Selected cases
+## q04 — Beneficial-owner identification
 
-| Question | Gold reference | Fixed-size result | Structure-aware result | Review purpose |
-|---|---|---|---|---|
-| q04 — Beneficial-owner identification | `rbi_kyc_2024`, PDF page 38 | No gold hit in top 10; top result is SEBI Master Circular for Depositories, pages 20–21 | Gold passage at rank 1, RBI KYC Direction page 38 | Clear structure-aware success; inspect whether each returned passage actually addresses beneficial-owner identification |
-| q17 — FPI proof of address | `rbi_kyc_2024`, PDF pages 94–95 | First gold hit at rank 8; top result is SEBI Depositories, pages 11–12 | Gold passage at rank 1, RBI KYC Direction page 94 | Table-question case; inspect extracted table headers, row/category alignment, and whether the retrieved text preserves the relevant cell |
-| q13 — KYC/AML-CFT staff training | `rbi_kyc_2024`, PDF page 70 | First gold hit at rank 5; top result is PFRDA KYC AML CFT, page 7 | No gold hit in top 10; same PFRDA document ranks first | Counterexample; compare the PFRDA passage with the RBI source passage and assess whether the query is sufficiently discriminative |
+Gold reference: `rbi_kyc_2024`, PDF page 38.
 
-## Interpretation guardrails
+- **Fixed-size:** no gold-page hit in the top 10. Rank 1 is SEBI's Master Circular for Depositories, pages 20–21 (score 0.611). Rank 2 is the RBI KYC document, pages 5–6 (score 0.4974); its preview discusses the ownership/entitlement threshold for a partnership, but it does not match the selected page-38 gold reference.
+- **Structure-aware:** rank 1 is the expected RBI KYC document, page 38 (score 0.7235), with section metadata `Part IV - Identification of Beneficial Owner`. Its preview begins with paragraph 34, explicitly addressing identification of beneficial owners when opening an account for a legal person.
 
-- These are retrieval outcomes under the current corpus, question set, embedding model, and index settings—not universal claims about either chunking strategy.
-- Rank differences alone do not establish why a strategy succeeded or failed.
-- q17 is labelled as a table question, but that label does not prove table extraction caused the observed ranking.
-- q13's shared top-ranked PFRDA document may indicate overlapping terminology, but this must be confirmed by reading both passages.
-- Gold page references remain provisional until checked against the exact local PDF version and page-number convention.
+**Evidence-based interpretation:** structure-aware retrieval surfaces the exact expected section as its first result. Fixed-size retrieval is distracted by semantically related beneficial-owner passages in other documents and by an earlier RBI definition passage. This is a ranking observation; it does not by itself prove that chunk boundaries caused the improvement.
 
-## Next evidence step
+## q17 — FPI proof-of-address table requirement
 
-Once `eval/retrieval_log_phase3.csv` is available locally, run:
+Gold reference: `rbi_kyc_2024`, PDF pages 94–95. This is one of the five table-labelled questions.
 
-```bash
-PYTHONPATH=. python eval/inspect_disagreements.py
-```
+- **Fixed-size:** first gold-page hit at rank 8 (pages 93–94; score 0.4879). Its top result is SEBI Depositories, pages 11–12, whose preview lists general proof-of-address documents rather than the FPI category table.
+- **Structure-aware:** rank 1 is the expected RBI KYC document, page 94 (score 0.5804), section `Annex IV`. Its preview preserves the table title and column headers for FPI type and Categories I, II, and III. A second gold result at rank 3 (pages 94–95) is explicitly marked `[TABLE 1]` and its preview includes the category columns. Rank 8 also retrieves page 95 with the UBO proof-of-address row and category-specific values.
 
-Review `eval/selected_disagreement_evidence.csv` alongside the source PDF pages. Record passage-level observations here, then update the gold-set review register if a cited page or label is incorrect. Do not describe a causal mechanism unless the retrieved chunk contents support it.
+**Evidence-based interpretation:** structure-aware results bring the relevant FPI annex/table to the top and retain visible table structure in the preview. The fixed-size top result matches the phrase “proof of address” but belongs to a different regulatory context. This supports a table-retrieval observation, although full-cell verification against the source PDF is still required before stating the Category III answer.
+
+## q13 — KYC/AML-CFT staff training
+
+Gold reference: `rbi_kyc_2024`, PDF page 70.
+
+- **Fixed-size:** first gold hit at rank 5 (RBI pages 69–71; score 0.4862). Its preview explicitly mentions that training should differ for frontline staff, compliance staff, and staff dealing with new customers.
+- **Structure-aware:** no gold-page hit in the top 10. Its rank 1 result is PFRDA's KYC/AML/CFT master circular, page 7 (score 0.567); the preview discusses the KYC/AML/CFT policy and reporting entities. Its rank 2 is the RBI KYC document, pages 17–18, concerning designated-director/principal-officer responsibilities rather than the training passage.
+- Both strategies rank the PFRDA document first, but the previews do not establish that this is the reason structure-aware missed the RBI training passage.
+
+**Evidence-based interpretation:** this is a counterexample to the overall structure-aware advantage: fixed-size retrieves the expected training passage within the top five, while structure-aware does not retrieve it within the top ten. The shared PFRDA top result suggests broad KYC/AML/CFT terminology overlap, but the available previews are insufficient to attribute the miss to a specific chunking or parsing defect.
+
+## Summary for the report
+
+These three cases provide two structure-aware wins (q04 and q17) and one fixed-size win (q13). The outcomes align with the overall measured Recall@10 and MRR advantage for structure-aware chunking in this 25-question set, while q13 demonstrates that the result is not uniform.
+
+Do not claim universal superiority. The evaluation is limited to this question set and current corpus/index configuration. The CSV previews are only 200 characters; full chunk contents and source PDF pages must be checked before finalizing causal explanations or the exact FPI table answer.
+
+## Remaining checks
+
+1. Verify the exact PDF pages and printed-page convention for q04, q17, and q13; then verify all other gold references.
+2. For q17, inspect the complete table rows and column alignment in the source PDF before accepting the answer label.
+3. For q13, compare the complete RBI training passage with the PFRDA rank-1 passage; retain the failure as a counterexample unless stronger evidence explains it.
+4. Complete the ten-page parsing/OCR inspection and before/after cleaning evidence.
