@@ -87,9 +87,18 @@ The benchmark, raw retrieval outputs, per-question analysis, selected disagreeme
 3. Complete or explicitly disposition the four visual checks (S03, S05, S06, S07). The documented concerns include S03's distorted multiplier and S05/S07's table layout/association.
 4. Add one source-linked before/after cleaning example.
 5. OCR accuracy remains unmeasured. Either test a representative scanned page against a manually transcribed reference or explicitly retain OCR accuracy as an unmeasured limitation for this phase.
-6. Record fixed-size and structure-aware vector-segment sizes, packaged ingestion elapsed time, total pages processed, corpus size, and rerun/skip/failure behaviour. These measurements are now recorded; the shared SQLite storage remains unallocated by collection.
-7. Update the evaluation report with the final limitations and a chunking recommendation that considers retrieval quality, index footprint, and measured latency.
+6. **Complete — operational measurements recorded:** fixed-size and structure-aware vector segments are 9.9 MB and 25 MB; the shared SQLite file is 224 MB; total Chroma footprint is 259 MB; the PDF corpus is 102 MB across 37 PDFs. The packaged full ingestion run processed 4,670 pages (216 OCR pages), produced 5,320 fixed-size and 12,920 structure-aware chunks, and took 897.46 seconds. The unchanged rerun skipped all 37 documents in 1.92 seconds with no failures or missing files. The shared SQLite storage cannot be apportioned reliably by collection.
+7. **In progress — report synthesis:** incorporate the measured trade-offs and retain explicit limitations for the incomplete gold-page audit, visual checks, and before/after cleaning evidence.
 
 Per-strategy query latency is already recorded above (median/p95: fixed-size 2.648/4.808 ms; structure-aware 2.318/3.104 ms). The raw retrieval log, metrics, run metadata, per-question results, disagreements, and selected evidence are already committed; these are not outstanding tasks.
 
 Phase 3 remains open until the remaining evidence is completed or each item is explicitly accepted as a documented limitation with an agreed scope.
+
+
+## Operational evidence disposition
+
+The operational measurements listed above are complete. The packaged corpus contains 37 PDFs (102 MB); the packaged Chroma database is 259 MB. The two vector directories map through Chroma's segment-to-collection metadata to the fixed-size (9.9 MB) and structure-aware (25 MB) collections respectively. The shared 224 MB SQLite file stores metadata for both collections and is not divided between them.
+
+The 4,670 processed-page count is the ingestion log's run total; it is not interchangeable with the 5,050-page sampling frame used by the deterministic manual-inspection exporter. The benchmark's indexed chunk totals (5,973 and 14,157) are collection counts at retrieval-evaluation time, and are distinct from the chunk counters emitted by the packaged ingestion run (5,320 and 12,920). Preserve these as separate measurements rather than forcing them to match.
+
+The full packaged ingestion took 897.46 seconds (14 min 57 sec). The subsequent unchanged-source run took 1.92 seconds and skipped all 37 manifest documents, with zero failures and zero missing documents. This is evidence of the no-change skip path, not a second full-ingestion timing.
