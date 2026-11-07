@@ -64,6 +64,23 @@ This pass checked the canonical CSV against the manifest and the existing source
 
 **Paraphrased questions (q02, q08, q14, q21, q23):** all five ask for the same underlying rule using question wording rather than copying a distinctive source sentence. They are materially rephrased at the question level. q02 and q08 are close to the source's legal concepts but do not reproduce the source clause wording. The labels are accepted.
 
+### Additional source-page inspection — 2026-11-07
+
+The manifest's published RBI source URLs were opened and their answer-bearing passages inspected. This strengthens the content-level checks but must not be represented as a byte-for-byte inspection of the user's packaged local PDFs; the local PDFs are not available in the repository connector or this execution environment.
+
+- **KYC q06:** paragraph 55, Secrecy Obligations and Sharing of Information, states the secrecy/confidentiality rule and its exceptions. The question's target is supported.
+- **KYC q07:** paragraph 56(b) specifies CKYCR upload within 10 days of commencement of an account-based relationship.
+- **KYC q05:** paragraph 40 begins in the Enhanced Due Diligence section; its listed non-face-to-face controls continue across the next page. The two-page target is appropriate at source level.
+- **KYC q14:** paragraph 41 specifies PEP identification controls, source-of-funds/wealth measures, senior-management approval and ongoing enhanced monitoring. The question is distinct from q05.
+- **KYC q09:** paragraph 64 begins with cross-border originator/beneficiary information and continues into responsibilities and further obligations. The broad four-page range needs exact local page confirmation; do not narrow it based on a snippet alone.
+- **KYC q16–q20:** Annex IV begins on the source PDF's Annex IV pages. The constitutive-documents, proof-of-address, photographs, UBO identity, and authorized-signatories rows are present. q17's Category III proof-of-address cell explicitly excludes Power of Attorney; q18's photograph exemption has a footnote; q20 has category-specific Global Custodian language. Preserve these qualifications in answer keys.
+- **Digital Lending q21:** paragraph 2 states outsourcing to an LSP/DLA does not diminish the RE's obligations.
+- **Digital Lending q22:** the circular's transition clause gives REs until November 30, 2022 for existing digital loans to comply.
+- **Digital Lending q23:** Annex I paragraph 4.1 assigns LSP fees/charges to the RE, not directly to the borrower.
+- **Digital Lending q24:** Annex I paragraphs 5.2.1–5.2.3 require a standardized KFS before contract execution and specify its contents, including APR, recovery mechanism, grievance redressal contact, and cooling-off/look-up period.
+- **NBFC filing q25:** the commercial-bank table on source PDF page 1 states five working days from the auditor-report signing date.
+
+These are source-content confirmations, not visual inspection findings. In particular, browser-extracted PDF text cannot establish that the local PDF's rendered table layout, OCR output, or cleaned text preserves the same associations.
 ### Current audit conclusion
 
 The metadata and semantic/category audit passes. No CSV correction is justified by the evidence currently available. **The gold set is not yet fully page-validated:** local PDF page alignment remains outstanding for all 25 records, including records with official-source checks. q17 also retains a specific table-cell association caveat. Do not rerun or overwrite the benchmark merely because this review was expanded; rerun only if a verified gold document/page label changes.
