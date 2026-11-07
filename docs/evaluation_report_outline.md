@@ -9,13 +9,13 @@
 - Main result (2026-11-07): fixed-size Recall@3/5/10 = 0.52/0.56/0.76, MRR = 0.527762; structure-aware = 0.56/0.68/0.76, MRR = 0.558667.
 - Subset signal: structure-aware leads on table questions; fixed-size leads on paraphrased questions (n=5 each).
 - Selected disagreement review: q04 and q17 favour structure-aware; q13 favours fixed-size. See `eval/disagreement_analysis.md`.
-- A final operational recommendation remains pending index disk footprint and packaged-ingestion measurements; per-strategy query latency is now available.
+- Packaged-ingestion timing, corpus size, combined database size, and per-strategy vector-segment sizes are now recorded. The final recommendation still needs the remaining gold-set and cleaning-evidence decisions.
 
 ## 2. System and corpus
 - Ingestion architecture: PyMuPDF parsing, table extraction, OCR triage, cleaning, two chunking strategies, local sentence-transformer embeddings, Chroma.
 - Corpus composition: 37 manifest documents; add document types, issuers, page counts, and scanned/mixed share from the final manifest.
 - Versions and configuration: Python, package versions, embedding model, Chroma version, chunk sizes/overlap, collection names.
-- Index evidence: benchmark collections contain 5,973 fixed-size and 14,157 structure-aware chunks. The current packaged Chroma database occupies 259 MB total (224 MB SQLite file plus segment directories of 25 MB and 9.9 MB); per-collection disk attribution is pending.
+- Index evidence: benchmark collections contain 5,973 fixed-size and 14,157 structure-aware chunks. The current packaged Chroma database occupies 259 MB total: a shared 224 MB SQLite file, a 9.9 MB fixed-size vector segment, and a 25 MB structure-aware vector segment. The 37-PDF source corpus occupies 102 MB. The structure-aware vector segment is about 2.53× the fixed-size segment; shared SQLite storage is not apportioned.
 
 ## 3. Evaluation design
 - Gold-set composition: 25 questions, exactly five table-dependent and five materially paraphrased questions.
@@ -36,7 +36,7 @@
 
 - Table subset (n=5): fixed Recall@3/5/10 = 0.40/0.40/0.80, MRR 0.453571; structure-aware = 0.80/0.80/0.80, MRR 0.800000.
 - Paraphrased subset (n=5): fixed = 0.60/0.60/1.00, MRR 0.653571; structure-aware = 0.40/0.40/0.60, MRR 0.433333.
-- Structure-aware has about 2.37x as many indexed chunks. Per-strategy Chroma search latency (25 queries each): fixed-size median/p95 2.648/4.808 ms; structure-aware 2.318/3.104 ms. These exclude query embedding and model loading. Index disk sizes remain to be measured.
+- Structure-aware has about 2.37x as many indexed chunks. Per-strategy Chroma search latency (25 queries each): fixed-size median/p95 2.648/4.808 ms; structure-aware 2.318/3.104 ms. These exclude query embedding and model loading. Vector-segment sizes: fixed-size 9.9 MB; structure-aware 25 MB. Shared SQLite file: 224 MB.
 
 ## 5. Disagreement analysis
 - Revised ranked evidence for q04, q17, q13 is documented in `eval/disagreement_analysis.md`.
@@ -54,7 +54,7 @@
 
 ## 7. Efficiency, robustness, and scaling
 - Packaged ingestion log (2026-11-07): 37 documents in manifest; 33 ingested, 4 skipped, 0 failed/missing; 4,670 pages, 216 OCR pages; 5,320 fixed-size and 12,920 structure-aware chunks; 897.46 seconds total (about 14 min 57 sec). A later unchanged rerun skipped all 37 documents in 1.92 seconds. These ingestion counts are from the packaged ingestion log and should not be conflated with the retrieval benchmark's indexed chunk counts.
-- Current combined Chroma database footprint: 259 MB (224 MB SQLite plus two segment directories of 25 MB and 9.9 MB); per-collection attribution remains pending.
+- Current combined Chroma database footprint: 259 MB (224 MB shared SQLite, 9.9 MB fixed-size vector segment, 25 MB structure-aware vector segment). Source PDF corpus: 102 MB.
 - Per-strategy Chroma search latency is measured (median/p95: fixed-size 2.648/4.808 ms; structure-aware 2.318/3.104 ms), excluding query embedding and model loading.
 - Embedding/API cost: local Sentence Transformers inference; no hosted embedding API charge for this benchmark.
 - Idempotent rerun evidence: 37 unchanged documents skipped in 1.92 seconds, with zero failures or missing documents.
