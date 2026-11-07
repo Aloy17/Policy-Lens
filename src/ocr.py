@@ -47,8 +47,11 @@ def apply_ocr_to_pages(
         if page["page_number"] in ocr_page_numbers:
             ocr_text = ocr_page(pdf_path, page["page_number"], language)
             if ocr_text.strip():
-                page_data["text"] = ocr_text
-                page_data["word_count"] = len(ocr_text.split())
+                table_text = page.get("table_text", "")
+                page_data["text"] = ocr_text.rstrip()
+                if table_text:
+                    page_data["text"] += "\n\n" + table_text
+                page_data["word_count"] = len(page_data["text"].split())
                 page_data["has_text"] = True
             page_data["ocr_used"] = True
         else:
