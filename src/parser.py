@@ -54,6 +54,42 @@ def _image_coverage(page: pymupdf.Page) -> float:
     return min(1.0, image_area / page_area)
 
 
+def _extract_page_text(page: pymupdf.Page) -> str:
+    """Extract page text in column order when a two-column layout is detected."""
+    blocks = []
+    for block in page.get_text("blocks"):
+        if len(block) < 7 or not isinstance(block[4], str):
+            continue
+        text = block[4].strip()
+        if text:
+            blocks.append((float(block[0]), float(block[1]), float(block[2]),
+                           float(block[3]), text))
+
+    if not blocks:
+        return page.get_text("text", sort=True)
+
+    midpoint = page.rect.width / 2
+    left = [b for b in blocks if b[2] <= midpoint + page.rect.width * 0.04]
+    right = [b for b in blocks if b[0] >= midpoint - page.rect.width * 0.04]
+    narrow = [b for b in blocks if (b[2] - b[0]) < page.rect.width * 0.65]
+
+    # Require multiple blocks in both halves before assuming columns.
+    if len(left) < 2 or len(right) < 2 or len(narrow) < 4:
+        return page.get_text("text", sort=True)
+
+    spanning = [b for b in blocks if b not in left and b not in right]
+    column_top = min([b[1] for b in left + right])
+    column_bottom = max([b[3] for b in left + right])
+    top = sorted([b for b in spanning if b[1] <= column_top], key=lambda b: b[1])
+    bottom = sorted([b for b in spanning if b[1] > column_bottom], key=lambda b: b[1])
+    left = sorted(left, key=lambda b: (b[1], b[0]))
+    right = sorted(right, key=lambda b: (b[1], b[0]))
+    middle = sorted([b for b in spanning if b not in top and b not in bottom],
+                    key=lambda b: (b[1], b[0]))
+    ordered = top + left + middle + right + bottom
+    return "\\n".join(block[4] for block in ordered)
+
+
 def parse_pdf(pdf_path: str | Path) -> list[dict[str, Any]]:
     """
     Extract page-level text and detected tables while preserving page numbers.
@@ -66,7 +102,7 @@ def parse_pdf(pdf_path: str | Path) -> list[dict[str, Any]]:
 
     with pymupdf.open(pdf_path) as document:
         for page_number, page in enumerate(document, start=1):
-            text = page.get_text("text", sort=True)
+            text = _extract_page_text(page)
             tables = _extract_tables(page)
             if tables:
                 text = text.rstrip() + "\n\n" + "\n\n".join(tables)
