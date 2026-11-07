@@ -8,13 +8,13 @@ The current question set has five table questions and five paraphrased questions
 
 ## Validate the gold-set file structure
 
-Before running retrieval evaluation, validate the CSV schema, ordered IDs, positive inclusive page ranges, and required category counts:
+Before running retrieval evaluation, validate the CSV schema, ordered IDs, required category counts, document IDs against the manifest, and inclusive page ranges against each document's manifest page count:
 
 ```bash
 PYTHONPATH=. python eval/validate_gold_set.py
 ```
 
-This is a structural check only. It does **not** validate source correctness, page alignment, table-question quality, or paraphrase quality; those remain documented manual review requirements below.
+This checks structure and catches page ranges that exceed the manifest's declared PDF page count. It does **not** prove that a passage appears on the labelled page, validate source correctness, or assess table-question/paraphrase quality; those still require manual review.
 
 ## Run against the packaged index
 
