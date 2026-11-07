@@ -1,5 +1,5 @@
 import re
-from typing import Any, Callable
+from typing import Any
 
 
 def tokenize(text: str) -> list[str]:
@@ -134,7 +134,8 @@ def structure_aware_chunks(pages: list[dict[str, Any]], target_size: int = 500,
                         any(buffer_ocr), tokenizer))
                     buffer_ids, buffer_pages, buffer_ocr = [], [], []
         if buffer_ids:
-            if chunks and len(buffer_ids) < min_size:
+            if (chunks and len(buffer_ids) < min_size
+                    and chunks[-1]["section_title"] == title):
                 previous = chunks[-1]
                 combined = previous["text"] + " " + _decode(buffer_ids, tokenizer)
                 if _token_count(combined, tokenizer) <= max_size:
