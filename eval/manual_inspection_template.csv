@@ -1,0 +1,1 @@
+sample_id,doc_id,pdf_page,printed_page,layout_type,source_text_present,ocr_used,ocr_reference_words,ocr_correct_words,estimated_word_accuracy,table_present,table_extraction_complete,reading_order_correct,header_footer_removed,cleaning_removed_legitimate_text,quality_issue,notes
