@@ -49,10 +49,10 @@ def load_manifest(manifest_path: str) -> pd.DataFrame:
     return pd.read_csv(manifest_path)
 
 
-def get_existing_source_hash(store: VectorStore, doc_id: str) -> str | None:
+def get_existing_source_hashes(store: VectorStore, doc_id: str) -> set[str]:
     result = store.collection.get(where={"doc_id": doc_id}, include=["metadatas"])
     metadatas = result.get("metadatas", [])
-    return metadatas[0].get("source_hash") if metadatas else None
+    return {item["source_hash"] for item in metadatas if item.get("source_hash")}
 
 
 def process_document(pdf_path: Path, document: dict, config: dict, embedder: Embedder,
@@ -62,14 +62,14 @@ def process_document(pdf_path: Path, document: dict, config: dict, embedder: Emb
     start_time = time.perf_counter()
     logger.info("PROCESSING | %s", pdf_path.name)
     source_hash = calculate_file_hash(pdf_path)
-    existing_hash = get_existing_source_hash(structure_store, doc_id)
-    fixed_hash = get_existing_source_hash(fixed_store, doc_id)
-    if existing_hash == source_hash and fixed_hash == source_hash:
+    existing_hashes = get_existing_source_hashes(structure_store, doc_id)
+    fixed_hashes = get_existing_source_hashes(fixed_store, doc_id)
+    if existing_hashes == {source_hash} and fixed_hashes == {source_hash}:
         logger.info("SKIP | %s | unchanged in both indexes", doc_id)
         return {"status": "skipped", "doc_id": doc_id, "pages": 0, "ocr_pages": 0,
                 "fixed_chunks": 0, "structure_chunks": 0,
                 "seconds": time.perf_counter() - start_time}
-    if existing_hash is not None or fixed_hash is not None:
+    if existing_hashes or fixed_hashes:
         logger.info("UPDATE | %s | source hash changed or index incomplete", doc_id)
     pages = parse_pdf(pdf_path)
     pages = apply_ocr_to_pages(
