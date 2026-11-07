@@ -11,13 +11,13 @@ The current question set has exactly five records marked as table questions and 
 From the repository root, with the packaged app database present:
 
 ```bash
-python eval/evaluate.py \
+PYTHONPATH=. python eval/evaluate.py \
   --db-path "dist/PolicyLens/PolicyLens Data/chroma_db" \
   --collection policylens_v1 \
   --questions eval/questions.csv \
   --top-k 10 \
   --output eval/retrieval_log_phase3.csv
-python eval/analyze_results.py \
+PYTHONPATH=. python eval/analyze_results.py \
   --log eval/retrieval_log_phase3.csv \
   --questions eval/questions.csv
 ```
