@@ -30,8 +30,19 @@ Outputs:
 - `run_metadata_phase3.json`: DB path, collection counts, model/config, machine/runtime details, and latency summary.
 - `per_question_phase3.csv`: first relevant rank and hit flags per strategy.
 - `disagreements_phase3.csv`: questions where top-1 document or Recall@10 outcome differs.
+- `selected_disagreement_evidence.csv`: ranked passage previews for q04, q17, and q13, exported for report review.
 
 Historical `retrieval_log.csv`, `retrieval_log_final.csv`, `metrics.csv`, and `disagreements.csv` are retained as historical outputs and are not overwritten.
+
+## Selected disagreement evidence
+
+After the Phase 3 evaluation and disagreement analysis, export the three report examples with their retrieved passage previews:
+
+```bash
+PYTHONPATH=. python eval/inspect_disagreements.py
+```
+
+The default cases are q04 (beneficial-owner identification), q17 (FPI table proof-of-address requirement), and q13 (KYC/AML-CFT staff training). The output contains each strategy's ranked document, page range, section, score, gold-hit flag, latency, and 200-character retrieved preview. This is evidence extraction, not a causal explanation: inspect the full source PDF pages and chunk text before attributing an outcome to chunking or table handling.
 
 ## Metric definitions
 
