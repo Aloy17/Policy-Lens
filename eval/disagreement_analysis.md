@@ -2,7 +2,7 @@
 
 Status: **latest ranked evidence reviewed; source-PDF visual verification remains incomplete**.
 
-Evidence: `eval/selected_disagreement_evidence.csv`, generated from the revised 2026-11-07 benchmark. It contains the top 10 results for each strategy for q04, q17, and q13 (60 rows). Previews are truncated; conclusions below are limited to the visible ranked evidence and gold-page-hit flags.
+Evidence: `eval/rebenchmark_2026-11-07/selected_disagreement_evidence.csv` contains the top 10 results for each strategy for q04, q17, and q13 (60 rows). `eval/rebenchmark_2026-11-07/q14_evidence.csv` contains the top 10 results for each strategy for q14 (20 rows). The previews are truncated; conclusions are limited to the visible ranked evidence and gold-page-hit flags. Previews are truncated; conclusions below are limited to the visible ranked evidence and gold-page-hit flags.
 
 ## q04 — Beneficial-owner identification
 
@@ -24,7 +24,7 @@ Gold reference: `rbi_kyc_2024`, PDF pages 94–95. Table-labelled question.
 
 ## q13 — KYC/AML-CFT staff training
 
-Gold reference: `rbi_kyc_2024`, PDF page 70.
+Gold reference: `rbi_kyc_2024`, PDF pages 69–70.
 
 - **Fixed-size:** first gold hit at rank 5 (RBI pages 69–71; score 0.4862). The preview explicitly says training should differ for frontline staff, compliance staff, and staff dealing with new customers.
 - **Structure-aware:** no gold-page hit in the top 10. Rank 1 is PFRDA's KYC/AML/CFT master circular, page 7 (score 0.567); rank 2 is RBI KYC pages 17–18, which concern designated-director/principal-officer responsibilities rather than the target training passage.
@@ -32,9 +32,9 @@ Gold reference: `rbi_kyc_2024`, PDF page 70.
 
 **Interpretation:** this is a counterexample to the overall structure-aware lead: fixed-size retrieves the expected passage at rank 5; structure-aware misses it within top 10. The result demonstrates that the aggregate advantage is not uniform and cannot be explained from these previews alone.
 
-## Summary
+## q14 — Politically exposed person controls\n\nGold reference: `rbi_kyc_2024`, PDF page 46.\n\n- **Fixed-size:** first gold-page hit at rank 7 (RBI KYC pages 45–47; score 0.4245). Ranks 1–6 are other documents, largely containing semantically similar conflict-of-interest material.\n- **Structure-aware:** first gold-page hit at rank 2 (RBI KYC pages 45–46; score 0.4805). Rank 1 is a SEBI Research Analysts conflict-of-interest passage (score 0.4837).\n\n**Interpretation:** structure-aware improves the first gold-page rank from 7 to 2, but neither strategy retrieves the gold page at rank 1. The visible rank-2 preview begins with simplified-due-diligence material and does not itself expose the PEP controls. The evidence supports a ranking improvement, not a claim that the complete PEP answer was retrieved at rank 2. Inspect the full passage/source page before making a stronger content-level attribution.\n\n## Summary
 
-The selected cases show **two structure-aware wins (q04, q17) and one fixed-size win (q13)**. This is consistent with, but does not independently prove, the aggregate results:
+The selected cases show **two clear structure-aware wins (q04, q17), one fixed-size win (q13), and one structure-aware ranking improvement (q14)**. This is consistent with, but does not independently prove, the aggregate results:
 
 | Metric | Fixed-size | Structure-aware |
 |---|---:|---:|
@@ -50,7 +50,7 @@ Structure-aware leads early retrieval and MRR overall and on the five table-labe
 - The 25-question gold set is small, RBI-concentrated, and not a blind holdout.
 - The 60 selected rows contain truncated previews, not full source passages.
 - q17's exact table-cell alignment must be checked in the source PDF before asserting the Category III answer.
-- q04 and q13 source-page alignment should be confirmed as part of the full gold-page audit.
+- q04, q13 and q14 source-page references were checked against the local PDF export; q13 is pages 69–70 and q14 is page 46.
 - The 10-page parser sample found table/numeric/reading-order risks; visual review of S03/S05/S06/S07 is not complete. Do not represent these as visually verified.
 - OCR accuracy was not measured: all 10 sampled pages were classified as native text and no OCR was run.
 - No causal claims about chunking, parsing, or cleaning should be made from rank differences alone.
