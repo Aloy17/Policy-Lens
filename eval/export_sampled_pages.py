@@ -19,7 +19,6 @@ def parse_args():
     parser.add_argument("--manifest", default="data/manifest.csv")
     parser.add_argument("--pdf-dir", required=True, help="Directory containing <doc_id>.pdf files.")
     parser.add_argument("--output-dir", default="eval/manual_inspection")
-    parser.add_argument("--dpi", type=int, default=120, help="Review PDF render DPI (36-300).")
     parser.add_argument("--ocr-language", default="eng")
     parser.add_argument("--min-words", type=int, default=20)
     parser.add_argument("--image-coverage-threshold", type=float, default=0.5)
@@ -46,9 +45,6 @@ def printed_page_hint(text):
 
 def main():
     args = parse_args()
-    if not 36 <= args.dpi <= 300:
-        raise SystemExit("--dpi must be between 36 and 300.")
-
     template = pd.read_csv(args.template).fillna("")
     required = {"sample_id", "doc_id", "pdf_page"}
     if not required.issubset(template.columns):
@@ -70,7 +66,6 @@ def main():
         f"- Sample size: {len(template)}",
         f"- PDF directory: {pdf_dir}",
         f"- OCR execution: {'disabled' if args.no_ocr else 'enabled for pages meeting the configured triage rules'}",
-        f"- Review render DPI: {args.dpi}",
         "",
         "PDF page numbers are 1-based. Printed-page hints are tentative and must be checked visually.",
         "OCR candidacy is a heuristic, not proof of a scan or OCR accuracy.",
