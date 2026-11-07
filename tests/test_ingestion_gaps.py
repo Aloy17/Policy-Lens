@@ -38,9 +38,9 @@ def test_structure_chunks_keep_precise_page_ranges_and_token_limit():
 
 def test_repeated_header_removed_but_repeated_body_text_preserved():
     pages = [
-        {"text": "REGULATOR HEADER\nCommon body wording\nPage one"},
-        {"text": "REGULATOR HEADER\nCommon body wording\nPage two"},
-        {"text": "REGULATOR HEADER\nCommon body wording\nPage three"},
+        {"text": "REGULATOR HEADER\nIntro line\nSecond line\nCommon body wording\nMiddle line\nMore text\nFooter"},
+        {"text": "REGULATOR HEADER\nIntro line\nSecond line\nCommon body wording\nMiddle line\nMore text\nFooter"},
+        {"text": "REGULATOR HEADER\nIntro line\nSecond line\nCommon body wording\nMiddle line\nMore text\nFooter"},
     ]
     repeated = find_repeated_lines(pages)
     cleaned = clean_page_text(pages[0]["text"], repeated)
