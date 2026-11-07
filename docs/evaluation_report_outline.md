@@ -1,6 +1,6 @@
 # PolicyLens evaluation report — working outline
 
-> Status: measured retrieval benchmark and revised selected-disagreement analysis are committed. Gold-page audit, visual parsing checks, before/after cleaning evidence, and efficiency measurements remain incomplete or explicitly unmeasured.
+> Status: retrieval benchmark, selected-disagreement analysis, and operational footprint/ingestion measurements are committed. Remaining Phase 3 gaps are gold-page audit completion, disposition of visual parsing checks, and a source-linked before/after cleaning example (or explicit acceptance as limitations). OCR accuracy remains unmeasured.
 
 ## 1. Executive summary
 - Evaluation objective: compare fixed-size and structure-aware chunking for retrieval over the PolicyLens corpus.
@@ -9,7 +9,7 @@
 - Main result (2026-11-07): fixed-size Recall@3/5/10 = 0.52/0.56/0.76, MRR = 0.527762; structure-aware = 0.56/0.68/0.76, MRR = 0.558667.
 - Subset signal: structure-aware leads on table questions; fixed-size leads on paraphrased questions (n=5 each).
 - Selected disagreement review: q04 and q17 favour structure-aware; q13 favours fixed-size. See `eval/disagreement_analysis.md`.
-- Packaged-ingestion timing, corpus size, combined database size, and per-strategy vector-segment sizes are now recorded. The final recommendation still needs the remaining gold-set and cleaning-evidence decisions.
+- Packaged-ingestion timing, corpus size, combined database size, and per-strategy vector-segment sizes are recorded. The operational measurements are complete; the remaining decisions concern gold-set validity, visual-check disposition, and cleaning evidence.
 
 ## 2. System and corpus
 - Ingestion architecture: PyMuPDF parsing, table extraction, OCR triage, cleaning, two chunking strategies, local sentence-transformer embeddings, Chroma.
@@ -48,9 +48,9 @@
 ## 6. Parsing and data quality
 - Ten-page deterministic sample: seed 2026, 10 pages from a 5,050-page PDF sampling frame.
 - Findings in `eval/manual_inspection_findings.md`: native extraction on all 10 pages; table numeric fidelity and layout/reading-order risks observed.
-- Visual verification of S03, S05, S06, and S07 remains pending; do not describe the page-level findings as visually confirmed.
+- Visual verification of S03, S05, S06, and S07 remains pending; do not describe the page-level findings as visually confirmed. If source-page access is not available for this phase, explicitly accept these as unresolved extraction-risk limitations rather than claiming verification.
 - OCR was not run on the sample; OCR word accuracy is **not measured**. A separate manually transcribed scan test is required for an accuracy estimate.
-- Before/after cleaning example with source-page provenance remains to be added.
+- Before/after cleaning example with source-page provenance remains to be added or explicitly deferred as a documented limitation.
 
 ## 7. Efficiency, robustness, and scaling
 - Packaged ingestion log (2026-11-07): 37 documents in manifest; 33 ingested, 4 skipped, 0 failed/missing; 4,670 pages, 216 OCR pages; 5,320 fixed-size and 12,920 structure-aware chunks; 897.46 seconds total (about 14 min 57 sec). A later unchanged rerun skipped all 37 documents in 1.92 seconds. These ingestion counts are from the packaged ingestion log and should not be conflated with the retrieval benchmark's indexed chunk counts.
