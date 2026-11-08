@@ -12,6 +12,62 @@ import chromadb
 import yaml
 
 
+def select_representative_records(collection, sample_size: int) -> list[dict]:
+    """Prefer substantive passages with section metadata from beyond opening pages."""
+    count = collection.count()
+    candidate_limit = min(count, max(sample_size * 100, 500))
+    candidates = collection.get(
+        limit=candidate_limit,
+        include=["metadatas", "documents"],
+    )
+
+    ranked = []
+    for index, record_id in enumerate(candidates.get("ids", [])):
+        metadata = (candidates.get("metadatas") or [])[index] or {}
+        document = (candidates.get("documents") or [])[index] or ""
+        page_start = metadata.get("page_start", 0)
+        section_title = str(metadata.get("section_title") or "").strip()
+        passage = " ".join(document.split())
+        # Exclude opening-page contents/index fragments where possible.
+        if len(passage) < 250 or not section_title or not isinstance(page_start, (int, float)) or page_start <= 2:
+            continue
+        ranked.append((page_start, record_id, metadata, passage))
+
+    # Spread examples across the available page range instead of taking adjacent chunks.
+    ranked.sort(key=lambda item: (item[0], item[1]))
+    if len(ranked) > sample_size:
+        last = len(ranked) - 1
+        indices = [round(i * last / (sample_size - 1)) for i in range(sample_size)] if sample_size > 1 else [last // 2]
+        ranked = [ranked[i] for i in indices]
+
+    records = [
+        {
+            "id": record_id,
+            "metadata": metadata,
+            "passage_preview": passage[:200],
+        }
+        for _, record_id, metadata, passage in ranked
+    ]
+
+    # If the strict filter yields too few examples, fill from remaining substantive passages.
+    if len(records) < sample_size:
+        used_ids = {record["id"] for record in records}
+        for index, record_id in enumerate(candidates.get("ids", [])):
+            if record_id in used_ids:
+                continue
+            metadata = (candidates.get("metadatas") or [])[index] or {}
+            document = (candidates.get("documents") or [])[index] or ""
+            passage = " ".join(document.split())
+            if len(passage) < 250:
+                continue
+            records.append({"id": record_id, "metadata": metadata, "passage_preview": passage[:200]})
+            used_ids.add(record_id)
+            if len(records) >= sample_size:
+                break
+
+    return records
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db-path", default=None,
@@ -44,20 +100,7 @@ def main() -> None:
 
     for name in (args.fixed_collection, args.structure_collection):
         collection = client.get_collection(name=name)
-        sample = collection.get(
-            limit=args.sample_size,
-            include=["metadatas", "documents"],
-        )
-        records = []
-        for index, record_id in enumerate(sample.get("ids", [])):
-            metadata = (sample.get("metadatas") or [])[index] or {}
-            document = (sample.get("documents") or [])[index] or ""
-            records.append({
-                "id": record_id,
-                "metadata": metadata,
-                "passage_preview": " ".join(document.split())[:200],
-            })
-
+        records = select_representative_records(collection, args.sample_size)
         summary["collections"][name] = {
             "count": collection.count(),
             "sample_records": len(records),
