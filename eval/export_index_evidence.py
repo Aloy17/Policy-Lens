@@ -48,10 +48,15 @@ def select_representative_records(collection, sample_size: int) -> list[dict]:
     if not all_records:
         return []
 
-    # Prefer section-labelled records when enough exist. For fixed-size chunks,
-    # section_title may legitimately be empty, so page-spread sampling still applies.
-    labelled = [item for item in all_records if item["has_section"]]
-    candidates = labelled if len(labelled) >= sample_size else all_records
+    # Opening pages often contain covers, publication notices, or contents pages.
+    # Prefer later pages when enough substantive records are available.
+    later_pages = [item for item in all_records if item["page_start"] > 2]
+    page_candidates = later_pages if len(later_pages) >= sample_size else all_records
+
+    # Structure-aware records should expose section metadata where possible.
+    # Fixed-size records may legitimately have empty section_title values.
+    labelled = [item for item in page_candidates if item["has_section"]]
+    candidates = labelled if len(labelled) >= sample_size else page_candidates
     candidates.sort(key=lambda item: (item["page_start"], item["id"]))
 
     take = min(sample_size, len(candidates))
@@ -92,8 +97,8 @@ def main() -> None:
         "collections": {},
         "note": (
             "Read-only collection counts and representative records; no index writes performed. "
-            "Samples are selected across page ranges; section_title is preserved as stored "
-            "and may be empty for fixed-size chunks."
+            "Samples prefer substantive passages after page 2 and are spread across page ranges. "
+            "Section titles are preserved as stored and may be empty for fixed-size chunks."
         ),
     }
 
