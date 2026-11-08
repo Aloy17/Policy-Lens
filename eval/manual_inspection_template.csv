@@ -1,1 +1,11 @@
 sample_id,doc_id,pdf_page,printed_page,layout_type,source_text_present,ocr_used,ocr_reference_words,ocr_correct_words,estimated_word_accuracy,table_present,table_extraction_complete,reading_order_correct,header_footer_removed,cleaning_removed_legitimate_text,quality_issue,notes
+S01,meity_dpdp_rules_2025,27,,,,,,,,,,,,,,
+S02,sebi_master_circular_for_depositories,35,,,,,,,,,,,,,,
+S03,sebi_master_circular_for_depositories,170,,,,,,,,,,,,,,
+S04,sebi_master_circular_for_infrastructure_investment_trusts,19,,,,,,,,,,,,,,
+S05,sebi_master_circular_for_listing_obligations_and_disclosure_requirements_20,82,,,,,,,,,,,,,,
+S06,sebi_master_circular_for_listing_obligations_and_disclosure_requirements_20,213,,,,,,,,,,,,,,
+S07,sebi_master_circular_for_merchant_bankers,104,,,,,,,,,,,,,,
+S08,sebi_master_circular_for_mutual_funds,217,,,,,,,,,,,,,,
+S09,sebi_master_circular_for_stock_brokers,246,,,,,,,,,,,,,,
+S10,sebi_master_circular_for_stock_brokers,322,,,,,,,,,,,,,,

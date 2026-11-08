@@ -1,0 +1,24 @@
+{
+  "database_path": "/Users/ryane/College/Assignments/Agentic AI/PolicLens/Policy-Lens/dist/PolicyLens/PolicyLens Data/chroma_db",
+  "collection_base": "policylens_v1",
+  "collection_counts": {
+    "fixed": 5973,
+    "structure": 14157
+  },
+  "embedding_model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+  "embedding_batch_size": 32,
+  "normalized_embeddings": true,
+  "top_k": 10,
+  "question_count": 25,
+  "table_question_count": 5,
+  "paraphrased_question_count": 5,
+  "mean_query_latency_ms": 2.4,
+  "median_query_latency_ms": 2.335,
+  "python_version": "3.11.18",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "processor": "arm",
+  "cpu_count": 10,
+  "embedding_api_cost": 0,
+  "embedding_api_cost_currency": "USD",
+  "embedding_cost_note": "Local Sentence Transformers inference; no hosted embedding API charge."
+}

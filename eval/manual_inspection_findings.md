@@ -14,11 +14,11 @@
 |---|---|---|---|
 | S01 | DPDP Rules 2025 / 27 | Good native extraction | Hindi gazette header and English provisions are retained. Cleaning mainly normalizes whitespace and indentation. |
 | S02 | SEBI Depositories / 35 | Good native extraction | Numbered clauses, subclauses, and footnote references remain readable. |
-| S03 | SEBI Depositories / 170 | Table numeric distortion | Native text gives the medium-risk multiplier as `1.5`, while reconstructed table output renders it as `15 .`. A downstream system must not trust this table cell without source verification. |
+| S03 | SEBI Depositories / 170 | Table numeric distortion | Native extraction and cleaned text preserve the medium-risk multiplier as `1.5`. Reconstructed table output renders it as `15 .`. This is a table-reconstruction fidelity defect, not a whitespace-cleaning defect. Verify numeric table cells against the source PDF. |
 | S04 | SEBI InvITs / 19 | Good native extraction | Clause numbering, prose, and footnote references are retained. |
 | S05 | SEBI LODR 2026 / 82 | Poor wide-table reconstruction | The multi-level, wide table has fragmented headers and column labels. Relationships between columns are difficult to recover from the serialized table. |
-| S06 | SEBI LODR 2026 / 213 | Mostly good; minor loss | The BRSR table is broadly represented, but the cleaned cross-reference text drops the numeral in “Question 7”, leaving “Question of Essential Indicators”. |
-| S07 | SEBI Merchant Bankers / 104 | Reading-order / table association risk | The circular list's number, circular/date, and subject/title content is interleaved. The reconstructed rows do not consistently preserve the association between a circular and its subject. |
+| S06 | SEBI LODR 2026 / 213 | Table-cell content loss | Native extraction and reconstructed table output preserve “Principle 6, Question 7 of Essential Indicators”. The cleaned-text section omits the cross-reference field entirely. This indicates a table-cell content preservation issue; it does not establish that the numeral alone was dropped. |
+| S07 | SEBI Merchant Bankers / 104 | Potential reading-order / table association risk | Native extraction contains wrapped circular numbers, dates, and subjects. The text representation makes row associations difficult to assess, but does not independently prove that reconstructed rows are incorrectly associated. Treat this table as requiring source verification. |
 | S08 | SEBI Mutual Funds / 217 | Good table reconstruction | The three InvIT investment limits (10% of issuer units, 10% of scheme NAV, and 5% of scheme NAV) and the remarks are represented coherently. |
 | S09 | SEBI Stock Brokers / 246 | Good native extraction | Numbered password-security and session-management provisions remain readable. |
 | S10 | SEBI Stock Brokers / 322 | Good native extraction | Cloud-control requirements and subclauses remain readable. |
@@ -29,7 +29,7 @@
 - OCR was not run on any sampled page; OCR word accuracy is therefore **not measured** by this sample.
 - Cleaning generally improves whitespace and indentation without obvious broad content loss in the prose samples.
 - The principal observed risks are table structure, numeric fidelity in table cells, and multi-column reading order.
-- At least three pages (S03, S05, S07) warrant explicit table/layout caution. S06 warrants a smaller text-fidelity check.
+- Four pages (S03, S05, S06, S07) warrant explicit table/layout caution: numeric reconstruction fidelity (S03), wide-table structure (S05), table-cell content preservation (S06), and potential row-association ambiguity (S07).
 
 ## Recommended treatment
 
@@ -43,3 +43,30 @@
 ## Interpretation
 
 This sample supports the conclusion that native-text extraction and prose cleaning are functioning well on the sampled pages, but it also exposes meaningful layout-sensitive failure modes. It does not justify a claim that all corpus tables are reliable, nor does it provide an OCR accuracy estimate.
+
+## Source-linked PDF cleaning example
+
+- **Source document:** `sebi_master_circular_for_depositories`
+- **Source file:** `data/pdfs/sebi_master_circular_for_depositories.pdf`
+- **PDF page:** 170
+- **Sample:** S03
+
+The native text extraction contains excessive whitespace and indentation:
+
+    High risk                         3
+              Medium High risk                2
+              Medium risk                         1.5
+              Low risk                         1
+
+The cleaned text normalizes whitespace while preserving the labels and values:
+
+    High risk 3
+    Medium High risk 2
+    Medium risk 1.5
+    Low risk 1
+
+**Observed cleaning effect:** Excessive spacing and indentation are removed. The four risk labels and corresponding values remain present in the cleaned text.
+
+**Important distinction:** The separately reconstructed table output represents the medium-risk value as `15 .` instead of `1.5`. This is a table-reconstruction fidelity issue, not evidence that the whitespace-cleaning operation changed the value.
+
+**Validation requirement:** Numeric table values must be checked against the original PDF page before being used as authoritative evidence.
