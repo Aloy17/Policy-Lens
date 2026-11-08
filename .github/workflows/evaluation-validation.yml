@@ -1,0 +1,36 @@
+name: Evaluation data validation
+
+on:
+  push:
+    paths:
+      - "eval/questions.csv"
+      - "eval/validate_gold_set.py"
+      - "tests/test_gold_set_validation.py"
+      - "data/manifest.csv"
+      - ".github/workflows/evaluation-validation.yml"
+  pull_request:
+    paths:
+      - "eval/questions.csv"
+      - "eval/validate_gold_set.py"
+      - "tests/test_gold_set_validation.py"
+      - "data/manifest.csv"
+      - ".github/workflows/evaluation-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gold-set-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependency
+        run: python -m pip install pytest
+      - name: Validate committed gold set against manifest
+        run: python eval/validate_gold_set.py
+      - name: Run validator regression tests
+        run: python -m pytest -q tests/test_gold_set_validation.py

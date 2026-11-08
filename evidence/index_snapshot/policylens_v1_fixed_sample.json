@@ -1,0 +1,87 @@
+[
+  {
+    "id": "gazette_1981_special_bearer_bonds_fixed_7b370c8980cb_3",
+    "metadata": {
+      "source_hash": "7b370c8980cb69b66c99cbf487ec9c463d70ef9bb73bb377bf3aabe399e43b84",
+      "chunk_strategy": "fixed",
+      "ocr_used": true,
+      "issuer": "Ministry of Law, Justice and Company Affairs (Legislative Department)",
+      "title": "The Special Bearer Bonds (Immunities and Exemptions) Ordinance, 1981",
+      "page_start": 3,
+      "document_type": "scanned_or_mixed",
+      "issue_date": "1981-01-12",
+      "doc_id": "gazette_1981_special_bearer_bonds",
+      "section_title": "",
+      "page_end": 4
+    },
+    "passage_preview": "clause shal ] be inserted, namely : — “ ( iiib ) of property in the form of special bearer bonds, 1991 ; ”. & ( 1 ) if any difficulty arises in giving effect to the provisions of this ordinance, the c"
+  },
+  {
+    "id": "sebi_master_circular_for_infrastructure_investment_trusts_fixed_536b4f570e3a_46",
+    "metadata": {
+      "section_title": "",
+      "ocr_used": false,
+      "page_end": 42,
+      "page_start": 41,
+      "issuer": "SEBI",
+      "title": "Master Circular for Infrastructure Investment Trusts",
+      "doc_id": "sebi_master_circular_for_infrastructure_investment_trusts",
+      "document_type": "text_native",
+      "source_hash": "536b4f570e3a77a9ddaab6bbe4a70a1af1d71fa475555127daaa5ecbe5ce788d",
+      "issue_date": "2025-07-11",
+      "chunk_strategy": "fixed"
+    },
+    "passage_preview": "statement of total returns at fair value a ) the line items for the ‘ statement of total return at fair value ’, shall, at minimum, include the following : particulars amount total comprehensive incom"
+  },
+  {
+    "id": "sebi_master_circular_for_stock_brokers_fixed_e268b5a1971c_113",
+    "metadata": {
+      "chunk_strategy": "fixed",
+      "doc_id": "sebi_master_circular_for_stock_brokers",
+      "issuer": "SEBI",
+      "document_type": "text_native",
+      "page_end": 106,
+      "issue_date": "2025-06-17",
+      "ocr_used": false,
+      "section_title": "",
+      "source_hash": "e268b5a1971c4d366872c371b986f03ab7f78c5311af84ef9023605ca2e4c190",
+      "title": "Master Circular for Stock Brokers",
+      "page_start": 105
+    },
+    "passage_preview": "has visibility of the client to whom such securities belong to, and accordingly is able to assign the value of the securities collateral, based on applicable haircut, to that client ’ s account. 43. 5"
+  },
+  {
+    "id": "sebi_master_circular_for_stock_brokers_fixed_e268b5a1971c_226",
+    "metadata": {
+      "ocr_used": false,
+      "section_title": "",
+      "page_end": 214,
+      "issuer": "SEBI",
+      "issue_date": "2025-06-17",
+      "title": "Master Circular for Stock Brokers",
+      "doc_id": "sebi_master_circular_for_stock_brokers",
+      "source_hash": "e268b5a1971c4d366872c371b986f03ab7f78c5311af84ef9023605ca2e4c190",
+      "chunk_strategy": "fixed",
+      "document_type": "text_native",
+      "page_start": 212
+    },
+    "passage_preview": "and requirements of the regulator shall be mandated by the board wherever felt necessary. the intermediary shall review the financial and operational capabilities of the third party in order to assess"
+  },
+  {
+    "id": "sebi_master_circular_for_mutual_funds_fixed_6402ffa74560_882",
+    "metadata": {
+      "page_end": 748,
+      "chunk_strategy": "fixed",
+      "section_title": "",
+      "doc_id": "sebi_master_circular_for_mutual_funds",
+      "title": "Master Circular for Mutual Funds",
+      "document_type": "text_native",
+      "issuer": "SEBI",
+      "issue_date": "2026-03",
+      "page_start": 747,
+      "source_hash": "6402ffa74560ab58c591c736e0da02e85b7c4d8de6690d46f9da366e6e4804e3",
+      "ocr_used": false
+    },
+    "passage_preview": "_ _ _ _ _ _ _ unitholder ( 3 ) signature : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ name : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 543 sebi circular no. sebi / ho / imd / imd - ii dof3 / p / "
+  }
+]
