@@ -1,0 +1,87 @@
+[
+  {
+    "id": "gazette_1981_special_bearer_bonds_structure_7b370c8980cb_11",
+    "metadata": {
+      "chunk_strategy": "structure",
+      "doc_id": "gazette_1981_special_bearer_bonds",
+      "ocr_used": true,
+      "title": "The Special Bearer Bonds (Immunities and Exemptions) Ordinance, 1981",
+      "source_hash": "7b370c8980cb69b66c99cbf487ec9c463d70ef9bb73bb377bf3aabe399e43b84",
+      "document_type": "scanned_or_mixed",
+      "page_end": 4,
+      "issuer": "Ministry of Law, Justice and Company Affairs (Legislative Department)",
+      "issue_date": "1981-01-12",
+      "section_title": "PRINTED BY THE GENERAL MANAGER, GOVERNMENT OF INDIA PRESS, MINTO ROAD",
+      "page_start": 3
+    },
+    "passage_preview": "printed by the general manager, government of india press, minto road new delhi and purlished by the controller of publications, delhi, 1981 amendment of act 43 of 1961. amendment of act 27 of 1957. a"
+  },
+  {
+    "id": "sebi_master_circular_for_debenture_trustees_structure_4a8ce13addf1_69",
+    "metadata": {
+      "title": "Master Circular for Debenture Trustees",
+      "source_hash": "4a8ce13addf1c5f9fb4dba3c7ab3e3a3e82660f2ae2906477b121b60b7e308f9",
+      "doc_id": "sebi_master_circular_for_debenture_trustees",
+      "chunk_strategy": "structure",
+      "issue_date": "2026-09-28",
+      "document_type": "text_native",
+      "ocr_used": false,
+      "page_end": 46,
+      "issuer": "SEBI",
+      "section_title": "Chapter III: Security and Covenant Monitoring System",
+      "page_start": 44
+    },
+    "passage_preview": "a. asset description i. asset name ii. asset details ( in case of shares, it shall also include isin, quantity, pledgee demat id, pledgee instrument id ) iii. asset location ( including address of the"
+  },
+  {
+    "id": "sebi_master_circular_for_depositories_structure_aa002c51c69a_218",
+    "metadata": {
+      "ocr_used": false,
+      "doc_id": "sebi_master_circular_for_depositories",
+      "issuer": "SEBI",
+      "source_hash": "aa002c51c69a074910643196c85d5018fee0c5ad98f70b554a17894b966e91c0",
+      "chunk_strategy": "structure",
+      "issue_date": "2023-10-06",
+      "page_start": 109,
+      "document_type": "text_native",
+      "title": "Master Circular for Depositories",
+      "section_title": "SEBI;",
+      "page_end": 110
+    },
+    "passage_preview": "prescribed in the framework. the said information shall be disseminated on website of both the indian depositories. for this purpose, the designated depository shall act as a lead depository and the o"
+  },
+  {
+    "id": "sebi_master_circular_for_mutual_funds_structure_6402ffa74560_424",
+    "metadata": {
+      "document_type": "text_native",
+      "page_start": 220,
+      "title": "Master Circular for Mutual Funds",
+      "ocr_used": false,
+      "doc_id": "sebi_master_circular_for_mutual_funds",
+      "issue_date": "2026-03",
+      "issuer": "SEBI",
+      "page_end": 221,
+      "section_title": "[TABLE 1]",
+      "source_hash": "6402ffa74560ab58c591c736e0da02e85b7c4d8de6690d46f9da366e6e4804e3",
+      "chunk_strategy": "structure"
+    },
+    "passage_preview": "market maker by rbi and exposure to a single counterparty scheme in such transactions shall not exceed 10 % of the net assets of the scheme. however, if mutual funds are transacting in irs through an "
+  },
+  {
+    "id": "sebi_master_circular_for_mutual_funds_structure_6402ffa74560_2147",
+    "metadata": {
+      "page_end": 748,
+      "ocr_used": false,
+      "document_type": "text_native",
+      "source_hash": "6402ffa74560ab58c591c736e0da02e85b7c4d8de6690d46f9da366e6e4804e3",
+      "page_start": 748,
+      "section_title": "10. REPORTING FORMATS FOR OFFSITE INSPECTION",
+      "issue_date": "2026-03",
+      "doc_id": "sebi_master_circular_for_mutual_funds",
+      "title": "Master Circular for Mutual Funds",
+      "issuer": "SEBI",
+      "chunk_strategy": "structure"
+    },
+    "passage_preview": "10. reporting formats for offsite inspection as part of the off - site inspection and surveillance of mutual funds and to monitor the compliance of the sebi ( mutual funds ) regulations, 2026 and circ"
+  }
+]
