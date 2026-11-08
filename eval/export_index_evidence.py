@@ -1,4 +1,4 @@
-""""Export a read-only snapshot of PolicyLens Chroma collections for submission evidence.
+"""Export a read-only snapshot of PolicyLens Chroma collections for submission evidence.
 
 Example:
     python eval/export_index_evidence.py --db-path "dist/PolicyLens/PolicyLens Data/chroma_db"
@@ -13,14 +13,13 @@ import yaml
 
 
 def select_representative_records(collection, sample_size: int) -> list[dict]:
-    """Scan collection pages and prefer substantive passages with section metadata."""
+    """Scan the full collection and select substantive passages across its page range."""
     count = collection.count()
     batch_size = 500
-    ranked = []
-    fallback = []
+    all_records = []
 
-    # Paginate through the full collection: insertion order can cluster early records
-    # from one document and otherwise hide useful examples from later documents.
+    # Paginate through the full collection because insertion order can cluster
+    # records from one document and hide useful examples from later documents.
     for offset in range(0, count, batch_size):
         batch = collection.get(
             limit=min(batch_size, count - offset),
@@ -31,42 +30,37 @@ def select_representative_records(collection, sample_size: int) -> list[dict]:
             metadata = (batch.get("metadatas") or [])[index] or {}
             document = (batch.get("documents") or [])[index] or ""
             passage = " ".join(document.split())
-            if len(passage) < 250:
+            page_start = metadata.get("page_start")
+            if len(passage) < 250 or not isinstance(page_start, (int, float)):
                 continue
 
-            record = {
+            all_records.append({
+                "page_start": page_start,
+                "has_section": bool(str(metadata.get("section_title") or "").strip()),
                 "id": record_id,
-                "metadata": metadata,
-                "passage_preview": passage[:200],
-            }
-            fallback.append(record)
+                "record": {
+                    "id": record_id,
+                    "metadata": metadata,
+                    "passage_preview": passage[:200],
+                },
+            })
 
-            page_start = metadata.get("page_start", 0)
-            section_title = str(metadata.get("section_title") or "").strip()
-            if section_title and isinstance(page_start, (int, float)) and page_start > 2:
-                ranked.append((page_start, record_id, record))
+    if not all_records:
+        return []
 
-    # Spread examples across the page range, avoiding adjacent chunks.
-    ranked.sort(key=lambda item: (item[0], item[1]))
-    selected = []
-    if ranked:
-        take = min(sample_size, len(ranked))
-        last = len(ranked) - 1
-        indices = [round(i * last / (take - 1)) for i in range(take)] if take > 1 else [last // 2]
-        selected = [ranked[i][2] for i in indices]
+    # Prefer section-labelled records when enough exist. For fixed-size chunks,
+    # section_title may legitimately be empty, so page-spread sampling still applies.
+    labelled = [item for item in all_records if item["has_section"]]
+    candidates = labelled if len(labelled) >= sample_size else all_records
+    candidates.sort(key=lambda item: (item["page_start"], item["id"]))
 
-    # Fill any remaining slots with substantive passages from the full scan.
-    used_ids = {record["id"] for record in selected}
-    if len(selected) < sample_size:
-        for record in fallback:
-            if record["id"] in used_ids:
-                continue
-            selected.append(record)
-            used_ids.add(record["id"])
-            if len(selected) >= sample_size:
-                break
-
-    return selected
+    take = min(sample_size, len(candidates))
+    last = len(candidates) - 1
+    indices = (
+        [round(i * last / (take - 1)) for i in range(take)]
+        if take > 1 else [last // 2]
+    )
+    return [candidates[index]["record"] for index in indices]
 
 
 def main() -> None:
@@ -96,7 +90,11 @@ def main() -> None:
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "database_path": str(Path(db_path).expanduser()),
         "collections": {},
-        "note": "Read-only collection counts and representative records; no index writes performed.",
+        "note": (
+            "Read-only collection counts and representative records; no index writes performed. "
+            "Samples are selected across page ranges; section_title is preserved as stored "
+            "and may be empty for fixed-size chunks."
+        ),
     }
 
     for name in (args.fixed_collection, args.structure_collection):
