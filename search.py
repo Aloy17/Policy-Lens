@@ -38,6 +38,8 @@ def main() -> None:
     parser.add_argument("--strategy", choices=["fixed", "structure"], default="structure")
     parser.add_argument("--top_k", "--top-k", dest="top_k", type=int, default=None)
     parser.add_argument("--filter", action="append", default=None, metavar="KEY=VALUE")
+    parser.add_argument("--db-path", default=None,
+                        help="Override the configured Chroma database path.")
     args = parser.parse_args()
     manifest_path = os.environ.get("POLICYLENS_MANIFEST_PATH", str(data_path("data/manifest.csv")))
     try:
@@ -49,12 +51,14 @@ def main() -> None:
     embedder = Embedder(model_name=config["embedding"]["model"],
         batch_size=config["embedding"]["batch_size"],
         normalize_embeddings=config["embedding"]["normalize_embeddings"])
-    store = VectorStore(path=str(data_path(config["vector_store"]["path"])),
+    db_path = args.db_path or str(data_path(config["vector_store"]["path"]))
+    store = VectorStore(path=db_path,
                         collection_name=f"{args.collection}_{args.strategy}")
     print(f"\nSearching {args.strategy} collection...")
     print(f"Query: {args.query}")
     if where:
         print(f"Filter: {where}")
+    print(f"Database: {db_path}")
     search_collection(store, embedder, args.query, top_k,
                       config["search"]["preview_chars"], where)
 
