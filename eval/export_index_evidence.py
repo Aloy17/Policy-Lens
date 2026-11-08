@@ -1,4 +1,4 @@
-"""Export a read-only snapshot of PolicyLens Chroma collections for submission evidence.
+""""Export a read-only snapshot of PolicyLens Chroma collections for submission evidence.
 
 Example:
     python eval/export_index_evidence.py --db-path "dist/PolicyLens/PolicyLens Data/chroma_db"
@@ -13,59 +13,60 @@ import yaml
 
 
 def select_representative_records(collection, sample_size: int) -> list[dict]:
-    """Prefer substantive passages with section metadata from beyond opening pages."""
+    """Scan collection pages and prefer substantive passages with section metadata."""
     count = collection.count()
-    candidate_limit = min(count, max(sample_size * 100, 500))
-    candidates = collection.get(
-        limit=candidate_limit,
-        include=["metadatas", "documents"],
-    )
-
+    batch_size = 500
     ranked = []
-    for index, record_id in enumerate(candidates.get("ids", [])):
-        metadata = (candidates.get("metadatas") or [])[index] or {}
-        document = (candidates.get("documents") or [])[index] or ""
-        page_start = metadata.get("page_start", 0)
-        section_title = str(metadata.get("section_title") or "").strip()
-        passage = " ".join(document.split())
-        # Exclude opening-page contents/index fragments where possible.
-        if len(passage) < 250 or not section_title or not isinstance(page_start, (int, float)) or page_start <= 2:
-            continue
-        ranked.append((page_start, record_id, metadata, passage))
+    fallback = []
 
-    # Spread examples across the available page range instead of taking adjacent chunks.
-    ranked.sort(key=lambda item: (item[0], item[1]))
-    if len(ranked) > sample_size:
-        last = len(ranked) - 1
-        indices = [round(i * last / (sample_size - 1)) for i in range(sample_size)] if sample_size > 1 else [last // 2]
-        ranked = [ranked[i] for i in indices]
-
-    records = [
-        {
-            "id": record_id,
-            "metadata": metadata,
-            "passage_preview": passage[:200],
-        }
-        for _, record_id, metadata, passage in ranked
-    ]
-
-    # If the strict filter yields too few examples, fill from remaining substantive passages.
-    if len(records) < sample_size:
-        used_ids = {record["id"] for record in records}
-        for index, record_id in enumerate(candidates.get("ids", [])):
-            if record_id in used_ids:
-                continue
-            metadata = (candidates.get("metadatas") or [])[index] or {}
-            document = (candidates.get("documents") or [])[index] or ""
+    # Paginate through the full collection: insertion order can cluster early records
+    # from one document and otherwise hide useful examples from later documents.
+    for offset in range(0, count, batch_size):
+        batch = collection.get(
+            limit=min(batch_size, count - offset),
+            offset=offset,
+            include=["metadatas", "documents"],
+        )
+        for index, record_id in enumerate(batch.get("ids", [])):
+            metadata = (batch.get("metadatas") or [])[index] or {}
+            document = (batch.get("documents") or [])[index] or ""
             passage = " ".join(document.split())
             if len(passage) < 250:
                 continue
-            records.append({"id": record_id, "metadata": metadata, "passage_preview": passage[:200]})
-            used_ids.add(record_id)
-            if len(records) >= sample_size:
+
+            record = {
+                "id": record_id,
+                "metadata": metadata,
+                "passage_preview": passage[:200],
+            }
+            fallback.append(record)
+
+            page_start = metadata.get("page_start", 0)
+            section_title = str(metadata.get("section_title") or "").strip()
+            if section_title and isinstance(page_start, (int, float)) and page_start > 2:
+                ranked.append((page_start, record_id, record))
+
+    # Spread examples across the page range, avoiding adjacent chunks.
+    ranked.sort(key=lambda item: (item[0], item[1]))
+    selected = []
+    if ranked:
+        take = min(sample_size, len(ranked))
+        last = len(ranked) - 1
+        indices = [round(i * last / (take - 1)) for i in range(take)] if take > 1 else [last // 2]
+        selected = [ranked[i][2] for i in indices]
+
+    # Fill any remaining slots with substantive passages from the full scan.
+    used_ids = {record["id"] for record in selected}
+    if len(selected) < sample_size:
+        for record in fallback:
+            if record["id"] in used_ids:
+                continue
+            selected.append(record)
+            used_ids.add(record["id"])
+            if len(selected) >= sample_size:
                 break
 
-    return records
+    return selected
 
 
 def main() -> None:
