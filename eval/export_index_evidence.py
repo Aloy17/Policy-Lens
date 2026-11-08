@@ -1,0 +1,79 @@
+"""Export a read-only snapshot of PolicyLens Chroma collections for submission evidence.
+
+Example:
+    python eval/export_index_evidence.py --db-path "dist/PolicyLens/PolicyLens Data/chroma_db"
+"""
+import argparse
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+import chromadb
+import yaml
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--db-path", default=None,
+                        help="Chroma persistence directory (defaults to config.yaml).")
+    parser.add_argument("--fixed-collection", default="policylens_v1_fixed")
+    parser.add_argument("--structure-collection", default="policylens_v1_structure")
+    parser.add_argument("--output", default="evidence/index_snapshot")
+    parser.add_argument("--sample-size", type=int, default=5)
+    args = parser.parse_args()
+
+    if args.sample_size < 1:
+        parser.error("--sample-size must be at least 1")
+
+    db_path = args.db_path
+    if db_path is None:
+        with Path("config.yaml").open("r", encoding="utf-8") as handle:
+            config = yaml.safe_load(handle)
+        db_path = config["vector_store"]["path"]
+
+    output = Path(args.output)
+    output.mkdir(parents=True, exist_ok=True)
+    client = chromadb.PersistentClient(path=str(Path(db_path).expanduser()))
+
+    summary = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "database_path": str(Path(db_path).expanduser()),
+        "collections": {},
+        "note": "Read-only collection counts and representative records; no index writes performed.",
+    }
+
+    for name in (args.fixed_collection, args.structure_collection):
+        collection = client.get_collection(name=name)
+        sample = collection.get(
+            limit=args.sample_size,
+            include=["metadatas", "documents"],
+        )
+        records = []
+        for index, record_id in enumerate(sample.get("ids", [])):
+            metadata = (sample.get("metadatas") or [])[index] or {}
+            document = (sample.get("documents") or [])[index] or ""
+            records.append({
+                "id": record_id,
+                "metadata": metadata,
+                "passage_preview": " ".join(document.split())[:200],
+            })
+
+        summary["collections"][name] = {
+            "count": collection.count(),
+            "sample_records": len(records),
+            "records": records,
+        }
+        with (output / f"{name}_sample.json").open("w", encoding="utf-8") as handle:
+            json.dump(records, handle, indent=2, ensure_ascii=False, default=str)
+
+    with (output / "index_summary.json").open("w", encoding="utf-8") as handle:
+        json.dump(summary, handle, indent=2, ensure_ascii=False, default=str)
+
+    print(f"Index evidence written to: {output.resolve()}")
+    for name, details in summary["collections"].items():
+        print(f"{name}: {details['count']:,} chunks; "
+              f"{details['sample_records']} sample records exported")
+
+
+if __name__ == "__main__":
+    main()
