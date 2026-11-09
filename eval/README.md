@@ -4,7 +4,7 @@
 
 This evaluation compares fixed-size and structure-aware chunking on the same 25-question gold set, embedding model, Chroma collections, and retrieval depth. A result is relevant only when its `doc_id` equals the gold document and its inclusive page range overlaps the gold page range. This is a retrieval-layer evaluation; it does not evaluate answer generation.
 
-The current question set has five table questions and five materially paraphrased questions. A structured semantic/category audit of all 25 questions is recorded in `gold_set_review.md`; the three document IDs and all inclusive page ranges pass manifest-bound checks. Official-source content checks cover q01–q25, including the FPI annex, Digital Lending notification, and commercial-bank filing row. This does not establish exact local-corpus PDF page alignment. Do not present the evaluation as fully gold-validated yet.
+The current question set has five table questions and five materially paraphrased questions. A structured semantic/category audit of all 25 questions is recorded in `gold_set_review.md`; the three document IDs and all inclusive page ranges pass manifest-bound checks. Official-source content checks cover q01–q25, including the FPI annex, Digital Lending notification, and commercial-bank filing row. The structural validator confirms IDs, document references, category counts, and page-range bounds; it does not establish exact local-corpus PDF page alignment. Accordingly, report the benchmark as structurally validated with explicit gold-label and extraction limitations, not as fully semantically gold-validated.
 
 ## Validate the gold-set file structure
 
@@ -64,7 +64,7 @@ PYTHONPATH=. python eval/analyze_results.py \\
   --questions eval/questions.csv
 ```
 
-The 2026-11-07 benchmark report is a run record, not a claim that all Phase 3 validation is complete. The raw local CSV/JSON outputs must be committed to preserve reproducibility.
+The 2026-11-07 benchmark report is the authoritative run record. The raw local CSV/JSON outputs are committed under `eval/rebenchmark_2026-11-07/` to preserve reproducibility.
 
 ## Selected disagreement evidence
 
@@ -83,13 +83,13 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 - MRR is the mean reciprocal rank over all questions in the evaluated subset.
 - The two chunking strategies are compared with identical queries and index/model settings. Query latency measures the Chroma search call only; it excludes model loading and query embedding time.
 
-## Remaining validation before Phase 3 closure
+## Limitations retained at Phase 3 closure
 
-1. **Exact local PDF page alignment remains open.** The semantic audit and official-source text checks are recorded in `gold_set_review.md`, but the exact local corpus PDFs must be checked before accepting every page label. The PDF files are not stored as repository text files, so this check must run against the local packaged corpus.
+1. **Exact local PDF page alignment is not fully established.** The semantic audit and official-source text checks are recorded in `gold_set_review.md`; the structural validator checks bounds, not passage-to-page truth. Treat individual gold-page labels as a documented evaluation limitation.
 2. **Category review completed at the semantic level.** q16–q20 each require a table row/value or footnote; q02, q08, q14, q21, and q23 are materially paraphrased. The remaining risk is rendered table-cell fidelity, not the category count.
 3. **Disagreement review completed.** q04, q17, and q13 are documented in `eval/disagreement_analysis.md`; do not infer causality from rank differences alone.
-4. **Ten-page extraction sample completed.** Findings and limitations are recorded in `manual_inspection_findings.md`. Visual confirmation of S03, S05, S06, and S07 remains incomplete; treat the findings as extraction-output observations, not visually confirmed defects.
-5. **Before/after cleaning evidence is still absent.** Add one source-linked example or explicitly retain it as a report limitation.
+4. **Ten-page extraction sample completed.** Findings and limitations are recorded in `manual_inspection_findings.md`. Visual confirmation of S03, S05, S06, and S07 was not completed; treat the findings as extraction-output observations, not visually confirmed defects.
+5. **Cleaning evidence:** a source-linked before/after example is recorded in `manual_inspection_findings.md`; this is a qualitative example, not a corpus-wide cleaning-accuracy measure.
 6. **OCR accuracy is unmeasured.** The ten-page sample had no OCR candidates and OCR was not run. A separate manually transcribed scan test is needed for an accuracy estimate; otherwise report this as unmeasured.
 7. **Operational measurements are complete** and recorded in `benchmark_run_2026-11-07.md`: packaged ingestion, unchanged rerun, corpus/database footprint, collection vector-segment sizes, and query latency.
 8. Treat the 2022 Digital Lending Guidelines as a historical circular: RBI's later Digital Lending Directions, 2025 supersede the earlier framework. Do not imply the 2022 circular is current policy.
@@ -99,7 +99,7 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 The gold set currently concentrates on three RBI documents, rather than representing all 37 corpus documents. It was assembled after ingestion work began, so it is not a fully blind holdout. The fixed-vs-structure result is conditional on this question set and current parser/chunker/index settings. It is not evidence of universal superiority or production compliance coverage.
 
 
-## Export the sampled pages for inspection
+## Export the sampled pages for optional inspection
 
 After pulling the latest branch and generating the deterministic sample template, export the ten sampled pages into a single review bundle. This reads the local PDFs and does not change the source files or sampling template.
 
