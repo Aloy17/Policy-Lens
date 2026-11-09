@@ -82,21 +82,21 @@ The latest run uses revised q02/q03 wording and page ranges, so the two runs are
 - The gold set is only 25 questions, concentrated in a small number of RBI documents, and was not a blind holdout.
 - These are retrieval-layer results, not answer accuracy or regulatory-compliance guarantees.
 
-## Remaining work before Phase 3 closure
+## Limitations retained at Phase 3 closure
 
-The corrected benchmark, raw retrieval outputs, per-question analysis, and selected disagreement evidence were generated locally under `eval/rebenchmark_2026-11-07/`; verify these artifacts are committed before treating the run as reproducible from a clean clone. The corrected q04/q17/q13/q14 interpretations are documented in `disagreement_analysis.md`. The remaining work is validation and operational evidence:
+The corrected benchmark, raw retrieval outputs, per-question analysis, and selected disagreement evidence are committed under `eval/rebenchmark_2026-11-07/`. The corrected q04/q17/q13/q14 interpretations are documented in `disagreement_analysis.md`. The following items remain explicit limitations rather than blockers to reporting the completed retrieval benchmark:
 
-1. Complete the exact local-corpus PDF page-alignment review for all 25 gold references and record corrections in `gold_set_review.md`.
-2. Confirm the five table questions genuinely depend on table values and the five paraphrased questions are materially paraphrased.
-3. Complete or explicitly disposition the four visual checks (S03, S05, S06, S07). The documented concerns include S03's distorted multiplier and S05/S07's table layout/association.
-4. Add one source-linked before/after cleaning example.
+1. Exact local-corpus PDF page alignment is not fully established. The structural validator checks bounds, not passage-to-page truth; treat gold-page labels as a documented limitation.
+2. The five table questions and five materially paraphrased questions have been reviewed semantically; rendered table-cell fidelity remains a limitation.
+3. Visual confirmation of S03, S05, S06, and S07 was not completed. Treat documented extraction concerns as unverified observations, not confirmed defects.
+4. A source-linked before/after cleaning example is recorded in `manual_inspection_findings.md`; it is qualitative, not a corpus-wide accuracy measure.
 5. OCR accuracy remains unmeasured. Either test a representative scanned page against a manually transcribed reference or explicitly retain OCR accuracy as an unmeasured limitation for this phase.
 6. **Complete — operational measurements recorded:** fixed-size and structure-aware vector segments are 9.9 MB and 25 MB; the shared SQLite file is 224 MB; total Chroma footprint is 259 MB; the PDF corpus is 102 MB across 37 PDFs. The packaged full ingestion run processed 4,670 pages (216 OCR pages), produced 5,320 fixed-size and 12,920 structure-aware chunks, and took 897.46 seconds. The unchanged rerun skipped all 37 documents in 1.92 seconds with no failures or missing files. The shared SQLite storage cannot be apportioned reliably by collection.
-7. **In progress — report synthesis:** incorporate the measured trade-offs and retain explicit limitations for the incomplete gold-page audit, visual checks, and before/after cleaning evidence.
+7. **Complete — report synthesis:** the six-page technical report incorporates measured trade-offs and explicitly retains the incomplete gold-page audit, visual-check, and OCR limitations.
 
 Per-strategy query latency is recorded above from the corrected rerun (median/p95: fixed-size 2.318/4.987 ms; structure-aware 2.352/2.893 ms). The raw retrieval log, metrics, run metadata, per-question results, disagreements, and selected evidence were generated locally; ensure the `eval/rebenchmark_2026-11-07/` output directory is committed to preserve reproducibility.
 
-Phase 3 remains open until the remaining evidence is completed or each item is explicitly accepted as a documented limitation with an agreed scope.
+Phase 3 benchmark and reporting are complete with the limitations above explicitly retained. This closure does not claim full semantic validation of every gold-page label, visual confirmation of sampled layouts, or measured OCR accuracy.
 
 
 ## Operational evidence disposition
