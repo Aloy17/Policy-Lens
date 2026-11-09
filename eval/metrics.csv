@@ -1,7 +1,7 @@
-subset,strategy,n_questions,recall@3,recall@5,recall@10,mrr
-overall,fixed,25,0.48,0.48,0.6,0.3773
-overall,structure,25,0.64,0.68,0.72,0.5817
-table_questions,fixed,6,0.5,0.5,0.5,0.3056
-table_questions,structure,6,0.1667,0.1667,0.1667,0.1667
-paraphrased_questions,fixed,9,0.6667,0.6667,0.8889,0.5741
-paraphrased_questions,structure,9,0.7778,0.7778,0.7778,0.7222
+subset,strategy,questions,recall_at_3,recall_at_5,recall_at_10,mrr
+overall,fixed,25,0.52,0.56,0.76,0.5277619047619048
+overall,structure,25,0.6,0.72,0.8,0.5786666666666667
+table_questions,fixed,5,0.4,0.4,0.8,0.45357142857142857
+table_questions,structure,5,0.8,0.8,0.8,0.8
+paraphrased_questions,fixed,5,0.6,0.6,1.0,0.6535714285714286
+paraphrased_questions,structure,5,0.6,0.6,0.8,0.5333333333333334
