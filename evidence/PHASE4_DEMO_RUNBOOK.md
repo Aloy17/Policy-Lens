@@ -29,7 +29,7 @@ Do not rerun full ingestion just to make a demo. The committed November 7 run re
 
 The full run processed 4,670 pages (216 OCR pages), produced 5,320 fixed-size and 12,920 structure-aware chunks, and took 897.46 seconds (14 min 57 sec). The unchanged-source rerun took 1.92 seconds.
 
-Current screenshot: `evidence/screenshots/09_ingestion_and_idempotency_summary.png`. This is a screenshot of the documented benchmark run summary, **not an original raw terminal ingestion-log capture**. Earlier November 3 logs in `logs/` are from a different 30-document run and must not be represented as the November 7 run. If original November 7 raw logs are recovered, preserve them separately and update this status.
+Current screenshot: `evidence/screenshots/09_ingestion_and_idempotency_summary.png`. This is a screenshot of the documented benchmark run summary, **not an original raw terminal ingestion-log capture**. The committed November 7 run record is the retained ingestion evidence. Do not substitute unrelated run output or describe the summary screenshot as a raw log. If original November 7 raw logs are recovered, preserve them separately and update this status.
 
 ## 3. Demonstrate filtered retrieval
 
@@ -55,7 +55,7 @@ Current combined capture: `evidence/screenshots/13_q04_retrieval_source_verifica
 
 ## 5. Current screenshot inventory
 
-Six current screenshots were committed in commit `8ab4890`:
+The current submission evidence consists of these six captures:
 
 | File | Evidence |
 |---|---|
@@ -63,10 +63,10 @@ Six current screenshots were committed in commit `8ab4890`:
 | `09_ingestion_and_idempotency_summary.png` | Documented full-ingestion and unchanged-rerun summaries; not raw logs |
 | `10_search_interface_current.png` | Current Streamlit search UI |
 | `11_index_sample_current.png` | Structure-aware sample metadata |
-| `12_test_results_current.png` | Current pytest output: 21 passed, 5 warnings |
+| `12_test_results_current.png` | Current recorded pytest output: 21 passed, 5 warnings |
 | `13_q04_retrieval_source_verification.png` | q04 CLI result alongside source PDF page 38 |
 
-The six files were confirmed to exist and their pixel dimensions were checked. Their visual contents still need a human legibility/content review. Do not present historical screenshots `02_corpus_overview.png` (stale counts: 2,691 and 2,423) or `07_test_results.png` (old five-test run) as current evidence. Keep historical files unchanged.
+The six files exist and their pixel dimensions were checked. Their visual contents still need a final legibility/content review.
 
 ## 6. Three-minute demo sequence
 
