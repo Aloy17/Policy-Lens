@@ -34,23 +34,23 @@ PYTHONPATH=. python eval/evaluate.py \
   --collection policylens_v1 \
   --questions eval/questions.csv \
   --top-k 10 \
-  --output eval/retrieval_log.csv
+  --output eval/retrieval_log_phase3.csv
 PYTHONPATH=. python eval/analyze_results.py \
-  --log eval/retrieval_log.csv \
+  --log eval/retrieval_log_phase3.csv \
   --questions eval/questions.csv
 ```
 
 The evaluator loads the model configured in `config.yaml`. The database override is intentional: the packaged app's index is separate from the source-mode default `chroma_db/`. Do not point this run at the source-mode database unless it has been populated with the matching `policylens_v1_fixed` and `policylens_v1_structure` collections.
 
 Outputs:
-- `retrieval_log.csv`: ranked results, gold-hit labels, scores, and query latency.
-- `metrics.csv`: overall and labelled-subset Recall@3/5/10 and MRR.
-- `rebenchmark_2026-11-07/run_metadata_phase3.json`: DB path, collection counts, model/config, machine/runtime details, and latency summary.
-- `rebenchmark_2026-11-07/per_question_phase3.csv`: first relevant rank and hit flags per strategy.
-- `rebenchmark_2026-11-07/disagreements_phase3.csv`: questions where top-1 document or Recall@10 outcome differs.
-- `rebenchmark_2026-11-07/selected_disagreement_evidence.csv`: ranked passage previews for q04, q17, and q13, exported for report review.
+- `retrieval_log_phase3.csv`: ranked results, gold-hit labels, scores, and query latency.
+- `metrics_phase3.csv`: overall and labelled-subset Recall@3/5/10 and MRR.
+- `run_metadata_phase3.json`: DB path, collection counts, model/config, machine/runtime details, and latency summary.
+- `per_question_phase3.csv`: first relevant rank and hit flags per strategy.
+- `disagreements_phase3.csv`: questions where top-1 document or Recall@10 outcome differs.
+- `selected_disagreement_evidence.csv`: ranked passage previews for q04, q17, and q13, exported for report review.
 
-The root-level `retrieval_log.csv` and `metrics.csv` contain the final November 7 benchmark. Supporting per-question, disagreement, and run-metadata exports are stored under `rebenchmark_2026-11-07/`.
+Historical `retrieval_log.csv`, `retrieval_log_final.csv`, `metrics.csv`, and `disagreements.csv` are retained as historical outputs and are not overwritten.
 
 ## Latest benchmark snapshot (2026-11-07)
 
@@ -60,11 +60,11 @@ After the run, generate the current per-question and disagreement summaries:
 
 ```bash
 PYTHONPATH=. python eval/analyze_results.py \\
-  --log eval/retrieval_log.csv \\
+  --log eval/retrieval_log_phase3.csv \\
   --questions eval/questions.csv
 ```
 
-The 2026-11-07 benchmark report is the authoritative run record. The supporting CSV/JSON outputs are committed under `eval/rebenchmark_2026-11-07/`.
+The 2026-11-07 benchmark report is the authoritative run record. The raw local CSV/JSON outputs are committed under `eval/rebenchmark_2026-11-07/` to preserve reproducibility.
 
 ## Selected disagreement evidence
 

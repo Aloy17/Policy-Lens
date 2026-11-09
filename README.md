@@ -100,4 +100,4 @@ The latest recorded validation passed 21 tests. The gold-set validator separatel
 - OCR accuracy has not been measured against a manually transcribed scanned-page reference.
 - The 10-page manual extraction sample was text-native; visual verification of the flagged table/layout pages remains incomplete.
 - The evaluation is retrieval-only, uses a small non-blind gold set, and is not evidence of production compliance coverage.
-- The committed screenshots document the current submission state; see `evidence/PHASE4_EVIDENCE_STATUS.md` for the evidence inventory.
+- The current screenshots include earlier UI/index/test snapshots; consult the benchmark record for the authoritative Phase 3 numbers.
