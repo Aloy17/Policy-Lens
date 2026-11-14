@@ -308,14 +308,26 @@ def test_runner_rejects_mismatched_chroma_result_arrays():
 
 def test_evidence_term_proxy_requires_all_terms_in_same_chunk():
     passage = Passage("doc_a", 10, 11)
-    assert bench.evidence_term_matches(
-        "The customer identification records are confidential.", passage,
+    metadata = meta("doc_a", 10, 11)
+    assert bench.evidence_passages_for_result(
+        "The customer identification records are confidential.", metadata,
         [passage], ["customer identification|records are confidential"]
-    )
-    assert not bench.evidence_term_matches(
+    ) == {0}
+    assert not bench.evidence_passages_for_result(
         "The customer identification process is described. Confidential records are retained.",
-        passage, [passage], ["customer identification|records are confidential"]
+        metadata, [passage], ["customer identification|records are confidential"]
     )
+
+
+def test_evidence_term_proxy_does_not_overcredit_second_passage():
+    passages = [Passage("doc_a", 10, 10), Passage("doc_a", 11, 11)]
+    scores = bench.score_evidence_term_proxy(
+        ["The header is Category III only.", "No matching evidence here."],
+        [meta("doc_a", 10, 11), meta("doc_x", 1)],
+        passages, ["Category III|header", "mandatory|proof of identity"], ks=(1, 2)
+    )
+    assert scores["recall@1"] == pytest.approx(0.5)
+    assert scores["recall@2"] == pytest.approx(0.5)
 
 
 def test_pdf_evidence_skips_are_reported_and_fail_by_default(tmp_path):
