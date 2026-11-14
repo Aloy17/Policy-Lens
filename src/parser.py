@@ -96,7 +96,7 @@ def _extract_tables(page: pymupdf.Page) -> list[str]:
             rows = [
                 [
                     rows[r][c]
-                    if re.search(r"\\d\\s*[.,]\\s*\\d", rows[r][c])
+                    if re.search(r"\d\s*[.,]\s*\d", rows[r][c])
                     else (native_rows[r][c] or rows[r][c])
                     for c in range(width)
                 ]
