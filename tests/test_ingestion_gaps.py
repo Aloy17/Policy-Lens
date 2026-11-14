@@ -128,11 +128,11 @@ def test_long_tables_repeat_headers_and_keep_rows_within_budget():
         "page_number": 7,
         "ocr_used": True,
         "text": (
-            "APPENDIX A\\n"
-            "[TABLE 1]\\n"
-            "| Category | Threshold |\\n"
-            "| --- | --- |\\n"
-            + "".join(f"| Category {i} | Value {i} |\\n" for i in range(1, 13))
+            "APPENDIX A\n"
+            "[TABLE 1]\n"
+            "| Category | Threshold |\n"
+            "| --- | --- |\n"
+            + "".join(f"| Category {i} | Value {i} |\n" for i in range(1, 13))
         ),
     }]
     chunks = structure_aware_chunks(
@@ -162,10 +162,10 @@ def test_table_row_that_exceeds_budget_is_split_with_context():
     pages = [{
         "page_number": 3,
         "text": (
-            "[TABLE 2]\\n"
-            "| Field | Description |\\n"
-            "| --- | --- |\\n"
-            "| Long field | " + "detail " * 30 + "|\\n"
+            "[TABLE 2]\n"
+            "| Field | Description |\n"
+            "| --- | --- |\n"
+            "| Long field | " + "detail " * 30 + "|\n"
         ),
     }]
     chunks = structure_aware_chunks(
