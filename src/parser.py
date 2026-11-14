@@ -89,8 +89,18 @@ def _extract_tables(page: pymupdf.Page) -> list[str]:
         rows = [row + [""] * (width - len(row)) for row in rows]
         native_rows = _native_table_rows(page, table, len(rows), width)
         if native_rows is not None:
+            # Positioned words can improve cell text when PyMuPDF's table
+            # extractor leaves a cell blank. Do not let them silently replace
+            # a non-empty extracted cell with different content: punctuation
+            # and decimal separators can be split into misleading tokens
+            # (for example, "1.5" becoming "15 .").
             rows = [
-                [native_rows[r][c] or rows[r][c] for c in range(width)]
+                [
+                    native_rows[r][c]
+                    if native_rows[r][c] and not rows[r][c]
+                    else rows[r][c]
+                    for c in range(width)
+                ]
                 for r in range(len(rows))
             ]
 
