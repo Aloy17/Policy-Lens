@@ -60,6 +60,20 @@ def _native_table_rows(
 
     return rows if assigned else None
 
+def _merge_table_cell(extracted: str, positioned: str) -> str:
+    """Combine table extraction and positioned words without corrupting decimals."""
+    if not positioned:
+        return extracted
+    decimal_pattern = r"\d\s*[.,]\s*\d"
+    extracted_has_decimal = re.search(decimal_pattern, extracted) is not None
+    positioned_has_decimal = re.search(decimal_pattern, positioned) is not None
+    if extracted_has_decimal and not positioned_has_decimal:
+        return extracted
+    if positioned_has_decimal and not extracted_has_decimal:
+        return positioned
+    return positioned or extracted
+
+
 def _extract_tables(page: pymupdf.Page) -> list[str]:
     """Extract tables while preferring source-positioned words for cell text."""
     if not hasattr(page, "find_tables"):
@@ -89,15 +103,9 @@ def _extract_tables(page: pymupdf.Page) -> list[str]:
         rows = [row + [""] * (width - len(row)) for row in rows]
         native_rows = _native_table_rows(page, table, len(rows), width)
         if native_rows is not None:
-            # Positioned words improve labels and spacing, but can split
-            # decimal separators (for example, "1.5" into "15 ."). Prefer
-            # PyMuPDF's cell extraction whenever it contains a decimal value;
-            # otherwise use positioned text when available.
             rows = [
                 [
-                    rows[r][c]
-                    if re.search(r"\d\s*[.,]\s*\d", rows[r][c])
-                    else (native_rows[r][c] or rows[r][c])
+                    _merge_table_cell(rows[r][c], native_rows[r][c])
                     for c in range(width)
                 ]
                 for r in range(len(rows))
