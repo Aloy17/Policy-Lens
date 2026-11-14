@@ -84,6 +84,10 @@ Latest overall metrics:
 
 Structure-aware chunking performs better overall and on the five table questions; fixed-size performs better on the five materially paraphrased questions. The gold set is small and concentrated in three RBI documents, and exact local-PDF page alignment is not fully established. OCR word accuracy is unmeasured. See the evaluation documentation before interpreting these results.
 
+## Extraction fidelity
+
+Task 2 selected-page table/OCR checks and current limitations are documented in [eval/extraction_fidelity_findings.md](eval/extraction_fidelity_findings.md). Run `PYTHONPATH=. python eval/extraction_fidelity.py` and `PYTHONPATH=. python eval/ocr_accuracy.py` against the local PDFs to reproduce the checks; OCR scoring requires Tesseract.
+
 ## Tests
 
 Run the automated test suite:
@@ -97,7 +101,7 @@ The latest recorded validation passed 21 tests. The gold-set validator separatel
 ## Known limitations and evidence status
 
 - Table extraction and reconstruction can lose numeric fidelity or table-cell relationships. Verify high-impact numeric values against the original PDF.
-- OCR accuracy has not been measured against a manually transcribed scanned-page reference.
+- OCR has a two-page manually transcribed pilot (82.37% micro word accuracy across 675 reference words); this is not a corpus-wide estimate. See `eval/extraction_fidelity_findings.md`.
 - The 10-page manual extraction sample was text-native; visual verification of the flagged table/layout pages remains incomplete.
 - The evaluation is retrieval-only, uses a small non-blind gold set, and is not evidence of production compliance coverage.
 - The current screenshots include earlier UI/index/test snapshots; consult the benchmark record for the authoritative Phase 3 numbers.
