@@ -29,7 +29,7 @@ from typing import Any, Protocol, Sequence
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from retrieval_metrics import (  # noqa: E402
-    DEFAULT_KS, Passage, aggregate, is_relevant, parse_passages, result_page_range, score_question,
+    DEFAULT_KS, Passage, aggregate, is_relevant, matches_passage, parse_passages, result_page_range, score_question,
 )
 
 SCRIPT_VERSION = "1.0.0"
