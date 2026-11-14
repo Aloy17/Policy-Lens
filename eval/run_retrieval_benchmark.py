@@ -86,14 +86,28 @@ def run_benchmark(
     for strategy, searcher in searchers.items():
         for q in questions:
             raw = searcher.query(query_embeddings[q["id"]], top_k)
-            ids = (raw.get("ids") or [[]])[0]
-            docs = (raw.get("documents") or [[]])[0]
-            metas = (raw.get("metadatas") or [[]])[0]
-            dists = (raw.get("distances") or [[]])[0]
+            if not isinstance(raw, dict):
+                raise TypeError(f"{strategy}/{q['id']}: Chroma query must return a dictionary.")
+            arrays = {}
+            for field in ("ids", "documents", "metadatas", "distances"):
+                value = raw.get(field)
+                if not isinstance(value, list) or len(value) != 1 or not isinstance(value[0], list):
+                    raise ValueError(
+                        f"{strategy}/{q['id']}: expected one result list for {field}; "
+                        f"got {type(value).__name__}."
+                    )
+                arrays[field] = value[0]
+            ids, docs, metas, dists = (
+                arrays["ids"], arrays["documents"], arrays["metadatas"], arrays["distances"]
+            )
+            lengths = {name: len(value) for name, value in arrays.items()}
+            if len(set(lengths.values())) != 1:
+                raise ValueError(f"{strategy}/{q['id']}: inconsistent Chroma result lengths: {lengths}")
             scores[strategy][q["id"]] = score_question(metas, q["_passages"])
             v1_scores = score_question(metas, [q["_v1_passage"]])
             scores[strategy][q["id"]]["v1"] = v1_scores
-            for rank, (cid, doc, meta, dist) in enumerate(zip(ids, docs, metas, dists), 1):
+            for rank, cid in enumerate(ids, 1):
+                doc, meta, dist = docs[rank - 1], metas[rank - 1], dists[rank - 1]
                 meta = meta if isinstance(meta, dict) else {}
                 parsed = result_page_range(meta)
                 matched = [i for i, p in enumerate(q["_passages"]) if is_relevant(meta, [p])]
@@ -173,7 +187,11 @@ def per_question_table(questions: list[dict], scores: dict[str, dict[str, dict]]
 
 def paired_bootstrap(questions, scores, key: str, iterations: int = 10000, seed: int = 0) -> dict:
     """Paired bootstrap of (structure - fixed) mean difference over headline questions."""
+    if iterations < 1:
+        raise ValueError("iterations must be >= 1.")
     ids = [q["id"] for q in questions if q["include_in_headline"].lower() == "true"]
+    if not ids:
+        raise ValueError("No headline questions available for paired bootstrap.")
     diffs = [scores["structure"][i][key] - scores["fixed"][i][key] for i in ids]
     rng = random.Random(seed)
     means = sorted(sum(rng.choice(diffs) for _ in diffs) / len(diffs) for _ in range(iterations))
@@ -202,7 +220,7 @@ def sha256_file(path: Path) -> str:
 def git_info(repo: Path) -> dict:
     def run(*args):
         return subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, check=False).stdout.strip()
-    return {"commit_sha": run("rev-parse", "HEAD"), "dirty_tracked_files": bool(run("status", "--porcelain", "--untracked-files=no"))}
+    return {"commit_sha": run("rev-parse", "HEAD"), "dirty_worktree": bool(run("status", "--porcelain"))}
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
