@@ -345,3 +345,27 @@ def test_pdf_evidence_skips_are_reported_and_fail_by_default(tmp_path):
     errors, details = v2.validate_evidence([row], pdf_dir, ocr=False)
     assert errors == []
     assert details[0]["result"] == "SKIPPED"
+
+
+
+def test_paired_bootstrap_supports_evidence_proxy():
+    questions = [
+        {"id": "q1", "include_in_headline": "true"},
+        {"id": "q2", "include_in_headline": "true"},
+    ]
+    scores = {
+        "fixed": {
+            "q1": {"evidence_term_proxy": {"rr": 0.0}},
+            "q2": {"evidence_term_proxy": {"rr": 0.5}},
+        },
+        "structure": {
+            "q1": {"evidence_term_proxy": {"rr": 1.0}},
+            "q2": {"evidence_term_proxy": {"rr": 0.5}},
+        },
+    }
+    result = bench.paired_bootstrap(
+        questions, scores, "evidence_term_proxy.rr", iterations=100, seed=7
+    )
+    assert result["mean_diff_structure_minus_fixed"] == pytest.approx(0.5)
+    assert result["questions_structure_better"] == 1
+    assert result["questions_tied"] == 1
