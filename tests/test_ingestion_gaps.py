@@ -250,35 +250,36 @@ def test_oversized_first_table_row_is_preserved_in_bounded_continuations():
     }]
 
     chunks = structure_aware_chunks(
-        pages, target_size=12, max_size=80, min_size=5, tokenizer=tokenizer
+        pages, target_size=12, max_size=120, min_size=5, tokenizer=tokenizer
     )
+    continuation_prefix = "[TABLE 1]\n[FIRST ROW CONTINUATION]\n"
     continuations = [
         chunk for chunk in chunks
-        if "[FIRST ROW CONTINUATION]" in chunk["text"]
+        if chunk["text"].startswith(continuation_prefix)
     ]
+    body_prefix = (
+        "[TABLE 1]\n"
+        "[FIRST ROW EXCEEDS CHUNK LIMIT; SEE FIRST ROW CONTINUATION]\n"
+    )
     body_chunks = [
-        chunk for chunk in chunks
-        if body_row in chunk["text"]
+        chunk for chunk in chunks if chunk["text"].startswith(body_prefix)
     ]
 
     assert len(continuations) > 1
     assert "".join(
-        chunk["text"].split("\n", 2)[2] for chunk in continuations
+        chunk["text"][len(continuation_prefix):] for chunk in continuations
     ) == first_row
-    assert body_chunks
-    assert all("[TABLE 1]" in chunk["text"] for chunk in body_chunks)
-    assert all(
-        "[FIRST ROW EXCEEDS CHUNK LIMIT; SEE FIRST ROW CONTINUATION]"
-        in chunk["text"]
-        for chunk in body_chunks
-    )
-    assert all(chunk["token_count"] <= 80 for chunk in chunks)
+    assert "".join(
+        chunk["text"][len(body_prefix):] for chunk in body_chunks
+    ) == body_row
+    assert all(chunk["token_count"] <= 120 for chunk in chunks)
     assert all(chunk["page_start"] == chunk["page_end"] == 95 for chunk in chunks)
 
 
 def test_oversized_table_body_row_is_split_without_losing_characters():
     tokenizer = CharacterTokenizer()
     long_row = "|" + ("body-value-" * 12) + "|"
+    prefix = "[TABLE 2]\n| Field | Description |\n| --- | --- |\n"
     pages = [{
         "page_number": 12,
         "text": (
@@ -290,13 +291,14 @@ def test_oversized_table_body_row_is_split_without_losing_characters():
     }]
 
     chunks = structure_aware_chunks(
-        pages, target_size=10, max_size=70, min_size=5, tokenizer=tokenizer
+        pages, target_size=10, max_size=100, min_size=5, tokenizer=tokenizer
     )
-    row_fragments = [
-        chunk["text"].split("\n", 2)[2]
-        for chunk in chunks
-        if "[TABLE 2]" in chunk["text"]
+    row_chunks = [
+        chunk for chunk in chunks if chunk["text"].startswith(prefix)
     ]
 
-    assert "".join(row_fragments) == long_row
-    assert all(chunk["token_count"] <= 70 for chunk in chunks)
+    assert len(row_chunks) > 1
+    assert "".join(
+        chunk["text"][len(prefix):] for chunk in row_chunks
+    ) == long_row
+    assert all(chunk["token_count"] <= 100 for chunk in chunks)
