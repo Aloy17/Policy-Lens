@@ -69,9 +69,10 @@ def test_ocr_disabled_does_not_call_tesseract(monkeypatch, tmp_path):
 
 
 class FakeTable:
+    # Match PyMuPDF's observed column-major cell ordering.
     cells = [
-        (0, 0, 50, 20), (50, 0, 100, 20),
-        (0, 20, 50, 40), (50, 20, 100, 40),
+        (0, 0, 50, 20), (0, 20, 50, 40),
+        (50, 0, 100, 20), (50, 20, 100, 40),
     ]
 
     def extract(self):
