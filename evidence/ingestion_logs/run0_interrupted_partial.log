@@ -1,0 +1,16 @@
+2026-11-07 18:00:19,345 | INFO | ======================================================================
+2026-11-07 18:00:19,345 | INFO | PolicyLens ingestion started
+2026-11-07 18:00:19,347 | INFO | Manifest documents: 37
+2026-11-07 18:00:19,630 | INFO | PROCESSING | rbi_kyc_2024.pdf
+2026-11-07 18:00:27,898 | INFO | CHUNKS | rbi_kyc_2024 | fixed=150 structure=186
+2026-11-07 18:00:30,551 | INFO | INGESTED | rbi_kyc_2024 | pages=107 ocr_pages=0 fixed_chunks=150 structure_chunks=186 time=10.92s
+2026-11-07 18:00:30,552 | INFO | PROCESSING | rbi_digital_lending_2022.pdf
+2026-11-07 18:00:31,553 | INFO | CHUNKS | rbi_digital_lending_2022 | fixed=13 structure=17
+2026-11-07 18:00:31,801 | INFO | INGESTED | rbi_digital_lending_2022 | pages=12 ocr_pages=0 fixed_chunks=13 structure_chunks=17 time=1.25s
+2026-11-07 18:00:31,802 | INFO | PROCESSING | rbi_hfc_directions_2021.pdf
+2026-11-07 18:00:52,398 | INFO | CHUNKS | rbi_hfc_directions_2021 | fixed=484 structure=1016
+2026-11-07 18:00:59,229 | INFO | INGESTED | rbi_hfc_directions_2021 | pages=258 ocr_pages=1 fixed_chunks=484 structure_chunks=1016 time=27.43s
+2026-11-07 18:00:59,232 | INFO | PROCESSING | rbi_nbfc_filing_2024.pdf
+2026-11-07 18:00:59,778 | INFO | CHUNKS | rbi_nbfc_filing_2024 | fixed=6 structure=18
+2026-11-07 18:01:00,072 | INFO | INGESTED | rbi_nbfc_filing_2024 | pages=3 ocr_pages=0 fixed_chunks=6 structure_chunks=18 time=0.84s
+2026-11-07 18:01:00,072 | INFO | PROCESSING | sebi_master_circular_for_listing_obligations_and_disclosure_requirements.pdf
