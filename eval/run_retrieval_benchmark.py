@@ -256,7 +256,15 @@ def paired_bootstrap(questions, scores, key: str, iterations: int = 10000, seed:
     ids = [q["id"] for q in questions if q["include_in_headline"].lower() == "true"]
     if not ids:
         raise ValueError("No headline questions available for paired bootstrap.")
-    diffs = [scores["structure"][i][key] - scores["fixed"][i][key] for i in ids]
+    if key.startswith("evidence_term_proxy."):
+        nested_key = key.split(".", 1)[1]
+        diffs = [
+            scores["structure"][i]["evidence_term_proxy"][nested_key]
+            - scores["fixed"][i]["evidence_term_proxy"][nested_key]
+            for i in ids
+        ]
+    else:
+        diffs = [scores["structure"][i][key] - scores["fixed"][i][key] for i in ids]
     rng = random.Random(seed)
     means = sorted(sum(rng.choice(diffs) for _ in diffs) / len(diffs) for _ in range(iterations))
     return {
@@ -378,7 +386,14 @@ def main() -> int:
 
     metrics = metrics_tables(questions, scores)
     per_q = per_question_table(questions, scores)
-    boot = [paired_bootstrap(questions, scores, key) for key in ("rr", "hit@10", "recall@10", "precision@5")]
+    boot = [
+        paired_bootstrap(questions, scores, key)
+        for key in (
+            "rr", "hit@10", "recall@10", "precision@5",
+            "evidence_term_proxy.rr", "evidence_term_proxy.hit@10",
+            "evidence_term_proxy.recall@10", "evidence_term_proxy.precision@5",
+        )
+    ]
 
     write_csv(out_dir / "retrieval_log.csv", log)
     write_csv(out_dir / "metrics.csv", metrics)
