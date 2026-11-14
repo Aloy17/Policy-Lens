@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from src.parser import parse_pdf
+from src.ocr import apply_ocr_to_pages
 
 
 CASES: list[dict[str, Any]] = [
@@ -119,7 +120,13 @@ def inspect_case(pdf_dir: Path, case: dict[str, Any]) -> dict[str, Any]:
             "description": case["description"],
         }
 
-    text = _normalise(page["text"])
+    inspected_page = page
+    if case["kind"] == "ocr_reference":
+        # Exercise the production OCR fallback on this page, not merely the
+        # PDF's embedded text layer. Tesseract must be installed locally.
+        inspected_page = apply_ocr_to_pages(pdf_path, [page], enabled=True)[0]
+
+    text = _normalise(inspected_page["text"])
     missing = [term for term in case["required"] if _normalise(term) not in text]
     forbidden = [term for term in case["forbidden"] if _normalise(term) in text]
     status = "pass" if not missing and not forbidden else "fail"
@@ -132,7 +139,8 @@ def inspect_case(pdf_dir: Path, case: dict[str, Any]) -> dict[str, Any]:
         "missing_required": missing,
         "forbidden_found": forbidden,
         "table_count": page.get("table_count", 0),
-        "word_count": page.get("word_count", 0),
+        "word_count": len(inspected_page["text"].split()),
+        "ocr_used": bool(inspected_page.get("ocr_used", False)),
         "ocr_candidate": page.get("word_count", 0) < 20
         or (
             page.get("image_coverage", 0.0) >= 0.5
