@@ -6,7 +6,7 @@
 |---|---|
 | Gold-set validation against the 37 PDFs | Done. Report: `dataset_validation_report.md` |
 | Extended, validated gold set (v2) | Done. `gold_questions_v2.csv` (42 questions, 41 usable) |
-| Metrics code, benchmark runner, unit tests | Done and tested with fixtures |
+| Metrics code, benchmark runner, unit tests | Implemented; CI verification pending after hardening |
 | **Benchmark on `policylens_v1_fixed` / `policylens_v1_structure`** | **Not run.** See "Why the benchmark has not run" |
 | Qualitative error analysis, recommendation | **Pending the benchmark.** Nothing below is a result |
 
@@ -16,20 +16,25 @@ The session that produced this work had the repository and the 37 PDFs but not t
 
 ## Methodology
 
-Relevance uses document ID and inclusive 1-based PDF page range. A retrieved chunk is relevant to a gold passage when `doc_id` matches and its `page_start`..`page_end` overlaps the passage range. A chunk is relevant to a question if it matches any of its gold passages.
+Two relevance bases are reported separately:
+
+1. **Page-overlap proxy:** document ID matches and the retrieved chunk's inclusive 1-based PDF page range overlaps a gold passage. This is a broad retrieval-location signal, not proof that the chunk contains the right clause.
+2. **Passage-term lexical proxy:** page overlap plus every required phrase in that passage's `passage_terms` group appearing in the retrieved chunk text. Each gold passage is scored independently, so a chunk cannot claim multi-passage coverage merely because its page range spans multiple passages.
+
+The lexical proxy is stricter than page overlap but is still not semantic answer validation. Manual review against full chunk text and source PDF pages remains necessary.
 
 | Metric | Definition |
 |---|---|
-| Hit Rate@k | 1 if any of the top k is relevant. The legacy `evaluate.py` labels this "Recall@k" |
-| Recall@k | Fraction of the question's gold passages covered by the top k. Equals Hit Rate@k for single-passage questions |
+| Hit Rate@k | 1 if any of the top k results match the selected relevance basis |
+| Recall@k | Fraction of gold passages covered by the top k; page-overlap and passage-term lexical versions are reported separately |
 | Precision@k | Relevant results in the top k divided by k (k is the denominator even if fewer results return) |
-| MRR | Mean of 1/rank of the first relevant result, 0 if none in the top 10 |
+| MRR | Mean reciprocal rank of the first relevant result; page-overlap and passage-term lexical comparisons are bootstrapped separately |
 
 Held constant across strategies: query text, a single set of query embeddings reused for both collections, `config.yaml` embedding settings, top-k 10, no metadata filter, the same Chroma `query` call, the same question set. Only the collection name differs.
 
 The score in the log is cosine similarity (`1 - distance`); Chroma's cosine distance is also logged. Lower distance means closer.
 
-Safety: the runner copies the Chroma directory to a temporary location and queries the copy. It hashes the original directory before and after and records the result in `run_metadata.json`. It uses `get_collection`, never `get_or_create_collection`, and refuses to write into a non-empty output directory.
+Safety: the runner copies the Chroma directory to a temporary location and queries the copy. It hashes the original directory before and after and records the result in `run_metadata.json`. It uses `get_collection`, never `get_or_create_collection`, and refuses to write into a non-empty output directory. It also rejects mismatched Chroma result-array lengths instead of silently truncating them.
 
 ## Gold-set validation summary
 
@@ -56,13 +61,13 @@ Coverage of the 41 usable questions: direct 31, paraphrase 9, table 5, numeric o
 - The questions were written after ingestion began, so this is not a blind holdout, and the original 25 are 80% KYC.
 - Only 3 multi-passage questions exist, so passage-level Recall@k differs from Hit Rate@k on very few cases.
 - Evidence checks use phrase matching against page text. They prove the phrase is on the labelled pages, not that the question is perfectly answerable from them.
-- Relevance is page-overlap based. A chunk on the right page but from a different clause counts as relevant (q05/q14 on p46; q23/q32 on p4).
+- Page-overlap relevance is deliberately broad: a chunk on the right page but from a different clause can count as relevant (q05/q14 on p46; q23/q32 on p4). The passage-term lexical proxy reduces this over-credit but cannot prove semantic correctness.
 - 41 questions give wide confidence intervals; the runner writes a paired bootstrap, and small differences should not be read as superiority.
 - This evaluates retrieval only, not answer quality.
 
 ## Reproduce
 
-Validate the dataset (needs the PDFs and `pymupdf`; add Tesseract for the scanned gazette):
+Validate the dataset (needs the PDFs and `pymupdf`; Tesseract must be installed and working for scanned pages). Evidence extraction errors fail validation. Any skipped evidence passage also fails by default; `--allow-skipped-evidence` is an explicit opt-out and must not be described as a complete validation:
 
 ```bash
 PYTHONPATH=. python eval/validate_gold_v2.py --pdf-dir data/pdfs --ocr --report eval/benchmark_2026-11-14/dataset_validation_report.md
