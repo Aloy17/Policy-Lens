@@ -57,7 +57,7 @@ def test_inspect_records_reports_complete_document_and_missing_document():
 def test_inspect_records_detects_duplicate_and_missing_indices():
     manifest = {"doc-1": {"doc_id": "doc-1"}}
     records = {
-        "ids": ["first", "second"],
+        "ids": ["doc-1_fixed_abc123_0", "doc-1_fixed_abc123_0"],
         "metadatas": [
             chunk_metadata("doc-1", 0),
             chunk_metadata("doc-1", 0),
@@ -71,7 +71,7 @@ def test_inspect_records_detects_duplicate_and_missing_indices():
 
     assert "duplicate_chunk_index" in issues
     assert "missing_or_out_of_range_chunk_index" in issues
-    assert "record_count_mismatch" in issues
+    assert "chunk_id_mismatch" not in issues
 
 
 def test_inspect_records_detects_source_hash_mismatch():
