@@ -66,3 +66,55 @@ def test_ocr_disabled_does_not_call_tesseract(monkeypatch, tmp_path):
     pages = [{"page_number": 1, "text": "", "word_count": 0, "has_text": False}]
     result = apply_ocr_to_pages(tmp_path / "unused.pdf", pages, enabled=False)
     assert result[0]["ocr_used"] is False
+
+
+class FakeTable:
+    cells = [
+        (0, 0, 50, 20), (50, 0, 100, 20),
+        (0, 20, 50, 40), (50, 20, 100, 40),
+    ]
+
+    def extract(self):
+        # Simulate the known PyMuPDF reconstruction defect.
+        return [["Risk", "Multiplier"], ["Medium risk", "15 ."]]
+
+
+class FakeTableFinder:
+    tables = [FakeTable()]
+
+
+class FakeTablePage:
+    def find_tables(self):
+        return FakeTableFinder()
+
+    def get_text(self, mode):
+        assert mode == "words"
+        return [
+            (2, 2, 25, 12, "Risk", 0, 0, 0),
+            (52, 2, 90, 12, "Multiplier", 0, 0, 1),
+            (2, 22, 40, 32, "Medium", 1, 0, 0),
+            (41, 22, 49, 32, "risk", 1, 0, 1),
+            (52, 22, 65, 32, "1.5", 1, 0, 2),
+        ]
+
+
+def test_table_cells_prefer_native_words_to_corrupted_reconstruction():
+    from src.parser import _extract_tables
+
+    tables = _extract_tables(FakeTablePage())
+
+    assert len(tables) == 1
+    assert "| Medium risk | 1.5 |" in tables[0]
+    assert "15 ." not in tables[0]
+
+
+def test_table_detection_errors_are_not_silently_ignored():
+    import pytest
+    from src.parser import _extract_tables
+
+    class BrokenTablePage:
+        def find_tables(self):
+            raise RuntimeError("table detection failed")
+
+    with pytest.raises(RuntimeError, match="table detection failed"):
+        _extract_tables(BrokenTablePage())
