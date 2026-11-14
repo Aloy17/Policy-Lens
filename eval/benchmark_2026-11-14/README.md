@@ -9,11 +9,11 @@
 | Metrics code, benchmark runner, unit tests | Implemented; CI verification running on PR head |
 | **Benchmark on `policylens_v1_fixed` / `policylens_v1_structure`** | **Run successfully** against a temporary copy of the repaired local database |
 | Aggregate results and recommendation | Reported in [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) |
-| Source-PDF-verified qualitative review | **Still pending** for the representative retrieval cases |
+| Selected retrieved-chunk content inspection | Done; detailed findings in [qualitative_error_analysis.md](qualitative_error_analysis.md). Visual source-PDF verification and full top-k reconstruction remain incomplete. |
 
 ## Benchmark results
 
-The local benchmark was completed on 2026-11-14. It evaluated 41 valid questions, verified that the original database remained unchanged, and produced mixed evidence for the two chunking strategies. Structure-aware retrieval led on page-overlap metrics, while lexical evidence-proxy results were mixed; all paired-bootstrap 95% confidence intervals included zero. See [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) for the aggregate tables, confidence intervals, limitations, and initial case observations.
+The local benchmark was completed on 2026-11-14. It evaluated 41 valid questions, verified that the original database remained unchanged, and produced mixed evidence for the two chunking strategies. Structure-aware retrieval led on page-overlap metrics, while lexical evidence-proxy results were mixed; all paired-bootstrap 95% confidence intervals included zero. See [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) for aggregate results and [`qualitative_error_analysis.md`](qualitative_error_analysis.md) for selected chunk-level findings and evidence limits.
 
 ## Methodology
 
