@@ -40,8 +40,10 @@ def edit_distance(ref: list[str], hyp: list[str]) -> int:
 
 def score(reference: str, ocr_text: str) -> dict[str, float]:
     ref, hyp = tokenize(reference), tokenize(ocr_text)
+    if not ref:
+        raise ValueError("OCR reference text must contain at least one word.")
     errors = edit_distance(ref, hyp)
-    wer = errors / len(ref) if ref else 0.0
+    wer = errors / len(ref)
     ref_counts, hyp_counts = Counter(ref), Counter(hyp)
     matched = sum(min(count, hyp_counts[word]) for word, count in ref_counts.items())
     return {
@@ -83,8 +85,12 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(rows)
     total_ref = sum(r["reference_words"] for r in rows)
-    weighted = sum(r["word_accuracy"] * r["reference_words"] for r in rows) / total_ref
-    print(f"Pages: {len(rows)} | weighted word accuracy: {weighted:.4f}")
+    total_errors = sum(r["word_errors"] for r in rows)
+    weighted = 1 - (total_errors / total_ref) if total_ref else 0.0
+    print(
+        f"Pages: {len(rows)} | reference words: {total_ref} | "
+        f"word errors: {total_errors} | micro word accuracy: {weighted:.4f}"
+    )
 
 
 if __name__ == "__main__":
