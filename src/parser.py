@@ -136,15 +136,22 @@ def _extract_page_text(page: pymupdf.Page) -> str:
         return page.get_text("text", sort=True)
 
     midpoint = page.rect.width / 2
-    left = [b for b in blocks if b[2] <= midpoint + page.rect.width * 0.04]
-    right = [b for b in blocks if b[0] >= midpoint - page.rect.width * 0.04]
     narrow = [b for b in blocks if (b[2] - b[0]) < page.rect.width * 0.65]
+    left = [
+        block for block in narrow
+        if (block[0] + block[2]) / 2 < midpoint
+    ]
+    right = [
+        block for block in narrow
+        if (block[0] + block[2]) / 2 >= midpoint
+    ]
 
-    # Require multiple blocks in both halves before assuming columns.
+    # Classify each block into exactly one column. A tolerance-based edge
+    # check can place blocks in the center gutter into both columns.
     if len(left) < 2 or len(right) < 2 or len(narrow) < 4:
         return page.get_text("text", sort=True)
 
-    spanning = [b for b in blocks if b not in left and b not in right]
+    spanning = [b for b in blocks if b not in narrow]
     column_top = min([b[1] for b in left + right])
     column_bottom = max([b[3] for b in left + right])
     top = sorted([b for b in spanning if b[1] <= column_top], key=lambda b: b[1])
