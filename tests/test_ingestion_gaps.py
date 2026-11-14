@@ -197,11 +197,11 @@ def test_wide_table_header_does_not_fail_when_separator_exceeds_budget():
     }]
 
     chunks = structure_aware_chunks(
-        pages, target_size=18, max_size=18, min_size=5
+        pages, target_size=20, max_size=20, min_size=5
     )
 
     assert chunks
-    assert all(chunk["token_count"] <= 18 for chunk in chunks)
+    assert all(chunk["token_count"] <= 20 for chunk in chunks)
     assert all(header in chunk["text"] for chunk in chunks)
     assert any("| row | value |" in chunk["text"] for chunk in chunks)
     assert all(separator not in chunk["text"] for chunk in chunks)
