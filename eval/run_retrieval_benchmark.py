@@ -72,6 +72,20 @@ def load_questions(path: Path) -> list[dict]:
     return rows
 
 
+def evidence_term_matches(document: str | None, passage: Passage, passages: Sequence[Passage], term_groups: Sequence[str]) -> bool:
+    """Lexical evidence proxy: all required terms for an overlapping gold passage occur in the chunk."""
+    if not isinstance(document, str) or not document.strip():
+        return False
+    text = " ".join(document.lower().split())
+    for gold, group in zip(passages, term_groups):
+        if gold.doc_id != passage.doc_id or gold.page_start > passage.page_end or gold.page_end < passage.page_start:
+            continue
+        terms = [term.strip().lower() for term in group.split("|") if term.strip()]
+        if terms and all(" ".join(term.split()) in text for term in terms):
+            return True
+    return False
+
+
 def run_benchmark(
     questions: list[dict],
     query_embeddings: dict[str, Sequence[float]],
@@ -104,6 +118,15 @@ def run_benchmark(
             if len(set(lengths.values())) != 1:
                 raise ValueError(f"{strategy}/{q['id']}: inconsistent Chroma result lengths: {lengths}")
             scores[strategy][q["id"]] = score_question(metas, q["_passages"])
+            term_groups = q["passage_terms"].split(";")
+            evidence_metas = [
+                meta if evidence_term_matches(doc, q["_passages"][0], q["_passages"], term_groups) else None
+                for doc, meta in zip(docs, metas)
+            ]
+            # This is a lexical evidence proxy, not semantic/answer correctness.
+            scores[strategy][q["id"]]["evidence_term_proxy"] = score_question(
+                evidence_metas, q["_passages"]
+            )
             v1_scores = score_question(metas, [q["_v1_passage"]])
             scores[strategy][q["id"]]["v1"] = v1_scores
             for rank, cid in enumerate(ids, 1):
@@ -121,6 +144,9 @@ def run_benchmark(
                     "section_title": meta.get("section_title", ""),
                     "distance": round(float(dist), 6), "similarity": round(1.0 - float(dist), 6),
                     "is_relevant": bool(matched),
+                    "evidence_term_proxy_relevant": evidence_term_matches(
+                        doc, Passage(parsed[0], parsed[1], parsed[2]), q["_passages"], term_groups
+                    ) if parsed else False,
                     "matched_gold_passages": ";".join(str(i + 1) for i in matched),
                     "expected_doc_id": q["_passages"][0].doc_id,
                     "expected_passages": q["gold_passages"],
@@ -149,7 +175,9 @@ def metrics_tables(questions: list[dict], scores: dict[str, dict[str, dict]]) ->
             continue
         for strategy in scores:
             agg = aggregate([scores[strategy][i] for i in ids])
-            rows.append({"subset": name, "strategy": strategy, **agg})
+            rows.append({"subset": name, "relevance_basis": "page_overlap_proxy", "strategy": strategy, **agg})
+            evidence_agg = aggregate([scores[strategy][i]["evidence_term_proxy"] for i in ids])
+            rows.append({"subset": name, "relevance_basis": "passage_term_lexical_proxy", "strategy": strategy, **evidence_agg})
     # Legacy-comparable view: original 25 questions, original v1 single-range labels.
     ids = groups["original_q01_q25_v2_labels"]
     for strategy in scores:
@@ -169,9 +197,13 @@ def per_question_table(questions: list[dict], scores: dict[str, dict[str, dict]]
             sc = scores[s][q["id"]]
             row[f"{s}_first_relevant_rank"] = sc["first_relevant_rank"] or ""
             for k in DEFAULT_KS:
-                row[f"{s}_hit@{k}"] = int(sc[f"hit@{k}"])
-                row[f"{s}_recall@{k}"] = round(sc[f"recall@{k}"], 4)
-                row[f"{s}_precision@{k}"] = round(sc[f"precision@{k}"], 4)
+                row[f"{s}_page_overlap_hit@{k}"] = int(sc[f"hit@{k}"])
+                row[f"{s}_page_overlap_recall@{k}"] = round(sc[f"recall@{k}"], 4)
+                row[f"{s}_page_overlap_precision@{k}"] = round(sc[f"precision@{k}"], 4)
+                ev = sc["evidence_term_proxy"]
+                row[f"{s}_evidence_term_hit@{k}"] = int(ev[f"hit@{k}"])
+                row[f"{s}_evidence_term_recall@{k}"] = round(ev[f"recall@{k}"], 4)
+                row[f"{s}_evidence_term_precision@{k}"] = round(ev[f"precision@{k}"], 4)
         f_rank = scores["fixed"][q["id"]]["first_relevant_rank"]
         s_rank = scores["structure"][q["id"]]["first_relevant_rank"]
         hit_f, hit_s = f_rank is not None, s_rank is not None
