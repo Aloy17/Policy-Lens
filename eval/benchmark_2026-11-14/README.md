@@ -6,13 +6,14 @@
 |---|---|
 | Gold-set validation against the 37 PDFs | Done. Report: `dataset_validation_report.md` |
 | Extended, validated gold set (v2) | Done. `gold_questions_v2.csv` (42 questions, 41 usable) |
-| Metrics code, benchmark runner, unit tests | Implemented; CI verification pending after hardening |
-| **Benchmark on `policylens_v1_fixed` / `policylens_v1_structure`** | **Not run.** See "Why the benchmark has not run" |
-| Qualitative error analysis, recommendation | **Pending the benchmark.** Nothing below is a result |
+| Metrics code, benchmark runner, unit tests | Implemented; CI verification running on PR head |
+| **Benchmark on `policylens_v1_fixed` / `policylens_v1_structure`** | **Run successfully** against a temporary copy of the repaired local database |
+| Aggregate results and recommendation | Reported in [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) |
+| Source-PDF-verified qualitative review | **Still pending** for the representative retrieval cases |
 
-## Why the benchmark has not run
+## Benchmark results
 
-The session that produced this work had the repository and the 37 PDFs but not the Chroma database (`chroma_db/` is gitignored), and it could not reach Hugging Face to load `sentence-transformers/multi-qa-MiniLM-L6-cos-v1`. Rebuilding an index in that environment would have meant re-ingesting the corpus, which the task forbids without review, and it would not have been the audited 5,932 / 15,773-record collections. No benchmark numbers exist, and none are estimated here.
+The local benchmark was completed on 2026-11-14. It evaluated 41 valid questions, verified that the original database remained unchanged, and produced mixed evidence for the two chunking strategies. Structure-aware retrieval led on page-overlap metrics, while lexical evidence-proxy results were mixed; all paired-bootstrap 95% confidence intervals included zero. See [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) for the aggregate tables, confidence intervals, limitations, and initial case observations.
 
 ## Methodology
 
@@ -87,9 +88,9 @@ PYTHONPATH=. python -m pytest -q tests/test_retrieval_metrics.py tests/test_gold
 
 ## Results
 
-Not yet available. The run writes `retrieval_log.csv`, `metrics.csv`, `per_question.csv`, `paired_bootstrap.json`, `cases_for_inspection.md` and `run_metadata.json`.
+The benchmark results and interpretation are documented in [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md). Raw run outputs remain local; `run_metadata.json` contains a machine-specific path and the retrieval log is not committed. Source-PDF verification of the representative retrieved chunks remains outstanding.
 
-## Hypotheses to check once results exist
+## Follow-up questions informed by the run
 
 These come from reading the source pages, not from retrieval output.
 
