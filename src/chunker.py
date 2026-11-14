@@ -82,6 +82,18 @@ def looks_like_heading(line: str) -> bool:
     return stripped.isupper() and 1 <= len(stripped.split()) <= 12
 
 
+def _is_table_separator(line: str) -> bool:
+    """Return True only for a Markdown table separator row."""
+    stripped = line.strip()
+    if not (stripped.startswith("|") and stripped.endswith("|")):
+        return False
+    cells = stripped.strip("|").split("|")
+    return bool(cells) and all(
+        re.fullmatch(r"\s*:?-{3,}:?\s*", cell) is not None
+        for cell in cells
+    )
+
+
 def _table_chunks(
     table_lines: list[tuple[str, int, bool]],
     section_title: str,
@@ -97,9 +109,23 @@ def _table_chunks(
 
     marker = table_lines[0]
     header = table_lines[1]
-    separator = table_lines[2] if len(table_lines) > 2 and table_lines[2][0].lstrip().startswith("|") else None
+    separator = (
+        table_lines[2]
+        if len(table_lines) > 2 and _is_table_separator(table_lines[2][0])
+        else None
+    )
     body_start = 3 if separator else 2
-    prefix_lines = [marker, header] + ([separator] if separator else [])
+
+    # A Markdown separator row is presentation-only. Keep it when it fits,
+    # but never let it displace substantive header or body content.
+    prefix_lines = [marker, header]
+    base_prefix_text = "\n".join(item[0] for item in prefix_lines)
+    if separator:
+        candidate_prefix_lines = prefix_lines + [separator]
+        candidate_prefix_text = "\n".join(item[0] for item in candidate_prefix_lines)
+        if len(_encode(candidate_prefix_text, tokenizer)) < max_size:
+            prefix_lines = candidate_prefix_lines
+
     prefix_text = "\n".join(item[0] for item in prefix_lines)
     prefix_tokens = _encode(prefix_text, tokenizer)
 
