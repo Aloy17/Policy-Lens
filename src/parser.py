@@ -10,14 +10,26 @@ def _native_table_rows(
     row_count: int,
     column_count: int,
 ) -> list[list[str]] | None:
-    """Rebuild table cells from positioned native words when cell geometry exists.
+    """Rebuild table cells from positioned native words and cell geometry.
 
-    PyMuPDF's table text reconstruction can lose punctuation in numeric cells.
-    Assigning native PDF words by their bounding-box centres preserves the
-    original glyph sequence, including decimal points.
+    PyMuPDF's flat table.cells sequence is not guaranteed to be row-major.
+    Derive row and column positions from each cell's coordinates instead.
     """
     cells = getattr(table, "cells", None)
     if not cells or len(cells) < row_count * column_count:
+        return None
+
+    valid_cells = [
+        tuple(map(float, cell[:4]))
+        for cell in cells
+        if cell is not None and len(cell) >= 4
+    ]
+    if len(valid_cells) < row_count * column_count:
+        return None
+
+    row_positions = sorted({round(cell[1], 3) for cell in valid_cells})
+    column_positions = sorted({round(cell[0], 3) for cell in valid_cells})
+    if len(row_positions) != row_count or len(column_positions) != column_count:
         return None
 
     try:
@@ -27,28 +39,26 @@ def _native_table_rows(
 
     rows = [["" for _ in range(column_count)] for _ in range(row_count)]
     assigned = 0
-    for row_index in range(row_count):
-        for column_index in range(column_count):
-            cell = cells[row_index * column_count + column_index]
-            if not cell or len(cell) < 4:
-                continue
-            x0, y0, x1, y1 = map(float, cell[:4])
-            cell_words = []
-            for word in words:
-                wx0, wy0, wx1, wy1, word_text = word[:5]
-                center_x = (float(wx0) + float(wx1)) / 2
-                center_y = (float(wy0) + float(wy1)) / 2
-                if x0 <= center_x <= x1 and y0 <= center_y <= y1:
-                    cell_words.append((float(wy0), float(wx0), str(word_text)))
-            cell_words.sort(key=lambda item: (item[0], item[1]))
-            if cell_words:
-                rows[row_index][column_index] = " ".join(
-                    item[2] for item in cell_words
-                )
-                assigned += len(cell_words)
+    for x0, y0, x1, y1 in valid_cells:
+        row_index = min(range(row_count), key=lambda i: abs(row_positions[i] - y0))
+        column_index = min(
+            range(column_count), key=lambda i: abs(column_positions[i] - x0)
+        )
+        cell_words = []
+        for word in words:
+            wx0, wy0, wx1, wy1, word_text = word[:5]
+            center_x = (float(wx0) + float(wx1)) / 2
+            center_y = (float(wy0) + float(wy1)) / 2
+            if x0 <= center_x <= x1 and y0 <= center_y <= y1:
+                cell_words.append((float(wy0), float(wx0), str(word_text)))
+        cell_words.sort(key=lambda item: (item[0], item[1]))
+        if cell_words:
+            rows[row_index][column_index] = " ".join(
+                item[2] for item in cell_words
+            )
+            assigned += len(cell_words)
 
     return rows if assigned else None
-
 
 def _extract_tables(page: pymupdf.Page) -> list[str]:
     """Extract tables while preferring source-positioned words for cell text."""
