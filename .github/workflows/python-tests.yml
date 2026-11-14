@@ -6,6 +6,7 @@ on:
       - "src/**"
       - "tests/**"
       - "ingest.py"
+      - "audit_chroma.py"
       - "eval/**"
       - "requirements.txt"
       - ".github/workflows/python-tests.yml"
@@ -14,6 +15,8 @@ on:
       - "src/**"
       - "tests/**"
       - "ingest.py"
+      - "audit_chroma.py"
+      - "eval/**"
       - "requirements.txt"
       - ".github/workflows/python-tests.yml"
   workflow_dispatch:
