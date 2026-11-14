@@ -118,12 +118,14 @@ def inspect_records(
                 if len(current_metadata) != expected_count:
                     issues.append("record_count_mismatch")
 
-                expected_prefix = f"{doc_id}_{strategy}_{(expected_hash or hashes[0])[:12]}_"
-                for record_id, metadata in current_rows:
-                    index = metadata.get("chunk_index")
-                    if type(index) is int and record_id != f"{expected_prefix}{index}":
-                        issues.append("chunk_id_mismatch")
-                        break
+                version_hash = expected_hash or (hashes[0] if hashes else None)
+                if version_hash:
+                    expected_prefix = f"{doc_id}_{strategy}_{version_hash[:12]}_"
+                    for record_id, metadata in current_rows:
+                        index = metadata.get("chunk_index")
+                        if type(index) is int and record_id != f"{expected_prefix}{index}":
+                            issues.append("chunk_id_mismatch")
+                            break
 
         if expected_hash is None and rows:
             issues.append("local_pdf_missing_hash_unverified")
