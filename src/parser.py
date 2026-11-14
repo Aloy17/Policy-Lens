@@ -4,33 +4,90 @@ from typing import Any
 import pymupdf
 
 
+def _native_table_rows(
+    page: pymupdf.Page,
+    table: Any,
+    row_count: int,
+    column_count: int,
+) -> list[list[str]] | None:
+    """Rebuild table cells from positioned native words when cell geometry exists.
+
+    PyMuPDF's table text reconstruction can lose punctuation in numeric cells.
+    Assigning native PDF words by their bounding-box centres preserves the
+    original glyph sequence, including decimal points.
+    """
+    cells = getattr(table, "cells", None)
+    if not cells or len(cells) < row_count * column_count:
+        return None
+
+    try:
+        words = page.get_text("words")
+    except Exception:
+        return None
+
+    rows = [["" for _ in range(column_count)] for _ in range(row_count)]
+    assigned = 0
+    for row_index in range(row_count):
+        for column_index in range(column_count):
+            cell = cells[row_index * column_count + column_index]
+            if not cell or len(cell) < 4:
+                continue
+            x0, y0, x1, y1 = map(float, cell[:4])
+            cell_words = []
+            for word in words:
+                wx0, wy0, wx1, wy1, word_text = word[:5]
+                center_x = (float(wx0) + float(wx1)) / 2
+                center_y = (float(wy0) + float(wy1)) / 2
+                if x0 <= center_x <= x1 and y0 <= center_y <= y1:
+                    cell_words.append((float(wy0), float(wx0), str(word_text)))
+            cell_words.sort(key=lambda item: (item[0], item[1]))
+            if cell_words:
+                rows[row_index][column_index] = " ".join(
+                    item[2] for item in cell_words
+                )
+                assigned += len(cell_words)
+
+    return rows if assigned else None
+
+
 def _extract_tables(page: pymupdf.Page) -> list[str]:
-    """Extract detected tables as readable Markdown-like text."""
+    """Extract tables while preferring source-positioned words for cell text."""
     if not hasattr(page, "find_tables"):
         return []
 
     try:
         finder = page.find_tables()
-    except Exception:
-        return []
+    except Exception as exc:
+        raise RuntimeError("PyMuPDF table detection failed") from exc
 
     rendered = []
     for table_number, table in enumerate(finder.tables, start=1):
-        rows = table.extract() or []
+        try:
+            extracted = table.extract() or []
+        except Exception as exc:
+            raise RuntimeError(
+                f"PyMuPDF failed to extract table {table_number}"
+            ) from exc
         rows = [
             ["" if cell is None else " ".join(str(cell).split()) for cell in row]
-            for row in rows
+            for row in extracted
         ]
         if not rows:
             continue
 
         width = max(len(row) for row in rows)
         rows = [row + [""] * (width - len(row)) for row in rows]
-        header = rows[0]
+        native_rows = _native_table_rows(page, table, len(rows), width)
+        if native_rows is not None:
+            rows = [
+                [native_rows[r][c] or rows[r][c] for c in range(width)]
+                for r in range(len(rows))
+            ]
+
         separator = ["---"] * width
         markdown_rows = [
             "| " + " | ".join(row) + " |"
-            for row in [header, separator, *rows[1:]]
+            for row in [rows[0], separator, *rows[1:]]
         ]
         rendered.append(f"[TABLE {table_number}]\n" + "\n".join(markdown_rows))
 
