@@ -36,13 +36,10 @@ class VectorStore:
         self,
         doc_id: str,
         source_hash: str,
-        expected_chunk_count: int,
+        expected_chunk_count: int | None,
         chunk_strategy: str,
     ) -> bool:
         """Return whether a source version has every expected chunk exactly once."""
-        if expected_chunk_count <= 0:
-            return False
-
         result = self.collection.get(
             where={"$and": [
                 {"doc_id": doc_id},
@@ -51,21 +48,30 @@ class VectorStore:
             include=["metadatas"],
         )
         metadatas = result.get("metadatas") or []
-        if len(metadatas) != expected_chunk_count:
+        if not metadatas:
+            return False
+
+        stored_counts = {metadata.get("chunk_count") for metadata in metadatas}
+        if len(stored_counts) != 1:
+            return False
+        stored_count = stored_counts.pop()
+        if not isinstance(stored_count, int) or stored_count <= 0:
+            return False
+        if expected_chunk_count is not None and stored_count != expected_chunk_count:
+            return False
+        if len(metadatas) != stored_count:
             return False
 
         indices = []
         for metadata in metadatas:
             if metadata.get("chunk_strategy") != chunk_strategy:
                 return False
-            if metadata.get("chunk_count") != expected_chunk_count:
-                return False
             index = metadata.get("chunk_index")
             if not isinstance(index, int):
                 return False
             indices.append(index)
 
-        return sorted(indices) == list(range(expected_chunk_count))
+        return sorted(indices) == list(range(stored_count))
 
     def search(self, query_embedding: list[float], top_k: int = 5,
                where: dict[str, Any] | None = None) -> dict[str, Any]:
