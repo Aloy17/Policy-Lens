@@ -73,6 +73,40 @@ class VectorStore:
 
         return sorted(indices) == list(range(stored_count))
 
+    def remove_unexpected_chunks(
+        self,
+        doc_id: str,
+        source_hash: str,
+        expected_chunk_count: int,
+        chunk_strategy: str,
+    ) -> int:
+        """Remove obsolete or malformed chunks for a just-written source version."""
+        result = self.collection.get(
+            where={"$and": [
+                {"doc_id": doc_id},
+                {"source_hash": source_hash},
+            ]},
+            include=["metadatas"],
+        )
+        unexpected_ids = []
+        for chunk_id, metadata in zip(
+            result.get("ids") or [], result.get("metadatas") or []
+        ):
+            if metadata.get("chunk_strategy") != chunk_strategy:
+                continue
+            index = metadata.get("chunk_index")
+            if (
+                metadata.get("chunk_count") != expected_chunk_count
+                or not isinstance(index, int)
+                or index < 0
+                or index >= expected_chunk_count
+            ):
+                unexpected_ids.append(chunk_id)
+
+        if unexpected_ids:
+            self.collection.delete(ids=unexpected_ids)
+        return len(unexpected_ids)
+
     def search(self, query_embedding: list[float], top_k: int = 5,
                where: dict[str, Any] | None = None) -> dict[str, Any]:
         return self.collection.query(query_embeddings=[query_embedding],
