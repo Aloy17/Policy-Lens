@@ -44,6 +44,7 @@ class VectorStore:
             where={"$and": [
                 {"doc_id": doc_id},
                 {"source_hash": source_hash},
+                {"chunk_strategy": chunk_strategy},
             ]},
             include=["metadatas"],
         )
@@ -85,6 +86,7 @@ class VectorStore:
             where={"$and": [
                 {"doc_id": doc_id},
                 {"source_hash": source_hash},
+                {"chunk_strategy": chunk_strategy},
             ]},
             include=["metadatas"],
         )
