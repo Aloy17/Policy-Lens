@@ -111,8 +111,14 @@ def page_texts(pdf_path: Path, ocr: bool) -> tuple[list[str], set[int]]:
                         ["tesseract", str(image), "-", "--psm", "4"],
                         capture_output=True, text=True, check=False,
                     )
+                if result.returncode != 0:
+                    raise RuntimeError(
+                        f"Tesseract failed on {pdf_path.name} page {index}: "
+                        f"{result.stderr.strip() or 'unknown OCR error'}"
+                    )
                 text = result.stdout
-                ocr_pages.add(index)
+                if text.strip():
+                    ocr_pages.add(index)
             texts.append(text)
     return texts, ocr_pages
 
@@ -131,13 +137,19 @@ def validate_evidence(rows: list[dict], pdf_dir: Path, ocr: bool) -> tuple[list[
             if not pdf.is_file():
                 errors.append(f"{r['id']}: PDF not found: {pdf}")
                 continue
-            if p.doc_id not in cache:
-                cache[p.doc_id] = page_texts(pdf, ocr)
-            texts, ocr_pages = cache[p.doc_id]
-            span = " ".join(texts[p.page_start - 1:p.page_end])
             label = f"{p.doc_id}:{p.page_start}-{p.page_end}"
+            try:
+                if p.doc_id not in cache:
+                    cache[p.doc_id] = page_texts(pdf, ocr)
+                texts, ocr_pages = cache[p.doc_id]
+                span = " ".join(texts[p.page_start - 1:p.page_end])
+            except Exception as error:
+                errors.append(f"{r['id']}: evidence extraction failed on {label}: {error}")
+                details.append({"id": r["id"], "result": "FAIL (extraction error)", "note": label})
+                continue
             if not span.strip():
-                details.append({"id": r["id"], "result": "SKIPPED (no text; rerun with --ocr)", "note": label})
+                reason = "no native text and OCR disabled" if not ocr else "no text after OCR"
+                details.append({"id": r["id"], "result": "SKIPPED", "note": f"{label}: {reason}"})
                 continue
             haystack = normalise(span)
             missing = [t for t in term_group.split("|") if t and normalise(t) not in haystack]
@@ -159,7 +171,7 @@ def write_report(path: Path, rows, struct_errors, evidence_errors, details, ran_
         f"Questions file: `{args.questions}`", f"Questions: {len(rows)}", "",
         "## Result", "",
         f"- Structural checks: {'PASSED' if not struct_errors else 'FAILED (' + str(len(struct_errors)) + ')'}",
-        f"- PDF evidence checks: {('PASSED' if not evidence_errors else 'FAILED (' + str(len(evidence_errors)) + ')') if ran_evidence else 'not run'}",
+        f"- PDF evidence checks: {('FAILED (' + str(len(evidence_errors)) + ' errors)' if evidence_errors else 'PASSED WITH SKIPS' if any(d['result'].startswith('SKIPPED') for d in details) else 'PASSED') if ran_evidence else 'not run'}",
         f"- Label status: {dict(status)}", f"- Category counts: {dict(sorted(cats.items()))}",
         f"- Documents covered ({len(docs)} of 37): {', '.join(docs)}", "",
     ]
@@ -179,6 +191,8 @@ def main() -> int:
     parser.add_argument("--manifest", default="data/manifest.csv")
     parser.add_argument("--pdf-dir", default=None)
     parser.add_argument("--ocr", action="store_true", help="OCR pages that have no native text.")
+    parser.add_argument("--allow-skipped-evidence", action="store_true",
+                        help="Return success when some PDF evidence checks are SKIPPED (not recommended).")
     parser.add_argument("--report", default=None, help="Write a markdown report here.")
     args = parser.parse_args()
 
@@ -198,14 +212,21 @@ def main() -> int:
     if args.report:
         write_report(Path(args.report), rows, struct_errors, evidence_errors, details, bool(args.pdf_dir), args)
 
+    skipped = [d for d in details if d["result"].startswith("SKIPPED")]
     errors = struct_errors + evidence_errors
+    if skipped and args.pdf_dir and not args.allow_skipped_evidence:
+        errors.append(
+            f"{len(skipped)} PDF evidence passage check(s) were SKIPPED; "
+            "rerun with working OCR or explicitly pass --allow-skipped-evidence."
+        )
     if errors:
         print("Gold-set v2 validation FAILED:")
         for error in errors:
             print(f"- {error}")
         return 1
-    skipped = [d for d in details if d["result"].startswith("SKIPPED")]
     print("Gold-set v2 validation PASSED.")
+    if skipped:
+        print("WARNING: evidence checks were skipped; this is not a complete PDF validation.")
     print(f"Questions: {len(rows)}; statuses: {dict(Counter(r['label_status'] for r in rows))}")
     if args.pdf_dir:
         print(f"PDF evidence: {sum(d['result'].startswith('PASS') for d in details)} passed, {len(skipped)} skipped")
