@@ -94,13 +94,55 @@ def _is_table_separator(line: str) -> bool:
     )
 
 
+def _split_text_with_prefix(
+    text: str,
+    prefix_text: str,
+    max_size: int,
+    tokenizer: Any = None,
+) -> list[str]:
+    """Split text into loss-minimizing token fragments under a repeated prefix."""
+    token_ids = _encode(text, tokenizer)
+    if not token_ids:
+        return []
+
+    if _token_count(prefix_text, tokenizer) >= max_size:
+        raise ValueError("Table context leaves no room for content")
+
+    fragments = []
+    offset = 0
+    while offset < len(token_ids):
+        low = 1
+        high = len(token_ids) - offset
+        best_end = offset
+        best_text = ""
+
+        while low <= high:
+            middle = (low + high) // 2
+            fragment = _decode(token_ids[offset:offset + middle], tokenizer)
+            candidate = prefix_text + "\n" + fragment if prefix_text else fragment
+            if _token_count(candidate, tokenizer) <= max_size:
+                best_end = offset + middle
+                best_text = fragment
+                low = middle + 1
+            else:
+                high = middle - 1
+
+        if best_end == offset:
+            raise ValueError("Unable to fit table content within the maximum chunk size")
+
+        fragments.append(best_text)
+        offset = best_end
+
+    return fragments
+
+
 def _table_chunks(
     table_lines: list[tuple[str, int, bool]],
     section_title: str,
     max_size: int,
     tokenizer: Any = None,
 ) -> list[dict[str, Any]]:
-    """Chunk a Markdown table while repeating its title and column header."""
+    """Chunk a Markdown table, preserving oversized first rows as continuations."""
     if len(table_lines) < 2:
         return [
             create_chunk(line, page, page, section_title, ocr, tokenizer)
@@ -108,7 +150,7 @@ def _table_chunks(
         ]
 
     marker = table_lines[0]
-    header = table_lines[1]
+    first_row = table_lines[1]
     separator = (
         table_lines[2]
         if len(table_lines) > 2 and _is_table_separator(table_lines[2][0])
@@ -116,23 +158,50 @@ def _table_chunks(
     )
     body_start = 3 if separator else 2
 
-    # A Markdown separator row is presentation-only. Keep it when it fits,
-    # but never let it displace substantive header or body content.
-    prefix_lines = [marker, header]
-    base_prefix_text = "\n".join(item[0] for item in prefix_lines)
-    if separator:
-        candidate_prefix_lines = prefix_lines + [separator]
-        candidate_prefix_text = "\n".join(item[0] for item in candidate_prefix_lines)
-        if len(_encode(candidate_prefix_text, tokenizer)) < max_size:
-            prefix_lines = candidate_prefix_lines
-
-    prefix_text = "\n".join(item[0] for item in prefix_lines)
-    prefix_tokens = _encode(prefix_text, tokenizer)
-
-    if len(prefix_tokens) >= max_size:
-        raise ValueError("Table title and header exceed the maximum chunk size")
+    marker_text = marker[0]
+    first_row_prefix = marker_text + "\n" + first_row[0]
+    first_row_is_oversized = _token_count(first_row_prefix, tokenizer) >= max_size
 
     chunks = []
+
+    if first_row_is_oversized:
+        # The first extracted row may itself be very long. Preserve it in
+        # bounded continuation chunks instead of treating it as mandatory
+        # repeated context for every subsequent row.
+        continuation_prefix = marker_text + "\n[FIRST ROW CONTINUATION]"
+        fragments = _split_text_with_prefix(
+            first_row[0], continuation_prefix, max_size, tokenizer
+        )
+        for fragment in fragments:
+            chunks.append(create_chunk(
+                continuation_prefix + "\n" + fragment,
+                first_row[1],
+                first_row[1],
+                section_title,
+                marker[2] or first_row[2],
+                tokenizer,
+            ))
+        prefix_lines = [marker]
+        prefix_text = (
+            marker_text
+            + "\n[FIRST ROW EXCEEDS CHUNK LIMIT; SEE FIRST ROW CONTINUATION]"
+        )
+    else:
+        prefix_lines = [marker, first_row]
+        prefix_text = first_row_prefix
+
+        # A Markdown separator is presentation-only. Keep it only when it
+        # fits alongside the substantive first row.
+        if separator:
+            candidate = prefix_text + "\n" + separator[0]
+            if _token_count(candidate, tokenizer) < max_size:
+                prefix_lines.append(separator)
+                prefix_text = candidate
+
+    prefix_tokens = _encode(prefix_text, tokenizer)
+    if len(prefix_tokens) >= max_size:
+        raise ValueError("Table context exceeds the maximum chunk size")
+
     body_buffer: list[tuple[str, int, bool]] = []
 
     def emit(rows: list[tuple[str, int, bool]]) -> None:
@@ -152,7 +221,7 @@ def _table_chunks(
     for row in table_lines[body_start:]:
         candidate = body_buffer + [row]
         candidate_text = prefix_text + "\n" + "\n".join(item[0] for item in candidate)
-        if len(_encode(candidate_text, tokenizer)) <= max_size:
+        if _token_count(candidate_text, tokenizer) <= max_size:
             body_buffer.append(row)
             continue
 
@@ -161,30 +230,24 @@ def _table_chunks(
             body_buffer = []
 
         single_text = prefix_text + "\n" + row[0]
-        single_tokens = _encode(single_text, tokenizer)
-        if len(single_tokens) <= max_size:
+        if _token_count(single_text, tokenizer) <= max_size:
             body_buffer = [row]
             continue
 
-        # An unusually long row cannot fit intact; split its token stream while
-        # repeating the table context in every continuation chunk.
-        row_tokens = _encode(row[0], tokenizer)
-        row_page, row_ocr = row[1], row[2]
-        available = max_size - len(prefix_tokens)
-        for offset in range(0, len(row_tokens), available):
-            part = _decode(row_tokens[offset:offset + available], tokenizer)
+        row_prefix = prefix_text
+        fragments = _split_text_with_prefix(row[0], row_prefix, max_size, tokenizer)
+        for fragment in fragments:
             chunks.append(create_chunk(
-                prefix_text + "\n" + part,
-                min(item[1] for item in prefix_lines + [(row[0], row_page, row_ocr)]),
-                max(item[1] for item in prefix_lines + [(row[0], row_page, row_ocr)]),
+                row_prefix + "\n" + fragment,
+                min(item[1] for item in prefix_lines + [row]),
+                max(item[1] for item in prefix_lines + [row]),
                 section_title,
-                any(item[2] for item in prefix_lines) or row_ocr,
+                any(item[2] for item in prefix_lines) or row[2],
                 tokenizer,
             ))
 
     emit(body_buffer)
     if not chunks:
-        emit([])
         chunks.append(create_chunk(
             prefix_text,
             marker[1],
