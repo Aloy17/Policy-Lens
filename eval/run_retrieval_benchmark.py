@@ -120,7 +120,8 @@ def run_benchmark(
             scores[strategy][q["id"]] = score_question(metas, q["_passages"])
             term_groups = q["passage_terms"].split(";")
             evidence_metas = [
-                meta if evidence_term_matches(doc, q["_passages"][0], q["_passages"], term_groups) else None
+                meta if evidence_term_matches(doc, q["_passages"][0], q["_passages"], term_groups)
+                else {"doc_id": "__no_evidence__", "page_start": 1, "page_end": 1}
                 for doc, meta in zip(docs, metas)
             ]
             # This is a lexical evidence proxy, not semantic/answer correctness.
