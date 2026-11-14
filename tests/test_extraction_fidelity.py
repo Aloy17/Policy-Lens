@@ -22,3 +22,11 @@ def test_run_reports_unavailable_cases_explicitly(tmp_path):
         "unavailable": 7,
     }
     assert len(report["manual_review_required"]) >= 3
+
+
+def test_ocr_score_rejects_empty_reference():
+    import pytest
+    from eval.ocr_accuracy import score
+
+    with pytest.raises(ValueError, match="at least one word"):
+        score("", "some OCR output")
