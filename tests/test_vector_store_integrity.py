@@ -127,6 +127,10 @@ def test_unexpected_chunk_cleanup_does_not_remove_other_strategies():
         metadata(3, strategy="structure"),
     ])
 
+    assert store.has_complete_document_version(
+        "doc-1", "abc123", expected_chunk_count=3, chunk_strategy="fixed"
+    )
+
     removed = store.remove_unexpected_chunks(
         "doc-1", "abc123", expected_chunk_count=3, chunk_strategy="fixed"
     )
