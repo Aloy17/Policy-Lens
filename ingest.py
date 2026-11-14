@@ -64,8 +64,22 @@ def process_document(pdf_path: Path, document: dict, config: dict, embedder: Emb
     source_hash = calculate_file_hash(pdf_path)
     existing_hashes = get_existing_source_hashes(structure_store, doc_id)
     fixed_hashes = get_existing_source_hashes(fixed_store, doc_id)
-    if existing_hashes == {source_hash} and fixed_hashes == {source_hash}:
-        logger.info("SKIP | %s | unchanged in both indexes", doc_id)
+    fixed_complete = (
+        fixed_hashes == {source_hash}
+        and fixed_store.has_complete_document_version(
+            doc_id, source_hash, expected_chunk_count=None,
+            chunk_strategy="fixed",
+        )
+    )
+    structure_complete = (
+        existing_hashes == {source_hash}
+        and structure_store.has_complete_document_version(
+            doc_id, source_hash, expected_chunk_count=None,
+            chunk_strategy="structure",
+        )
+    )
+    if fixed_complete and structure_complete:
+        logger.info("SKIP | %s | unchanged and complete in both indexes", doc_id)
         return {"status": "skipped", "doc_id": doc_id, "pages": 0, "ocr_pages": 0,
                 "fixed_chunks": 0, "structure_chunks": 0,
                 "seconds": time.perf_counter() - start_time}
@@ -105,6 +119,12 @@ def process_document(pdf_path: Path, document: dict, config: dict, embedder: Emb
     # Store the new version before removing the previous indexed version.
     fixed_store.add_chunks(fixed_chunks)
     structure_store.add_chunks(structure_chunks)
+    fixed_store.remove_unexpected_chunks(
+        doc_id, source_hash, len(fixed_chunks), "fixed"
+    )
+    structure_store.remove_unexpected_chunks(
+        doc_id, source_hash, len(structure_chunks), "structure"
+    )
     fixed_store.delete_old_versions(doc_id, source_hash)
     structure_store.delete_old_versions(doc_id, source_hash)
     elapsed = time.perf_counter() - start_time

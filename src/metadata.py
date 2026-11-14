@@ -47,15 +47,18 @@ def attach_metadata(
     """Attach metadata to every chunk."""
     enriched_chunks = []
 
-    for chunk in chunks:
+    for chunk_index, chunk in enumerate(chunks):
         chunk_data = chunk.copy()
 
-        chunk_data["metadata"] = build_chunk_metadata(
+        metadata = build_chunk_metadata(
             chunk=chunk,
             document=document,
             source_hash=source_hash,
             chunk_strategy=chunk_strategy,
         )
+        metadata["chunk_index"] = chunk_index
+        metadata["chunk_count"] = len(chunks)
+        chunk_data["metadata"] = metadata
 
         enriched_chunks.append(chunk_data)
 

@@ -4,33 +4,100 @@ from typing import Any
 import pymupdf
 
 
+def _native_table_rows(
+    page: pymupdf.Page,
+    table: Any,
+    row_count: int,
+    column_count: int,
+) -> list[list[str]] | None:
+    """Rebuild table cells from positioned native words and cell geometry.
+
+    PyMuPDF's flat table.cells sequence is not guaranteed to be row-major.
+    Derive row and column positions from each cell's coordinates instead.
+    """
+    cells = getattr(table, "cells", None)
+    if not cells or len(cells) < row_count * column_count:
+        return None
+
+    valid_cells = [
+        tuple(map(float, cell[:4]))
+        for cell in cells
+        if cell is not None and len(cell) >= 4
+    ]
+    if len(valid_cells) < row_count * column_count:
+        return None
+
+    row_positions = sorted({round(cell[1], 3) for cell in valid_cells})
+    column_positions = sorted({round(cell[0], 3) for cell in valid_cells})
+    if len(row_positions) != row_count or len(column_positions) != column_count:
+        return None
+
+    try:
+        words = page.get_text("words")
+    except Exception:
+        return None
+
+    rows = [["" for _ in range(column_count)] for _ in range(row_count)]
+    assigned = 0
+    for x0, y0, x1, y1 in valid_cells:
+        row_index = min(range(row_count), key=lambda i: abs(row_positions[i] - y0))
+        column_index = min(
+            range(column_count), key=lambda i: abs(column_positions[i] - x0)
+        )
+        cell_words = []
+        for word in words:
+            wx0, wy0, wx1, wy1, word_text = word[:5]
+            center_x = (float(wx0) + float(wx1)) / 2
+            center_y = (float(wy0) + float(wy1)) / 2
+            if x0 <= center_x <= x1 and y0 <= center_y <= y1:
+                cell_words.append((float(wy0), float(wx0), str(word_text)))
+        cell_words.sort(key=lambda item: (item[0], item[1]))
+        if cell_words:
+            rows[row_index][column_index] = " ".join(
+                item[2] for item in cell_words
+            )
+            assigned += len(cell_words)
+
+    return rows if assigned else None
+
 def _extract_tables(page: pymupdf.Page) -> list[str]:
-    """Extract detected tables as readable Markdown-like text."""
+    """Extract tables while preferring source-positioned words for cell text."""
     if not hasattr(page, "find_tables"):
         return []
 
     try:
         finder = page.find_tables()
-    except Exception:
-        return []
+    except Exception as exc:
+        raise RuntimeError("PyMuPDF table detection failed") from exc
 
     rendered = []
     for table_number, table in enumerate(finder.tables, start=1):
-        rows = table.extract() or []
+        try:
+            extracted = table.extract() or []
+        except Exception as exc:
+            raise RuntimeError(
+                f"PyMuPDF failed to extract table {table_number}"
+            ) from exc
         rows = [
             ["" if cell is None else " ".join(str(cell).split()) for cell in row]
-            for row in rows
+            for row in extracted
         ]
         if not rows:
             continue
 
         width = max(len(row) for row in rows)
         rows = [row + [""] * (width - len(row)) for row in rows]
-        header = rows[0]
+        native_rows = _native_table_rows(page, table, len(rows), width)
+        if native_rows is not None:
+            rows = [
+                [native_rows[r][c] or rows[r][c] for c in range(width)]
+                for r in range(len(rows))
+            ]
+
         separator = ["---"] * width
         markdown_rows = [
             "| " + " | ".join(row) + " |"
-            for row in [header, separator, *rows[1:]]
+            for row in [rows[0], separator, *rows[1:]]
         ]
         rendered.append(f"[TABLE {table_number}]\n" + "\n".join(markdown_rows))
 
@@ -69,15 +136,22 @@ def _extract_page_text(page: pymupdf.Page) -> str:
         return page.get_text("text", sort=True)
 
     midpoint = page.rect.width / 2
-    left = [b for b in blocks if b[2] <= midpoint + page.rect.width * 0.04]
-    right = [b for b in blocks if b[0] >= midpoint - page.rect.width * 0.04]
     narrow = [b for b in blocks if (b[2] - b[0]) < page.rect.width * 0.65]
+    left = [
+        block for block in narrow
+        if (block[0] + block[2]) / 2 < midpoint
+    ]
+    right = [
+        block for block in narrow
+        if (block[0] + block[2]) / 2 >= midpoint
+    ]
 
-    # Require multiple blocks in both halves before assuming columns.
+    # Classify each block into exactly one column. A tolerance-based edge
+    # check can place blocks in the center gutter into both columns.
     if len(left) < 2 or len(right) < 2 or len(narrow) < 4:
         return page.get_text("text", sort=True)
 
-    spanning = [b for b in blocks if b not in left and b not in right]
+    spanning = [b for b in blocks if b not in narrow]
     column_top = min([b[1] for b in left + right])
     column_bottom = max([b[3] for b in left + right])
     top = sorted([b for b in spanning if b[1] <= column_top], key=lambda b: b[1])
