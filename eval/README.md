@@ -118,3 +118,31 @@ The helper creates a new `eval/manual_inspection/` directory containing:
 OCR is run only on sampled pages that meet the same text-density/image-coverage triage thresholds configured for ingestion (20-word minimum; 50% image coverage with fewer than 120 words). Use `--no-ocr` to inspect native extraction only. OCR candidacy is a heuristic and does not establish OCR accuracy. The script does not estimate OCR word accuracy; that requires manually comparing OCR output with a human-transcribed reference.
 
 The PDF review bundle copies the original pages, preserving their vector/text content. The report's printed-page hint is tentative and must be checked visually. After reviewing the bundle, complete the corresponding human-judgment fields in `manual_inspection_template.csv`; do not infer table completeness, reading-order correctness, or legitimate-text loss from metadata alone.
+
+
+## Task 2 — extraction fidelity evaluation
+
+The extraction-fidelity checks are separate from retrieval scoring. They exercise selected pages containing a numeric table, a wide multi-level table, a cross-reference table, a circular/date/subject table, and two scanned/mixed OCR-reference pages.
+
+Run the deterministic page checks from the repository root:
+
+```bash
+PYTHONPATH=. python eval/extraction_fidelity.py \
+  --pdf-dir data/pdfs \
+  --output eval/extraction_fidelity_report.json
+```
+
+The runner checks expected source terms and known malformed table strings. It reports missing PDFs/pages explicitly and exits non-zero when a check fails or is unavailable. It is a seven-page smoke/regression set, not a statistically representative corpus-wide extraction-accuracy estimate.
+
+The existing OCR reference scorer is run separately:
+
+```bash
+PYTHONPATH=. python eval/ocr_accuracy.py \
+  --reference-dir eval/ocr_reference \
+  --pdf-dir data/pdfs \
+  --output eval/ocr_accuracy.csv
+```
+
+References are manually transcribed page bodies; WER is exact whitespace-token edit distance and therefore sensitive to punctuation, tokenization and editorial transcription choices. Report micro word accuracy as a reference-set metric, not a general OCR guarantee.
+
+The deterministic checks do not prove wide-table row/column association or visual reading order. S05 and S07 remain manual-review cases; inspect their rendered source pages and compare each table row/column before marking those dimensions complete. OCR checks should be rerun on the local PDFs because the CI workflow does not download the corpus PDFs or install Tesseract.
