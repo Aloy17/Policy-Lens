@@ -8,13 +8,17 @@ class FakeCollection:
 
     def get(self, where, include):
         assert include == ["metadatas"]
-        assert where == {
-            "$and": [
-                {"doc_id": "doc-1"},
-                {"source_hash": "abc123"},
-            ]
+        filters = where["$and"]
+        criteria = {key: value for item in filters for key, value in item.items()}
+        matching = [
+            (chunk_id, metadata)
+            for chunk_id, metadata in zip(self.ids, self.metadatas)
+            if all(metadata.get(key) == value for key, value in criteria.items())
+        ]
+        return {
+            "ids": [chunk_id for chunk_id, _ in matching],
+            "metadatas": [metadata for _, metadata in matching],
         }
-        return {"ids": self.ids, "metadatas": self.metadatas}
 
     def delete(self, ids):
         for chunk_id in ids:
