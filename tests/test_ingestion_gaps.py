@@ -140,16 +140,19 @@ def test_long_tables_repeat_headers_and_keep_rows_within_budget():
     )
 
     assert len(chunks) > 1
-    for chunk in chunks:
+    table_chunks = [chunk for chunk in chunks if "[TABLE 1]" in chunk["text"]]
+    assert len(table_chunks) > 1
+    assert any(chunk["text"] == "APPENDIX A" for chunk in chunks)
+
+    for chunk in table_chunks:
         assert chunk["token_count"] <= 15
-        assert "[TABLE 1]" in chunk["text"]
         assert "| Category | Threshold |" in chunk["text"]
         assert "| --- | --- |" in chunk["text"]
         assert chunk["page_start"] == chunk["page_end"] == 7
         assert chunk["ocr_used"] is True
 
     body_rows = [
-        line for chunk in chunks for line in chunk["text"].splitlines()
+        line for chunk in table_chunks for line in chunk["text"].splitlines()
         if line.startswith("| Category ") and not line.startswith("| Category |")
     ]
     assert len(body_rows) == 12
