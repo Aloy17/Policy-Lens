@@ -115,6 +115,26 @@ The benchmark's generated inspection notes identified these representative outco
 
 **Evidence boundary:** these observations are from the benchmark's generated case inspection and the result snippets/page labels previously examined. The full local `retrieval_log.csv`, complete retrieved chunk text, and corresponding original PDF pages were not available in the repository during preparation of this report. Therefore, the observations above are not represented as source-PDF-verified findings. In particular, q16's table correctness and the exact clause-level correctness of q03/q04/q07/q08/q09 remain unconfirmed here. A source-verified qualitative error analysis is still required before treating Task 1 as fully complete.
 
+## Retrieved-chunk qualitative inspection
+
+A follow-up inspection was completed using selected chunk records pasted from the local Chroma database. This verifies the supplied extracted chunk text, but it is not visual verification against the original PDF page images. The supplied extract omitted question IDs and ranks for each record, so it cannot independently reconstruct the complete top-k ordering; case/rank associations below retain the benchmark inspection notes.
+
+| Question | Content-level finding from supplied chunks |
+|---|---|
+| q03 | Fixed-size chunk on pp. 22–24 contains the operative third-party CDD reliance conditions, including immediate access to CDD records, availability of supporting documentation without delay, third-party regulation and controls, high-risk-jurisdiction restriction, and the RE's ultimate responsibility. Strong substantive evidence. |
+| q04 | Structure-aware chunk on p. 38 contains only the heading “Part IV - Identification of Beneficial Owner”; it does not contain the operative identification test. This is a page-overlap false positive, not an answer-supporting hit. |
+| q07 | Structure-aware chunk on pp. 57–58 explicitly states the CKYCR upload deadline is within 10 days of commencement of the account-based relationship. Strong substantive evidence. The corresponding fixed-size chunk was not included in the supplied extract. |
+| q08 | Structure-aware chunk on pp. 58–59 explicitly says the RE must retrieve the updated KYC record from CKYCR and update its own record. Strong substantive evidence. The corresponding fixed-size chunk was not included in the supplied extract. |
+| q09 | Supplied fixed and structure-aware chunks are on-topic and refer to originator/beneficiary information and RE responsibilities, but neither excerpt enumerates all required data elements. Relevant but partial evidence; not sufficient by itself to mark a complete answer as retrieved. |
+| q16 | Fixed-size chunk on pp. 93–94 contains the Annex IV table row and Category I cell marked “mandatory” for constitutive documents. Strong substantive table evidence. The corresponding structure-aware chunk was not included in the supplied extract. |
+| x03 | Fixed-size chunk on pp. 31–33 contains the escalation route: if the research analyst does not satisfactorily resolve the complaint, the investor may lodge a complaint with SEBI through SCORES. It is answer-supporting evidence despite being outside the gold page 10. The structure-aware chunk on p. 3 contains only the heading “Investor Complaints” and is insufficient. |
+
+This inspection demonstrates two important evaluation issues: page overlap can count heading-only chunks as hits (q04), while strict gold-page matching can miss answer-supporting evidence elsewhere in the same source document (x03). q09 also shows why a binary page hit cannot establish answer completeness.
+
+**Remaining limits:** only selected chunks were supplied, not every top-k result for both strategies; the paste omitted query IDs and ranks; q07/q08 fixed-size counterparts and q16 structure-aware counterpart were not included; original PDF page images were not supplied. Accordingly, this is a partial content-level inspection, not a complete source-PDF-verified qualitative evaluation.
+
+See [qualitative_error_analysis.md](qualitative_error_analysis.md) for the detailed chunk-by-chunk notes and evidence boundaries.
+
 ## Limitations
 
 1. **Corpus coverage:** 7 of 37 documents; RBI KYC dominates the set.
@@ -123,7 +143,7 @@ The benchmark's generated inspection notes identified these representative outco
 4. **Proxy relevance:** page overlap can reward the wrong clause on the right page. Passage-term matching reduces but does not eliminate this problem.
 5. **Limited multi-passage coverage:** only three valid questions require multiple passages.
 6. **No answer-generation evaluation:** this experiment measures retrieval, not whether a generated answer is correct, complete, or properly cited.
-7. **Qualitative review incomplete:** complete chunk text and source-PDF verification are needed for the representative cases listed above.
+7. **Qualitative review partial:** selected retrieved chunk text has been inspected; complete top-k reconstruction and visual source-PDF verification remain outstanding.
 
 ## Conclusion and next work
 
@@ -131,7 +151,7 @@ This run shows a consistent page-overlap advantage for structure-aware chunking,
 
 Before final sign-off:
 
-1. Complete source-PDF verification of the representative cases using the full retrieval log and retrieved chunk text.
+1. If full sign-off requires visual source-PDF verification, inspect the original PDF page images and complete top-k records for the representative cases.
 2. Expand the gold set across more of the 37-document corpus, especially documents currently absent or underrepresented.
 3. Add end-to-end answer and citation evaluation separately; do not conflate it with retrieval metrics.
 
