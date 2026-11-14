@@ -119,6 +119,12 @@ def process_document(pdf_path: Path, document: dict, config: dict, embedder: Emb
     # Store the new version before removing the previous indexed version.
     fixed_store.add_chunks(fixed_chunks)
     structure_store.add_chunks(structure_chunks)
+    fixed_store.remove_unexpected_chunks(
+        doc_id, source_hash, len(fixed_chunks), "fixed"
+    )
+    structure_store.remove_unexpected_chunks(
+        doc_id, source_hash, len(structure_chunks), "structure"
+    )
     fixed_store.delete_old_versions(doc_id, source_hash)
     structure_store.delete_old_versions(doc_id, source_hash)
     elapsed = time.perf_counter() - start_time
