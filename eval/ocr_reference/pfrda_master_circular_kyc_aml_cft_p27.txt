@@ -1,0 +1,11 @@
+CIRCULAR
+CIR No.: PFRDA/2020/46/SUP-CRA/18 Date: October 06, 2020
+To,
+All stakeholders under NPS
+Subject: Video based Customer Identification Process (VCIP) for NPS
+PFRDA in its endeavor to make the subscriber on-boarding , exit, processing of service requests and contribution deposits seamless and subscriber friendly, has been constantly introducing new modes of subscriber KYC and authentication processes such as OTP/ eSign, Offline Aadhaar based KYC, third party reliance for KYC, Paperless on-boarding, e- exit for eNPS Subscribers, e Nomination, D Remit etc.
+2. In continuation of such efforts, it has now been decided to permit intermediaries registered with PFRDA to use Video based Customer Identification Process (VCIP) for the purpose of on-boarding, exit or any other service request related to NPS.
+3. The envisaged benefits of VCIP are as under -
+i. In the new normal world post COVID, VCIP overcomes the challenges of remote presence, limited mobility, contactless services, social distancing norms etc.
+ii. It eases the process of on-boarding/ exit / other service requests, as the Subscriber verification is carried out without the need of physical presence of Subscribers before Point of Presence (PoPs)/Nodal officers.
+ii. It optimizes the turnaround time of account opening, execution of exit and processing of other service requests.

@@ -1,0 +1,6 @@
+id,question,expected_doc_id,expected_page_start,expected_page_end,is_table_question,is_paraphrased
+x01,"For how long must a data fiduciary keep logs and personal data so that unauthorised access can be detected and investigated?",meity_dpdp_rules_2025,26,26,false,false
+x02,"How far ahead of erasing personal data must the data principal be warned if they have not used the service?",meity_dpdp_rules_2025,27,27,false,true
+x03,"Where can an investor take a complaint about a research analyst if the analyst's own response does not satisfy them?",sebi_master_circular_for_research_analysts,10,10,false,true
+x04,"Can a person who subscribed to the Special Bearer Bonds be made to disclose how they obtained them?",gazette_1981_special_bearer_bonds,2,2,false,true
+x05,"What benefits does PFRDA list for video based customer identification for NPS subscribers?",pfrda_master_circular_kyc_aml_cft,27,27,false,false

@@ -304,6 +304,13 @@ def main() -> None:
         help="Output retrieval log (kept separate from historical logs).",
     )
 
+    parser.add_argument(
+        "--extension",
+        action="store_true",
+        help="Skip the exact 25-question and 5/5 category checks, for supplementary sets "
+             "such as eval/questions_extension.csv. Do not use for the main benchmark.",
+    )
+
     args = parser.parse_args()
 
     config = load_config()
@@ -366,10 +373,10 @@ def main() -> None:
     if args.top_k < 10:
         raise ValueError("--top-k must be at least 10 for Recall@10.")
 
-    if len(questions) != 25:
+    if not args.extension and len(questions) != 25:
         raise ValueError(f"Expected exactly 25 evaluation questions; found {len(questions)}.")
 
-    for column, expected_count in [("is_table_question", 5), ("is_paraphrased", 5)]:
+    for column, expected_count in ([] if args.extension else [("is_table_question", 5), ("is_paraphrased", 5)]):
         actual_count = int(
             questions[column].astype(str).str.lower().eq("true").sum()
         )
