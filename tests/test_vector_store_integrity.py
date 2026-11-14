@@ -127,6 +127,7 @@ def test_unexpected_chunk_cleanup_does_not_remove_other_strategies():
         "doc-1", "abc123", expected_chunk_count=3, chunk_strategy="fixed"
     )
 
-    assert removed == 1
+    assert removed == 0
+    assert len(store.collection.metadatas) == 4
     assert any(item["chunk_strategy"] == "structure"
                for item in store.collection.metadatas)
