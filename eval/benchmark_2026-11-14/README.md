@@ -1,0 +1,100 @@
+# Task 1: Retrieval quality evaluation (2026-11-14)
+
+## Status
+
+| Part | State |
+|---|---|
+| Gold-set validation against the 37 PDFs | Done. Report: `dataset_validation_report.md` |
+| Extended, validated gold set (v2) | Done. `gold_questions_v2.csv` (42 questions, 41 usable) |
+| Metrics code, benchmark runner, unit tests | Implemented; CI verification running on PR head |
+| **Benchmark on `policylens_v1_fixed` / `policylens_v1_structure`** | **Run successfully** against a temporary copy of the repaired local database |
+| Aggregate results and recommendation | Reported in [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) |
+| Selected retrieved-chunk content inspection | Done; detailed findings in [qualitative_error_analysis.md](qualitative_error_analysis.md). Visual source-PDF verification and full top-k reconstruction remain incomplete. |
+
+## Benchmark results
+
+The local benchmark was completed on 2026-11-14. It evaluated 41 valid questions, verified that the original database remained unchanged, and produced mixed evidence for the two chunking strategies. Structure-aware retrieval led on page-overlap metrics, while lexical evidence-proxy results were mixed; all paired-bootstrap 95% confidence intervals included zero. See [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md) for aggregate results and [`qualitative_error_analysis.md`](qualitative_error_analysis.md) for selected chunk-level findings and evidence limits.
+
+## Methodology
+
+Two relevance bases are reported separately:
+
+1. **Page-overlap proxy:** document ID matches and the retrieved chunk's inclusive 1-based PDF page range overlaps a gold passage. This is a broad retrieval-location signal, not proof that the chunk contains the right clause.
+2. **Passage-term lexical proxy:** page overlap plus every required phrase in that passage's `passage_terms` group appearing in the retrieved chunk text. Each gold passage is scored independently, so a chunk cannot claim multi-passage coverage merely because its page range spans multiple passages.
+
+The lexical proxy is stricter than page overlap but is still not semantic answer validation. Manual review against full chunk text and source PDF pages remains necessary.
+
+| Metric | Definition |
+|---|---|
+| Hit Rate@k | 1 if any of the top k results match the selected relevance basis |
+| Recall@k | Fraction of gold passages covered by the top k; page-overlap and passage-term lexical versions are reported separately |
+| Precision@k | Relevant results in the top k divided by k (k is the denominator even if fewer results return) |
+| MRR | Mean reciprocal rank of the first relevant result; page-overlap and passage-term lexical comparisons are bootstrapped separately |
+
+Held constant across strategies: query text, a single set of query embeddings reused for both collections, `config.yaml` embedding settings, top-k 10, no metadata filter, the same Chroma `query` call, the same question set. Only the collection name differs.
+
+The score in the log is cosine similarity (`1 - distance`); Chroma's cosine distance is also logged. Lower distance means closer.
+
+Safety: the runner copies the Chroma directory to a temporary location and queries the copy. It hashes the original directory before and after and records the result in `run_metadata.json`. It uses `get_collection`, never `get_or_create_collection`, and refuses to write into a non-empty output directory. It also rejects mismatched Chroma result-array lengths instead of silently truncating them.
+
+## Gold-set validation summary
+
+All 37 PDFs match `data/pdf_checksums.csv` and the manifest page counts. The existing validator and its tests pass. Every gold passage in v2 was checked against the PDF text of its page range (45 passage checks, 0 failures; the scanned 1981 gazette was checked by Tesseract OCR). The 25 original IDs, questions and v1 page ranges are preserved in the v2 file.
+
+| ID | Finding | Action |
+|---|---|---|
+| q17 | v1 range 94-95 over-inclusive; the Category III entity proof-of-address cell is on p94 only | v2 passage 94-94 (corrected) |
+| q19, q20 | Row is on p95 but the Category column headers are on p94; p95 rows carry no category labels | v2 needs two passages, 94 and 95 (corrected) |
+| q21 | v1 range 1-4; the only passage saying RE obligations are not diminished is circular para 2 on p1 | v2 passage 1-1 (corrected) |
+| q23 | v1 range 4-5; para 4.1 is on p4, p5 para 5.2.3 is a different fee rule | v2 passage 4-4 (corrected) |
+| q05 | Wording is generic; only para 40 is headed Enhanced Due Diligence, and p46 also starts para 41 (PEPs, q14) | Kept, flagged in notes |
+| q09 | Four-page span, scored leniently | Kept, flagged |
+| x04 | Scanned gazette, no native text | Kept; retrieval depends on ingestion OCR |
+| x05 | PDF p27 is an almost empty "Annexure 2" page; no text lists benefits of video-based identification anywhere in the document | Invalid, excluded from headline |
+
+Twelve questions were added (q26-q37) from passages read in the PDFs: periodic-updation intervals, small-account and OTP e-KYC limits, DPDP breach timing, consent-manager net worth, DPDP commencement dates, cooling-off period, penal interest, digitally signed documents, a PFRDA vs RBI V-CIP definition pair, and a three-passage distinction question (q37).
+
+Coverage of the 41 usable questions: direct 31, paraphrase 9, table 5, numeric or date 12, clause-specific 19, distinction 6, multi-passage 3 (q19, q20, q37). By document: RBI KYC 25, Digital Lending 7, DPDP Rules 5, and one each for NBFC filing, PFRDA, SEBI research analysts and the 1981 gazette.
+
+## Limitations
+
+- Gold questions cover 7 of the 37 documents (RBI KYC, Digital Lending, NBFC filing; DPDP Rules; SEBI research analysts; PFRDA; the 1981 gazette). The SEBI master circulars, HFC directions and Supreme Court chronicles are barely represented. Results will not generalise to the whole corpus.
+- The questions were written after ingestion began, so this is not a blind holdout, and the original 25 are 80% KYC.
+- Only 3 multi-passage questions exist, so passage-level Recall@k differs from Hit Rate@k on very few cases.
+- Evidence checks use phrase matching against page text. They prove the phrase is on the labelled pages, not that the question is perfectly answerable from them.
+- Page-overlap relevance is deliberately broad: a chunk on the right page but from a different clause can count as relevant (q05/q14 on p46; q23/q32 on p4). The passage-term lexical proxy reduces this over-credit but cannot prove semantic correctness.
+- 41 questions give wide confidence intervals; the runner writes a paired bootstrap, and small differences should not be read as superiority.
+- This evaluates retrieval only, not answer quality.
+
+## Reproduce
+
+Validate the dataset (needs the PDFs and `pymupdf`; Tesseract must be installed and working for scanned pages). Evidence extraction errors fail validation. Any skipped evidence passage also fails by default; `--allow-skipped-evidence` is an explicit opt-out and must not be described as a complete validation:
+
+```bash
+PYTHONPATH=. python eval/validate_gold_v2.py --pdf-dir data/pdfs --ocr --report eval/benchmark_2026-11-14/dataset_validation_report.md
+```
+
+Run the benchmark (needs the local Chroma database and the embedding model; writes to a new `eval/benchmark_<date>_run/` directory):
+
+```bash
+PYTHONPATH=. python eval/run_retrieval_benchmark.py --db-path "<path to chroma_db>" --collection-base policylens_v1
+```
+
+Unit tests (no Chroma database or model needed):
+
+```bash
+PYTHONPATH=. python -m pytest -q tests/test_retrieval_metrics.py tests/test_gold_set_validation.py tests/test_eval_tools.py
+```
+
+## Results
+
+The benchmark results and interpretation are documented in [`retrieval_evaluation_report.md`](retrieval_evaluation_report.md). Raw run outputs remain local; `run_metadata.json` contains a machine-specific path and the retrieval log is not committed. Source-PDF verification of the representative retrieved chunks remains outstanding.
+
+## Follow-up questions informed by the run
+
+These come from reading the source pages, not from retrieval output.
+
+- q19 and q20 may fail or rank poorly for any chunking that splits the Annex IV table between p94 (headers) and p95 (rows).
+- q34 and q35 are near-identical questions about different regulators; wrong-document hits are a likely failure mode.
+- q23 and q32 are adjacent clauses on p4, and q05 and q14 share p46; page-overlap scoring will not separate them.
+- x04 depends entirely on the quality of OCR text in the index.
