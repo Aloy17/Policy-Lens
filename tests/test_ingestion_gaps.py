@@ -119,3 +119,61 @@ def test_table_detection_errors_are_not_silently_ignored():
 
     with pytest.raises(RuntimeError, match="table detection failed"):
         _extract_tables(BrokenTablePage())
+
+
+def test_long_tables_repeat_headers_and_keep_rows_within_budget():
+    from src.chunker import structure_aware_chunks
+
+    pages = [{
+        "page_number": 7,
+        "ocr_used": True,
+        "text": (
+            "APPENDIX A\\n"
+            "[TABLE 1]\\n"
+            "| Category | Threshold |\\n"
+            "| --- | --- |\\n"
+            + "".join(f"| Category {i} | Value {i} |\\n" for i in range(1, 13))
+        ),
+    }]
+    tokenizer = FakeTokenizer()
+    chunks = structure_aware_chunks(
+        pages, target_size=8, max_size=12, min_size=4, tokenizer=tokenizer
+    )
+
+    assert len(chunks) > 1
+    for chunk in chunks:
+        assert chunk["token_count"] <= 12
+        assert "[TABLE 1]" in chunk["text"]
+        assert "| Category | Threshold |" in chunk["text"]
+        assert "| --- | --- |" in chunk["text"]
+        assert chunk["page_start"] == chunk["page_end"] == 7
+        assert chunk["ocr_used"] is True
+
+    body_rows = [
+        line for chunk in chunks for line in chunk["text"].splitlines()
+        if line.startswith("| Category ") and not line.startswith("| Category |")
+    ]
+    assert len(body_rows) == 12
+    assert len(set(body_rows)) == 12
+
+
+def test_table_row_that_exceeds_budget_is_split_with_context():
+    from src.chunker import structure_aware_chunks
+
+    pages = [{
+        "page_number": 3,
+        "text": (
+            "[TABLE 2]\\n"
+            "| Field | Description |\\n"
+            "| --- | --- |\\n"
+            "| Long field | " + "detail " * 30 + "|\\n"
+        ),
+    }]
+    chunks = structure_aware_chunks(
+        pages, target_size=10, max_size=15, min_size=5, tokenizer=FakeTokenizer()
+    )
+
+    assert len(chunks) > 1
+    assert all(chunk["token_count"] <= 15 for chunk in chunks)
+    assert all("[TABLE 2]" in chunk["text"] for chunk in chunks)
+    assert all("| Field | Description |" in chunk["text"] for chunk in chunks)
