@@ -71,6 +71,8 @@ def _merge_table_cell(extracted: str, positioned: str) -> str:
         return extracted
     if positioned_has_decimal and not extracted_has_decimal:
         return positioned
+    if extracted_has_decimal and positioned_has_decimal:
+        return extracted
     return positioned or extracted
 
 
