@@ -72,19 +72,55 @@ def load_questions(path: Path) -> list[dict]:
     return rows
 
 
-def evidence_term_matches(document: str | None, passage: Passage, passages: Sequence[Passage], term_groups: Sequence[str]) -> bool:
-    """Lexical evidence proxy: all required terms for an overlapping gold passage occur in the chunk."""
+def evidence_passages_for_result(
+    document: str | None, metadata: dict | None, passages: Sequence[Passage],
+    term_groups: Sequence[str],
+) -> set[int]:
+    """Return only passages whose page range overlaps and whose terms occur in this chunk."""
     if not isinstance(document, str) or not document.strip():
-        return False
+        return set()
     text = " ".join(document.lower().split())
-    for gold, group in zip(passages, term_groups):
-        if gold.doc_id != passage.doc_id or gold.page_start > passage.page_end or gold.page_end < passage.page_start:
+    matched = set()
+    for index, (gold, group) in enumerate(zip(passages, term_groups)):
+        if not matches_passage(metadata, gold):
             continue
         terms = [term.strip().lower() for term in group.split("|") if term.strip()]
         if terms and all(" ".join(term.split()) in text for term in terms):
-            return True
-    return False
+            matched.add(index)
+    return matched
 
+
+def score_evidence_term_proxy(
+    documents: Sequence[str | None], metadatas: Sequence[dict | None],
+    passages: Sequence[Passage], term_groups: Sequence[str], ks=DEFAULT_KS,
+) -> dict:
+    """Score passage-term lexical matches; this is not semantic answer validation."""
+    if len(documents) != len(metadatas):
+        raise ValueError("Evidence scoring requires aligned documents and metadata.")
+    if len(passages) != len(term_groups):
+        raise ValueError("Each gold passage must have one passage_terms group.")
+    if not passages:
+        raise ValueError("At least one gold passage is required.")
+    ks = tuple(ks)
+    if any(k < 1 for k in ks):
+        raise ValueError("k must be >= 1.")
+    covered_at_rank = [
+        evidence_passages_for_result(doc, meta, passages, term_groups)
+        for doc, meta in zip(documents, metadatas)
+    ]
+    flags = [bool(hits) for hits in covered_at_rank]
+    first_rank = next((rank for rank, hit in enumerate(flags, 1) if hit), None)
+    malformed = sum(result_page_range(meta) is None for meta in metadatas)
+    scores = {
+        "first_relevant_rank": first_rank, "rr": 1.0 / first_rank if first_rank else 0.0,
+        "retrieved": len(flags), "malformed_results": malformed, "relevant_flags": flags,
+    }
+    for k in ks:
+        covered = set().union(*covered_at_rank[:k]) if covered_at_rank[:k] else set()
+        scores[f"hit@{k}"] = float(any(flags[:k]))
+        scores[f"recall@{k}"] = len(covered) / len(passages)
+        scores[f"precision@{k}"] = sum(flags[:k]) / k
+    return scores
 
 def run_benchmark(
     questions: list[dict],
@@ -119,14 +155,9 @@ def run_benchmark(
                 raise ValueError(f"{strategy}/{q['id']}: inconsistent Chroma result lengths: {lengths}")
             scores[strategy][q["id"]] = score_question(metas, q["_passages"])
             term_groups = q["passage_terms"].split(";")
-            evidence_metas = [
-                meta if evidence_term_matches(doc, q["_passages"][0], q["_passages"], term_groups)
-                else {"doc_id": "__no_evidence__", "page_start": 1, "page_end": 1}
-                for doc, meta in zip(docs, metas)
-            ]
             # This is a lexical evidence proxy, not semantic/answer correctness.
-            scores[strategy][q["id"]]["evidence_term_proxy"] = score_question(
-                evidence_metas, q["_passages"]
+            scores[strategy][q["id"]]["evidence_term_proxy"] = score_evidence_term_proxy(
+                docs, metas, q["_passages"], term_groups
             )
             v1_scores = score_question(metas, [q["_v1_passage"]])
             scores[strategy][q["id"]]["v1"] = v1_scores
@@ -145,9 +176,9 @@ def run_benchmark(
                     "section_title": meta.get("section_title", ""),
                     "distance": round(float(dist), 6), "similarity": round(1.0 - float(dist), 6),
                     "is_relevant": bool(matched),
-                    "evidence_term_proxy_relevant": evidence_term_matches(
-                        doc, Passage(parsed[0], parsed[1], parsed[2]), q["_passages"], term_groups
-                    ) if parsed else False,
+                    "evidence_term_proxy_relevant": bool(
+                        evidence_passages_for_result(doc, meta, q["_passages"], term_groups)
+                    ),
                     "matched_gold_passages": ";".join(str(i + 1) for i in matched),
                     "expected_doc_id": q["_passages"][0].doc_id,
                     "expected_passages": q["gold_passages"],
