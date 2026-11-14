@@ -90,7 +90,7 @@ The default cases are q04 (beneficial-owner identification), q17 (FPI table proo
 3. **Disagreement review completed.** q04, q17, and q13 are documented in `eval/disagreement_analysis.md`; do not infer causality from rank differences alone.
 4. **Ten-page extraction sample completed.** Findings and limitations are recorded in `manual_inspection_findings.md`. Visual confirmation of S03, S05, S06, and S07 was not completed; treat the findings as extraction-output observations, not visually confirmed defects.
 5. **Cleaning evidence:** a source-linked before/after example is recorded in `manual_inspection_findings.md`; this is a qualitative example, not a corpus-wide cleaning-accuracy measure.
-6. **OCR accuracy is unmeasured.** The ten-page sample had no OCR candidates and OCR was not run. A separate manually transcribed scan test is needed for an accuracy estimate; otherwise report this as unmeasured.
+6. **OCR accuracy has a two-page pilot, not a representative estimate.** The committed references report 89.60% word accuracy on Gazette p. 2 and 65.69% on PFRDA p. 27 (82.37% micro accuracy across 675 reference words). The ten-page native-text sample itself had no OCR candidates. See `extraction_fidelity_findings.md`; do not generalize the two-page pilot to the corpus.
 7. **Operational measurements are complete** and recorded in `benchmark_run_2026-11-07.md`: packaged ingestion, unchanged rerun, corpus/database footprint, collection vector-segment sizes, and query latency.
 8. Treat the 2022 Digital Lending Guidelines as a historical circular: RBI's later Digital Lending Directions, 2025 supersede the earlier framework. Do not imply the 2022 circular is current policy.
 
@@ -146,3 +146,6 @@ PYTHONPATH=. python eval/ocr_accuracy.py \
 References are manually transcribed page bodies; WER is exact whitespace-token edit distance and therefore sensitive to punctuation, tokenization and editorial transcription choices. Report micro word accuracy as a reference-set metric, not a general OCR guarantee.
 
 The deterministic checks do not prove wide-table row/column association or visual reading order. S05 and S07 remain manual-review cases; inspect their rendered source pages and compare each table row/column before marking those dimensions complete. OCR checks should be rerun on the local PDFs because the CI workflow does not download the corpus PDFs or install Tesseract.
+
+
+See [Task 2 extraction fidelity findings](extraction_fidelity_findings.md) for the selected-page checks, OCR pilot metrics, table/layout observations, and remaining visual-validation work.
