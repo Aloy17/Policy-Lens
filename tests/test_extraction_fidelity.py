@@ -30,3 +30,71 @@ def test_ocr_score_rejects_empty_reference():
 
     with pytest.raises(ValueError, match="at least one word"):
         score("", "some OCR output")
+
+
+def test_inspect_case_checks_required_and_forbidden_text(monkeypatch, tmp_path):
+    import eval.extraction_fidelity as fidelity
+
+    case = {
+        "case_id": "fixture_table",
+        "doc_id": "fixture",
+        "page": 1,
+        "kind": "table",
+        "required": ["Medium risk", "1.5"],
+        "forbidden": ["15 ."],
+        "description": "fixture",
+    }
+    (tmp_path / "fixture.pdf").touch()
+    monkeypatch.setattr(
+        fidelity,
+        "parse_pdf",
+        lambda _path: [{
+            "page_number": 1,
+            "text": "Medium risk 1.5",
+            "table_count": 1,
+            "word_count": 3,
+            "image_coverage": 0.0,
+        }],
+    )
+
+    result = fidelity.inspect_case(tmp_path, case)
+
+    assert result["status"] == "pass"
+    assert result["missing_required"] == []
+    assert result["forbidden_found"] == []
+
+
+def test_ocr_reference_case_uses_ocr_fallback(monkeypatch, tmp_path):
+    import eval.extraction_fidelity as fidelity
+
+    case = {
+        "case_id": "fixture_ocr",
+        "doc_id": "fixture",
+        "page": 2,
+        "kind": "ocr_reference",
+        "required": ["recognized legal text"],
+        "forbidden": [],
+        "description": "fixture OCR",
+    }
+    (tmp_path / "fixture.pdf").touch()
+    page = {
+        "page_number": 2,
+        "text": "weak embedded layer",
+        "word_count": 3,
+        "image_coverage": 0.9,
+        "table_count": 0,
+    }
+    monkeypatch.setattr(fidelity, "parse_pdf", lambda _path: [page])
+
+    def fake_ocr(_path, pages, enabled=True):
+        assert pages == [page]
+        assert enabled is True
+        return [{**page, "text": "recognized legal text", "ocr_used": True}]
+
+    monkeypatch.setattr(fidelity, "apply_ocr_to_pages", fake_ocr)
+
+    result = fidelity.inspect_case(tmp_path, case)
+
+    assert result["status"] == "pass"
+    assert result["ocr_used"] is True
+    assert result["ocr_candidate"] is True
