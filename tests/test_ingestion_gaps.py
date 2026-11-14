@@ -225,3 +225,78 @@ def test_table_data_row_is_not_mistaken_for_markdown_separator():
     assert header in chunks[0]["text"]
     assert data_row in chunks[0]["text"]
 
+
+class CharacterTokenizer:
+    def encode(self, text, add_special_tokens=False):
+        return [ord(char) for char in text]
+
+    def decode(self, token_ids, skip_special_tokens=True):
+        return "".join(chr(token_id) for token_id in token_ids)
+
+
+def test_oversized_first_table_row_is_preserved_in_bounded_continuations():
+    tokenizer = CharacterTokenizer()
+    first_row = "|" + ("long-cell-content-" * 8) + "|"
+    body_row = "| 1 | Example value |"
+    pages = [{
+        "page_number": 95,
+        "ocr_used": False,
+        "text": (
+            "[TABLE 1]\n"
+            + first_row + "\n"
+            + "| --- | --- |\n"
+            + body_row + "\n"
+        ),
+    }]
+
+    chunks = structure_aware_chunks(
+        pages, target_size=12, max_size=80, min_size=5, tokenizer=tokenizer
+    )
+    continuations = [
+        chunk for chunk in chunks
+        if "[FIRST ROW CONTINUATION]" in chunk["text"]
+    ]
+    body_chunks = [
+        chunk for chunk in chunks
+        if body_row in chunk["text"]
+    ]
+
+    assert len(continuations) > 1
+    assert "".join(
+        chunk["text"].split("\n", 2)[2] for chunk in continuations
+    ) == first_row
+    assert body_chunks
+    assert all("[TABLE 1]" in chunk["text"] for chunk in body_chunks)
+    assert all(
+        "[FIRST ROW EXCEEDS CHUNK LIMIT; SEE FIRST ROW CONTINUATION]"
+        in chunk["text"]
+        for chunk in body_chunks
+    )
+    assert all(chunk["token_count"] <= 80 for chunk in chunks)
+    assert all(chunk["page_start"] == chunk["page_end"] == 95 for chunk in chunks)
+
+
+def test_oversized_table_body_row_is_split_without_losing_characters():
+    tokenizer = CharacterTokenizer()
+    long_row = "|" + ("body-value-" * 12) + "|"
+    pages = [{
+        "page_number": 12,
+        "text": (
+            "[TABLE 2]\n"
+            "| Field | Description |\n"
+            "| --- | --- |\n"
+            + long_row + "\n"
+        ),
+    }]
+
+    chunks = structure_aware_chunks(
+        pages, target_size=10, max_size=70, min_size=5, tokenizer=tokenizer
+    )
+    row_fragments = [
+        chunk["text"].split("\n", 2)[2]
+        for chunk in chunks
+        if "[TABLE 2]" in chunk["text"]
+    ]
+
+    assert "".join(row_fragments) == long_row
+    assert all(chunk["token_count"] <= 70 for chunk in chunks)
