@@ -286,3 +286,50 @@ def test_committed_v2_dataset_is_structurally_valid():
         row = next(r for r in rows if r["id"] == qid)
         assert row["question"] == orig["question"]
         assert (row["expected_page_start"], row["expected_page_end"]) == (orig["expected_page_start"], orig["expected_page_end"])
+
+
+
+def test_runner_rejects_mismatched_chroma_result_arrays():
+    class BrokenSearcher(FakeSearcher):
+        def query(self, embedding, top_k):
+            return {
+                "ids": [["c1", "c2"]],
+                "documents": [["one"]],
+                "metadatas": [[meta("doc_a", 10)]],
+                "distances": [[0.1]],
+            }
+
+    with pytest.raises(ValueError, match="inconsistent Chroma result lengths"):
+        bench.run_benchmark(
+            _questions(), {"q1": [0.0]},
+            {"fixed": BrokenSearcher([]), "structure": FakeSearcher([])}, 10
+        )
+
+
+def test_evidence_term_proxy_requires_all_terms_in_same_chunk():
+    passage = Passage("doc_a", 10, 11)
+    assert bench.evidence_term_matches(
+        "The customer identification records are confidential.", passage,
+        [passage], ["customer identification|records are confidential"]
+    )
+    assert not bench.evidence_term_matches(
+        "The customer identification process is described. Confidential records are retained.",
+        passage, [passage], ["customer identification|records are confidential"]
+    )
+
+
+def test_pdf_evidence_skips_are_reported_and_fail_by_default(tmp_path):
+    pdf_dir = tmp_path / "pdfs"
+    pdf_dir.mkdir()
+    pdf = pdf_dir / "doc_a.pdf"
+    pymupdf = pytest.importorskip("pymupdf")
+    document = pymupdf.open()
+    document.new_page()
+    document.save(str(pdf))
+    document.close()
+
+    row = gold_row()
+    row["passage_terms"] = "not present"
+    errors, details = v2.validate_evidence([row], pdf_dir, ocr=False)
+    assert errors == []
+    assert details[0]["result"] == "SKIPPED"
