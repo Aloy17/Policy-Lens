@@ -36,5 +36,13 @@ jobs:
           cache-dependency-path: requirements.txt
       - name: Install project dependencies
         run: python -m pip install -r requirements.txt
+      - name: Install Tesseract for scanned-page validation
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr
       - name: Run complete test suite
         run: python -m pytest -q
+      - name: Run selected-page extraction fidelity checks
+        run: PYTHONPATH=. python eval/extraction_fidelity.py --pdf-dir data/pdfs --output /tmp/extraction_fidelity_report.json
+      - name: Run OCR accuracy against committed references
+        run: PYTHONPATH=. python eval/ocr_accuracy.py --reference-dir eval/ocr_reference --pdf-dir data/pdfs --output /tmp/ocr_accuracy.csv

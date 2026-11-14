@@ -302,3 +302,12 @@ def test_oversized_table_body_row_is_split_without_losing_characters():
         chunk["text"][len(prefix):] for chunk in row_chunks
     ) == long_row
     assert all(chunk["token_count"] <= 100 for chunk in chunks)
+
+
+def test_table_cell_merge_preserves_decimal_from_either_extractor():
+    from src.parser import _merge_table_cell
+
+    assert _merge_table_cell("15 .", "1.5") == "1.5"
+    assert _merge_table_cell("1.5", "15 .") == "1.5"
+    assert _merge_table_cell("Mediumrisk", "Medium risk") == "Medium risk"
+    assert _merge_table_cell("1.5", "1.6") == "1.5"
