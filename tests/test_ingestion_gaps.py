@@ -135,14 +135,13 @@ def test_long_tables_repeat_headers_and_keep_rows_within_budget():
             + "".join(f"| Category {i} | Value {i} |\\n" for i in range(1, 13))
         ),
     }]
-    tokenizer = FakeTokenizer()
     chunks = structure_aware_chunks(
-        pages, target_size=8, max_size=12, min_size=4, tokenizer=tokenizer
+        pages, target_size=10, max_size=15, min_size=4
     )
 
     assert len(chunks) > 1
     for chunk in chunks:
-        assert chunk["token_count"] <= 12
+        assert chunk["token_count"] <= 15
         assert "[TABLE 1]" in chunk["text"]
         assert "| Category | Threshold |" in chunk["text"]
         assert "| --- | --- |" in chunk["text"]
@@ -170,7 +169,7 @@ def test_table_row_that_exceeds_budget_is_split_with_context():
         ),
     }]
     chunks = structure_aware_chunks(
-        pages, target_size=10, max_size=15, min_size=5, tokenizer=FakeTokenizer()
+        pages, target_size=10, max_size=15, min_size=5
     )
 
     assert len(chunks) > 1
