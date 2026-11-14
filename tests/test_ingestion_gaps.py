@@ -179,3 +179,49 @@ def test_table_row_that_exceeds_budget_is_split_with_context():
     assert all(chunk["token_count"] <= 15 for chunk in chunks)
     assert all("[TABLE 2]" in chunk["text"] for chunk in chunks)
     assert all("| Field | Description |" in chunk["text"] for chunk in chunks)
+
+
+def test_wide_table_header_does_not_fail_when_separator_exceeds_budget():
+    from src.chunker import structure_aware_chunks
+
+    header = "| " + " ".join(f"Column{i}" for i in range(1, 11)) + " |"
+    separator = "| " + " | ".join(["---"] * 10) + " |"
+    pages = [{
+        "page_number": 74,
+        "text": (
+            "[TABLE 1]\n"
+            + header + "\n"
+            + separator + "\n"
+            + "| row | value |\n"
+        ),
+    }]
+
+    chunks = structure_aware_chunks(
+        pages, target_size=15, max_size=15, min_size=5
+    )
+
+    assert chunks
+    assert all(chunk["token_count"] <= 15 for chunk in chunks)
+    assert all(header in chunk["text"] for chunk in chunks)
+    assert any("| row | value |" in chunk["text"] for chunk in chunks)
+    assert all(separator not in chunk["text"] for chunk in chunks)
+
+
+def test_table_data_row_is_not_mistaken_for_markdown_separator():
+    from src.chunker import structure_aware_chunks
+
+    header = "| Description | Details |"
+    data_row = "| 23 | Holding and subsidiary companies |"
+    pages = [{
+        "page_number": 189,
+        "text": "[TABLE 1]\n" + header + "\n" + data_row + "\n",
+    }]
+
+    chunks = structure_aware_chunks(
+        pages, target_size=50, max_size=100, min_size=5
+    )
+
+    assert len(chunks) == 1
+    assert header in chunks[0]["text"]
+    assert data_row in chunks[0]["text"]
+
