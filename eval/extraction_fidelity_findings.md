@@ -54,7 +54,7 @@ PYTHONPATH=. python eval/ocr_accuracy.py \
   --output eval/ocr_accuracy.csv
 ```
 
-The fidelity runner does not claim to validate semantic table-cell relationships. The wide LODR table and Merchant Banker table still require visual review. The OCR runner requires local Tesseract and the PDFs; the CI suite tests evaluator logic but does not download the corpus or execute OCR.
+The fidelity runner does not claim to validate semantic table-cell relationships. The wide LODR table and Merchant Banker table still require visual review. GitHub Actions installs Tesseract and runs both the selected-page extraction evaluator and OCR accuracy scorer against the repository's committed PDFs. The same commands can be rerun locally against the Mac corpus; local reruns are still needed to confirm behavior in that environment.
 
 ## Two-column layout
 
@@ -62,7 +62,7 @@ The existing parser has a synthetic regression test ensuring a center-gutter blo
 
 ## Remaining work
 
-1. Run the seven-page evaluator and OCR scorer against the local corpus PDFs with Tesseract installed.
+1. Rerun the seven-page evaluator and OCR scorer against the local corpus PDFs to confirm behavior in the Mac environment.
 2. Inspect the rendered S03, S05, S06 and S07 pages; record cell/row-level judgments, not only keyword presence.
 3. Select at least one genuine two-column page and compare rendered reading order with extracted text.
 4. Review failures and update parser/OCR logic only when the source page supports the correction.
