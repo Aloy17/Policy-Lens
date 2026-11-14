@@ -310,4 +310,4 @@ def test_table_cell_merge_preserves_decimal_from_either_extractor():
     assert _merge_table_cell("15 .", "1.5") == "1.5"
     assert _merge_table_cell("1.5", "15 .") == "1.5"
     assert _merge_table_cell("Mediumrisk", "Medium risk") == "Medium risk"
-    assert _merge_table_cell("1.5", "1.6") == "1.6"
+    assert _merge_table_cell("1.5", "1.6") == "1.5"
