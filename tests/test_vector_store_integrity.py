@@ -4,6 +4,7 @@ from src.vector_store import VectorStore
 class FakeCollection:
     def __init__(self, metadatas):
         self.metadatas = metadatas
+        self.ids = [f"chunk-{index}" for index in range(len(metadatas))]
 
     def get(self, where, include):
         assert include == ["metadatas"]
@@ -13,7 +14,13 @@ class FakeCollection:
                 {"source_hash": "abc123"},
             ]
         }
-        return {"metadatas": self.metadatas}
+        return {"ids": self.ids, "metadatas": self.metadatas}
+
+    def delete(self, ids):
+        for chunk_id in ids:
+            index = self.ids.index(chunk_id)
+            self.ids.pop(index)
+            self.metadatas.pop(index)
 
 
 def make_store(metadatas):
@@ -87,3 +94,39 @@ def test_empty_version_is_not_recognized():
     assert not store.has_complete_document_version(
         "doc-1", "abc123", expected_chunk_count=None, chunk_strategy="fixed"
     )
+
+
+
+def test_unexpected_same_version_chunks_are_removed():
+    store = make_store([
+        metadata(0),
+        metadata(1),
+        metadata(2),
+        metadata(3, count=4),
+        {"doc_id": "doc-1", "source_hash": "abc123",
+         "chunk_strategy": "fixed", "chunk_index": None, "chunk_count": 3},
+    ])
+
+    removed = store.remove_unexpected_chunks(
+        "doc-1", "abc123", expected_chunk_count=3, chunk_strategy="fixed"
+    )
+
+    assert removed == 2
+    assert store.collection.metadatas == [metadata(0), metadata(1), metadata(2)]
+
+
+def test_unexpected_chunk_cleanup_does_not_remove_other_strategies():
+    store = make_store([
+        metadata(0),
+        metadata(1),
+        metadata(2),
+        metadata(3, strategy="structure"),
+    ])
+
+    removed = store.remove_unexpected_chunks(
+        "doc-1", "abc123", expected_chunk_count=3, chunk_strategy="fixed"
+    )
+
+    assert removed == 1
+    assert any(item["chunk_strategy"] == "structure"
+               for item in store.collection.metadatas)
