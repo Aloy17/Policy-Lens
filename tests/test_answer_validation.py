@@ -56,9 +56,11 @@ def test_unknown_fact_ids_and_unverified_annotation_fail():
 def test_insufficient_source_requires_explicit_abstention_evidence():
     key = answer()
     key.update(reference_answer="", required_facts="", answerability="insufficient_source")
-    row = review(fact_ids="")
-    row["evidence_class"] = "insufficient"
-    scores = score_reviews([key], [row])
+    fixed = review(fact_ids="")
+    fixed["evidence_class"] = "insufficient"
+    structure = review(strategy="structure", fact_ids="")
+    structure["evidence_class"] = "insufficient"
+    scores = score_reviews([key], [fixed, structure])
     assert all(x["outcome"] == "abstention_supported" for x in scores)
 
 
