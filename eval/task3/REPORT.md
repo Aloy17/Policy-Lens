@@ -1,6 +1,6 @@
 # PolicyLens Case Study 2 — Task 3 Retrieval Evidence Evaluation
 
-**Status:** Evidence review and scoring complete; final local validation/CI and x03 source-version reconciliation remain.
+**Status:** Evidence review, visual source verification, x03 source reconciliation, and scoring complete; final local validation and CI remain.
 
 ## 1. Scope
 
