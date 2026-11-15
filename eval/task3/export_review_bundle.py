@@ -63,8 +63,12 @@ def main() -> None:
     }
 
     retrieved: dict[tuple[str, str], tuple[str, dict]] = {}
+    # A chunk may appear in multiple questions/ranks. Chroma requires unique IDs
+    # per get() call, so fetch each strategy-specific chunk only once.
     ids_by_strategy = {
-        strategy: [row["chunk_id"] for row in rows if row["strategy"] == strategy]
+        strategy: list(dict.fromkeys(
+            row["chunk_id"] for row in rows if row["strategy"] == strategy
+        ))
         for strategy in ("fixed", "structure")
     }
     for strategy, ids in ids_by_strategy.items():
