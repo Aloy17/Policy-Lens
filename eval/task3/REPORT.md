@@ -33,15 +33,15 @@ Citation accuracy is evaluated independently from semantic support. A passage ca
 
 | Metric | Fixed 500-token chunks | Structure-aware chunks |
 | --- | ---: | ---: |
-| Complete support | 18 / 41 (43.9%) | 25 / 41 (61.0%) |
-| Partial support | 6 / 41 (14.6%) | 5 / 41 (12.2%) |
+| Complete support | 19 / 41 (46.3%) | 25 / 41 (61.0%) |
+| Partial support | 5 / 41 (12.2%) | 5 / 41 (12.2%) |
 | No required-fact support in top 10 | 17 / 41 (41.5%) | 11 / 41 (26.8%) |
-| Mean required-fact coverage | 52.7% | 67.2% |
+| Mean required-fact coverage | 53.3% | 67.2% |
 
 Across the 82 question-strategy pairs:
 
-- Complete support: 43 (52.4%)
-- Partial support: 11 (13.4%)
+- Complete support: 44 (53.7%)
+- Partial support: 10 (12.2%)
 - No required-fact support in the top 10: 28 (34.1%)
 
 Structure-aware retrieval achieved higher mean fact coverage and more complete-support outcomes in this evaluation set. These results are descriptive for this corpus, question set, and retrieval configuration; they are not a statistically generalisable claim.
