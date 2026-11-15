@@ -11,7 +11,7 @@ Last updated: 2026-11-15. Branch: `task3-answer-key-verification`.
 - Validation logic was reproduced against the current answer key and review CSV: 41 questions, 820 review rows, no schema errors, no unknown fact IDs, and no accurate citation marked source-unverified.
 - Scoring: `answer_validation_scores.csv` contains 82 question-strategy results.
 
-## Preliminary retrieval results
+## Final reviewed retrieval results
 
 | Metric | Fixed 500-token chunks | Structure-aware chunks |
 | --- | ---: | ---: |
@@ -33,7 +33,7 @@ Across both strategies, 44 of 82 question-strategy pairs achieved complete fact 
 ## Currency and interpretation limitations
 
 - The RBI Digital Lending circular used for q21-q24 and q31-q33 is explicitly marked repealed and replaced by the RBI (Digital Lending) Directions, 2025. Scores for those questions measure retrieval against the historical 2022 source specified in the answer key; they must not be presented as current regulatory guidance.
-- The q34 PFRDA page 6 and x04 Ordinance page 2 have been visually confirmed; other flagged source pages remain pending.
+- All flagged source pages have been visually confirmed; q34 and x04 are called out above because they were key evidence examples.
 - x03's gold passage was updated to the 2026 SEBI Research Analysts Master Circular (pp.69–70). The current passage specifies SCORES 2.0, the current platform URL, two-level RAASB/SEBI review, and the physical-complaint route. The older scores.gov.in URL and helpline are retained only as historical retrieval evidence, not as current facts.
 - Text alignment and semantic relevance are separate: matching page ranges do not by themselves prove that a passage supports an answer. The evidence classes and supported fact IDs are the human semantic annotations.
 
