@@ -13,6 +13,7 @@ Last updated: 2026-11-15. Branch: `task3-answer-key-verification` (off `task3-an
 - Audit results: all 820/820 cited page ranges are present in the supplied source-page export; 517 chunks have >=0.95 text alignment, 168 have 0.80-0.95, 81 have 0.50-0.80, 25 have 0.01-0.50, and 29 have 0.00.
 - 154 chunks cite at least one page flagged for visual review in the source-page export.
 - Added `source_alignment_summary.json` and `source_alignment_report.md`. These are text-alignment diagnostics only, not semantic evidence review or source-PDF visual verification.
+- Latest local export command completed successfully: 820 evidence rows requested, 570 unique source pages exported as text, 54 pages included in the visual-review PDF, and 0 missing/unreadable source entries. The PyMuPDF deprecation warning did not prevent export.
 
 ## Material corrections to the draft key
 - q01: removed conditions not in the text (address change, retrievable record). Source: para 10(f), p19.
@@ -32,12 +33,12 @@ Last updated: 2026-11-15. Branch: `task3-answer-key-verification` (off `task3-an
 - x03: a separate `sebi_master_circular_for_research_analysts_2026` PDF exists; not compared with the cited document.
 
 ## Not done
-- Human semantic review of all 820 retrieval rows: `evidence_class`, `supported_fact_ids`, `citation_status`.
-- Visual inspection of all original cited PDF pages; the 154 flagged rows/pages need particular attention, with table/scanned pages checked carefully.
-- Scoring and final Task 3 results report. The scoring script requires every review row to have a defensible manual annotation and accurate citations to be source-verified.
+- Human semantic review of all 820 retrieval rows: `evidence_class`, `supported_fact_ids`, and `citation_status`. The supplied `PolicyLens_Task3_Evidence_Review.csv` currently contains all 820 rows but all four annotation fields are blank.
+- Visual inspection of the 54 pages in the newly generated visual-review PDF. The PDF was generated locally and is not present in the repository/chat; its page images have therefore not been inspected here. Pages flagged in the text export need particular attention, especially tables and scanned pages.
+- Scoring and final Task 3 results report. The scoring script requires defensible row-level annotations; it does not infer semantic support from keyword overlap.
 
 ## Important review boundary
-The text-alignment audit does not determine whether a chunk supports any required fact, whether a citation is semantically correct, or whether a table/scanned page was visually read. Do not populate the evidence-review CSV or set `source_verified=yes` from alignment alone.
+The text-alignment audit does not determine whether a chunk supports any required fact, whether a citation is semantically correct, or whether a table/scanned page was visually read. The 570-page text export is sufficient to assess text-native page content, but it cannot establish visual fidelity for pages flagged for visual review. Do not set `source_verified=yes` for a visually dependent page without inspecting its original rendered page.
 
 ## Next step
-Continue the human evidence review in question batches using `chunk_text.jsonl`, the verified answer key, and original PDF pages. Use `audit_chunk_sources.py` to prioritize low-alignment and visual-review cases. The audit script does not access or mutate Chroma or source PDFs.
+Complete the 820-row evidence review in question batches using `chunk_text.jsonl`, the verified answer key, and the 570-page source text export. Mark visually dependent rows as not source-verified until the relevant page image is inspected. Then run `validate` and `score`, write the fixed-vs-structure results and limitations, and rerun CI. Do not merge either Task 3 PR until the evidence review and CI are complete.
