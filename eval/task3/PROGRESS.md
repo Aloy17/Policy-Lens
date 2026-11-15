@@ -8,6 +8,12 @@ Last updated: 2026-11-15. Branch: `task3-answer-key-verification` (off `task3-an
   - Every row's `review_notes` records the paragraph and page checked and what was corrected.
 - Validator on the answer key: no answer-key errors. All remaining errors are the blank evidence-review rows.
 - Unit tests: `tests/test_answer_validation.py` 6 passed.
+- Full retrieved chunk text and cited source-page text exports were supplied; no local Chroma access is required for text-level analysis.
+- Added `audit_chunk_sources.py`, a read-only diagnostic comparing retrieved chunk text to its cited source-page text.
+- Audit results: all 820/820 cited page ranges are present in the supplied source-page export; 517 chunks have >=0.95 text alignment, 168 have 0.80-0.95, 81 have 0.50-0.80, 25 have 0.01-0.50, and 29 have 0.00.
+- 154 chunks cite at least one page flagged for visual review in the source-page export.
+- Added `source_alignment_summary.json` and `source_alignment_report.md`. These are text-alignment diagnostics only, not semantic evidence review or source-PDF visual verification.
+- Latest local export command completed successfully: 820 evidence rows requested, 570 unique source pages exported as text, 54 pages included in the visual-review PDF, and 0 missing/unreadable source entries. The PyMuPDF deprecation warning did not prevent export.
 
 ## Material corrections to the draft key
 - q01: removed conditions not in the text (address change, retrievable record). Source: para 10(f), p19.
@@ -26,13 +32,13 @@ Last updated: 2026-11-15. Branch: `task3-answer-key-verification` (off `task3-an
 - The RBI digital lending circular (q21-q24, q31-q33) has a banner on p1: repealed, replaced by the RBI (Digital Lending) Directions, 2025.
 - x03: a separate `sebi_master_circular_for_research_analysts_2026` PDF exists; not compared with the cited document.
 
-## Not done (blocked: needs your local Chroma DB)
-- Evidence review of the 820 retrieval rows (`evidence_class`, `supported_fact_ids`, `citation_status`, `source_verified`). The retrieval log holds only ~190-character previews, and full chunk text exists only in the local Chroma DB.
-- Therefore: no scoring, no results report, and the evidence-review CSV is untouched (all rows still blank).
+## Not done
+- Human semantic review of all 820 retrieval rows: `evidence_class`, `supported_fact_ids`, and `citation_status`. The supplied `PolicyLens_Task3_Evidence_Review.csv` currently contains all 820 rows but all four annotation fields are blank.
+- Visual inspection of the 54 pages in the newly generated visual-review PDF. The PDF was generated locally and is not present in the repository/chat; its page images have therefore not been inspected here. Pages flagged in the text export need particular attention, especially tables and scanned pages.
+- Scoring and final Task 3 results report. The scoring script requires defensible row-level annotations; it does not infer semantic support from keyword overlap.
+
+## Important review boundary
+The text-alignment audit does not determine whether a chunk supports any required fact, whether a citation is semantically correct, or whether a table/scanned page was visually read. The 570-page text export is sufficient to assess text-native page content, but it cannot establish visual fidelity for pages flagged for visual review. Do not set `source_verified=yes` for a visually dependent page without inspecting its original rendered page.
 
 ## Next step
-Run locally, then commit the output file to this branch or send it over:
-
-    ./.venv/bin/python eval/task3/export_chunk_text.py
-
-This writes `eval/task3/chunk_text.jsonl` (read-only on Chroma; refuses to overwrite). Evidence rows are then reviewed per question against the verified key, in batches.
+Complete the 820-row evidence review in question batches using `chunk_text.jsonl`, the verified answer key, and the 570-page source text export. Mark visually dependent rows as not source-verified until the relevant page image is inspected. Then run `validate` and `score`, write the fixed-vs-structure results and limitations, and rerun CI. Do not merge either Task 3 PR until the evidence review and CI are complete.

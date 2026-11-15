@@ -1,0 +1,22 @@
+{
+  "chunk_records": 820,
+  "source_page_records": 570,
+  "chunks_with_all_source_pages": 820,
+  "chunks_needing_visual_review": 154,
+  "alignment_bands": {
+    "0.95-1.00": 517,
+    "0.80-0.95": 168,
+    "0.50-0.80": 81,
+    "0.01-0.50": 25,
+    "0.00": 29
+  },
+  "strategy_comparison": {
+    "fixed": {"chunks": 410, "alignment_gte_095": 252, "alignment_gte_080": 348, "alignment_lt_050": 18, "mean_alignment": 0.8996},
+    "structure": {"chunks": 410, "alignment_gte_095": 265, "alignment_gte_080": 337, "alignment_lt_050": 36, "mean_alignment": 0.8719}
+  },
+  "limitations": [
+    "Text alignment does not establish semantic support for a question.",
+    "Text alignment does not verify visual table structure or scanned-page content.",
+    "This report does not set evidence_class, supported_fact_ids, citation_status, or source_verified."
+  ]
+}
