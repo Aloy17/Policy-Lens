@@ -37,15 +37,12 @@ Across both strategies, 44 of 82 question-strategy pairs achieved complete fact 
 - x03's gold passage was updated to the 2026 SEBI Research Analysts Master Circular (pp.69–70). The current passage specifies SCORES 2.0, the current platform URL, two-level RAASB/SEBI review, and the physical-complaint route. The older scores.gov.in URL and helpline are retained only as historical retrieval evidence, not as current facts.
 - Text alignment and semantic relevance are separate: matching page ranges do not by themselves prove that a passage supports an answer. The evidence classes and supported fact IDs are the human semantic annotations.
 
-## Remaining before Task 3 can be called fully closed
+## Release checks
 
-1. Run the repository's actual local commands:
-   ```bash
-   ./.venv/bin/python eval/answer_validation.py validate --answer-key eval/task3/answer_key.csv --reviews eval/task3/evidence_review.csv
-   ./.venv/bin/python eval/answer_validation.py score --answer-key eval/task3/answer_key.csv --reviews eval/task3/evidence_review.csv --output eval/task3/answer_validation_scores.csv
-   ```
-   The current score file was generated from the same scoring logic after a zero-error schema/fact-ID audit; the local run should confirm the repository implementation end-to-end.
-2. Confirm CI succeeds on the final branch state, review the diff, and only then merge the Task 3 PR. Keep the superseded 2022 digital-lending circular and x04 repeal note explicit in the final report.
+- Local validation passed: 41 questions and 820 review rows; no schema or fact-ID errors.
+- Local scoring passed: 82 question-strategy scores generated.
+- GitHub Actions passed on commit `d562196`: full test suite, selected-page extraction fidelity, and OCR accuracy.
+- Final PR review and merge remain.
 
 ## Review boundary
 
