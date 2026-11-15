@@ -155,6 +155,8 @@ def validate_inputs(answer_key: list[dict[str, str]], reviews: list[dict[str, st
             errors.append(f"{qid}: invalid citation_status.")
         if row.get("source_verified", "").lower() not in {"yes", "no"}:
             errors.append(f"{qid}: source_verified must be yes or no.")
+        if row.get("citation_status") == "accurate" and row.get("source_verified", "").lower() != "yes":
+            errors.append(f"{qid}: an accurate citation must be verified against the source PDF.")
     return errors
 
 
