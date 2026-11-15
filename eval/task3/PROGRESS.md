@@ -24,11 +24,11 @@ Across both strategies, 43 of 82 question-strategy pairs achieved complete fact 
 
 ## Citation and source verification
 
-- 688 citation assessments were eligible for accuracy scoring; all 688 were accurate against the supplied source-page text export (100%).
-- 132 chunk citations touch pages flagged for visual review and remain source-unverified; they are recorded as `not_applicable` for citation-accuracy scoring rather than being falsely counted as verified or inaccurate.
+- 698 citation assessments were eligible for accuracy scoring; all 698 were accurate against the supplied source-page text export (100%).
+- 122 chunk citations still touch pages flagged for visual review and remain source-unverified; they are recorded as `not_applicable` for citation-accuracy scoring rather than being falsely counted as verified or inaccurate.
 - The visual-review contact sheets cover 108 pages. Scanned/mixed pages still need page-level confirmation before any affected row can be upgraded to `source_verified=yes`.
-- The scanned Special Bearer Bonds Ordinance passage (x04) is especially important: OCR text is readable, but the source-page verification flag remains pending. The instrument also bears a handwritten repeal note, so its legal currency is not established by this retrieval evaluation.
-- PFRDA VCIP (q34) also relies on a scanned/mixed source page; its text-level evidence is annotated, but source verification remains pending.
+- The scanned Special Bearer Bonds Ordinance passage (x04), PDF page 2, has now been visually checked against the committed contact sheet; section 3 is legible and the citation is marked source-verified. The instrument also bears a handwritten repeal note, so its legal currency is not established by this retrieval evaluation.
+- PFRDA VCIP (q34), PDF page 6, has now been visually checked against the committed contact sheet; para 3.26 is legible and the direct definition citation is marked source-verified.
 
 ## Currency and interpretation limitations
 
@@ -39,7 +39,7 @@ Across both strategies, 43 of 82 question-strategy pairs achieved complete fact 
 
 ## Remaining before Task 3 can be called fully closed
 
-1. Complete page-level visual confirmation for the 132 flagged chunk citations (prioritise q34 and x04, then any other flagged source pages that affect scored evidence).
+1. Complete page-level visual confirmation for the remaining 122 flagged chunk citations; q34 and x04 have been confirmed.
 2. Reconcile x03's answer-key source version with the 2026 circular and decide whether to update the gold passage/reference answer.
 3. Run the repository's actual local commands:
    ```bash
