@@ -33,7 +33,7 @@ Across both strategies, 43 of 82 question-strategy pairs achieved complete fact 
 ## Currency and interpretation limitations
 
 - The RBI Digital Lending circular used for q21-q24 and q31-q33 is explicitly marked repealed and replaced by the RBI (Digital Lending) Directions, 2025. Scores for those questions measure retrieval against the historical 2022 source specified in the answer key; they must not be presented as current regulatory guidance.
-- The q34 PFRDA source and x04 scanned Ordinance need visual source confirmation.
+- The q34 PFRDA page 6 and x04 Ordinance page 2 have been visually confirmed; other flagged source pages remain pending.
 - x03 retrieved a relevant grievance passage from the 2026 SEBI Research Analysts Master Circular, while the answer key's gold passage points to an earlier circular. This is recorded as partial support pending source-version reconciliation.
 - Text alignment and semantic relevance are separate: matching page ranges do not by themselves prove that a passage supports an answer. The evidence classes and supported fact IDs are the human semantic annotations.
 
