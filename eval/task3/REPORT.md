@@ -1,6 +1,6 @@
 # PolicyLens Case Study 2 — Task 3 Retrieval Evidence Evaluation
 
-**Status:** Evidence review, visual source verification, x03 source reconciliation, and scoring complete; final local validation and CI remain.
+**Status:** Evidence review, visual source verification, x03 source reconciliation, scoring, local validation, and CI complete.
 
 ## 1. Scope
 
@@ -61,9 +61,9 @@ A no-support outcome means that the retrieved top 10 did not support any require
 
 The 2022 RBI Digital Lending circular used by q21–q24 and q31–q33 is marked repealed and replaced by the RBI (Digital Lending) Directions, 2025. Those question scores assess retrieval against the historical source specified in the current answer key. They must not be presented as evidence of current regulatory requirements.
 
-### SEBI Research Analysts source-version mismatch
+### SEBI Research Analysts source reconciliation
 
-For x03, the retrieved 2026 SEBI Research Analysts Master Circular contains a relevant grievance-redressal passage, but the answer key's gold passage points to an earlier circular. The retrieved evidence is conservatively classified as partial pending reconciliation of the answer key's source locator and expected answer with the 2026 circular.
+For x03, the answer key was reconciled to the 2026 SEBI Research Analysts Master Circular (pp. 69–70). The current reference answer covers SCORES 2.0, the current platform URL, the two-level RAASB/SEBI review, and the physical-complaint route. The older SCORES URL and helpline are not treated as current facts.
 
 ### Historical Special Bearer Bonds Ordinance
 
@@ -93,4 +93,4 @@ Expected validation summary: 41 questions and 820 review rows, with no schema or
 - `source_alignment_report.md` and `source_alignment_summary.json` — source-page alignment diagnostics
 - `PROGRESS.md` — detailed execution status and remaining release checks
 
-**Release gate:** run the repository's local validation/scoring commands, reconcile x03's source-version reference, and confirm GitHub Actions passes on the final PR head before merging.
+**Release gate:** local validation and scoring passed (41 questions; 820 evidence rows; 82 scores generated). GitHub Actions passed on commit `d562196`. Merge remains the final release action.
