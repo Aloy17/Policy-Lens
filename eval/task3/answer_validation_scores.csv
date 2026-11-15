@@ -77,7 +77,7 @@ x01,fixed,answerable,no_support,4,0,0,10,10,1,10,0
 x01,structure,answerable,partial_support,4,2,0.5,10,10,1,10,0
 x02,fixed,answerable,complete_support,3,3,1,10,10,1,10,0
 x02,structure,answerable,complete_support,3,3,1,10,10,1,10,0
-x03,fixed,answerable,partial_support,4,3,0.75,10,10,1,10,0
+x03,fixed,answerable,complete_support,4,4,1,10,10,1,10,0
 x03,structure,answerable,partial_support,4,3,0.75,10,10,1,10,0
 x04,fixed,answerable,partial_support,4,2,0.5,10,10,1,10,0
 x04,structure,answerable,complete_support,4,4,1,10,10,1,10,0
