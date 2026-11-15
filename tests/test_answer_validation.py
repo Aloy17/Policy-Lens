@@ -81,3 +81,9 @@ def test_build_templates(tmp_path):
     )
     review_path = tmp_path / "review.csv"
     assert build_review_template(log, review_path, top_k=1) == 1
+
+
+def test_accurate_citation_requires_source_pdf_verification():
+    row = review()
+    row["source_verified"] = "no"
+    assert any("accurate citation must be verified" in e for e in validate_inputs([answer()], [row]))
