@@ -1,87 +1,97 @@
 [
   {
-    "id": "gazette_1981_special_bearer_bonds_fixed_7b370c8980cb_3",
+    "id": "gazette_1990_constitution_66th_amendment_fixed_8c792f2de965_2",
     "metadata": {
-      "source_hash": "7b370c8980cb69b66c99cbf487ec9c463d70ef9bb73bb377bf3aabe399e43b84",
+      "title": "Constitution (Sixty-Sixth Amendment) Act 1990",
       "chunk_strategy": "fixed",
-      "ocr_used": true,
-      "issuer": "Ministry of Law, Justice and Company Affairs (Legislative Department)",
-      "title": "The Special Bearer Bonds (Immunities and Exemptions) Ordinance, 1981",
-      "page_start": 3,
+      "page_end": 4,
+      "issuer": "Ministry of Law and Justice (Legislative Department)",
+      "issue_date": "1990-06-08",
+      "chunk_index": 2,
       "document_type": "scanned_or_mixed",
-      "issue_date": "1981-01-12",
-      "doc_id": "gazette_1981_special_bearer_bonds",
-      "section_title": "",
-      "page_end": 4
+      "source_hash": "8c792f2de965c9d846624b185647b52e5aad3daf216577c1344933909228ae4d",
+      "doc_id": "gazette_1990_constitution_66th_amendment",
+      "ocr_used": true,
+      "page_start": 3,
+      "chunk_count": 4,
+      "section_title": ""
     },
-    "passage_preview": "clause shal ] be inserted, namely : — “ ( iiib ) of property in the form of special bearer bonds, 1991 ; ”. & ( 1 ) if any difficulty arises in giving effect to the provisions of this ordinance, the c"
+    "passage_preview": "the gazette of india extraordinary _ 3 224, the kerala land reforms ( amendment ) act, 1981 ( kerala act 19 of 1981 ). 225, the madhya pradesh land revenue code ( third amendment ) act, 1976 ( madhya "
   },
   {
-    "id": "sebi_master_circular_for_infrastructure_investment_trusts_fixed_536b4f570e3a_46",
+    "id": "pfrda_master_circular_kyc_aml_cft_fixed_bc432cc332ad_36",
     "metadata": {
-      "section_title": "",
-      "ocr_used": false,
-      "page_end": 42,
-      "page_start": 41,
-      "issuer": "SEBI",
-      "title": "Master Circular for Infrastructure Investment Trusts",
-      "doc_id": "sebi_master_circular_for_infrastructure_investment_trusts",
-      "document_type": "text_native",
-      "source_hash": "536b4f570e3a77a9ddaab6bbe4a70a1af1d71fa475555127daaa5ecbe5ce788d",
-      "issue_date": "2025-07-11",
-      "chunk_strategy": "fixed"
-    },
-    "passage_preview": "statement of total returns at fair value a ) the line items for the ‘ statement of total return at fair value ’, shall, at minimum, include the following : particulars amount total comprehensive incom"
-  },
-  {
-    "id": "sebi_master_circular_for_stock_brokers_fixed_e268b5a1971c_113",
-    "metadata": {
+      "issuer": "PFRDA",
+      "doc_id": "pfrda_master_circular_kyc_aml_cft",
       "chunk_strategy": "fixed",
-      "doc_id": "sebi_master_circular_for_stock_brokers",
-      "issuer": "SEBI",
-      "document_type": "text_native",
-      "page_end": 106,
-      "issue_date": "2025-06-17",
+      "page_end": 23,
+      "source_hash": "bc432cc332ad9577f126105a96871cd8f499d6d6c30d4dc0367303ebe027dcdb",
+      "title": "Master Circular - KYC AML CFT",
+      "chunk_count": 50,
+      "chunk_index": 36,
       "ocr_used": false,
       "section_title": "",
-      "source_hash": "e268b5a1971c4d366872c371b986f03ab7f78c5311af84ef9023605ca2e4c190",
-      "title": "Master Circular for Stock Brokers",
-      "page_start": 105
+      "page_start": 23,
+      "document_type": "scanned_or_mixed",
+      "issue_date": "2024-09-23"
     },
-    "passage_preview": "has visibility of the client to whom such securities belong to, and accordingly is able to assign the value of the securities collateral, based on applicable haircut, to that client ’ s account. 43. 5"
+    "passage_preview": ". 16. 3 the reporting formats and comprehensive reporting format guide, prescribed / released by fiu - ind and report generation utility and report validation utility developed to assist reporting ent"
   },
   {
-    "id": "sebi_master_circular_for_stock_brokers_fixed_e268b5a1971c_226",
+    "id": "supreme_court_chronicle_june_2026_fixed_edb8043ae81d_47",
+    "metadata": {
+      "issue_date": "2026-06",
+      "document_type": "text_native",
+      "issuer": "Supreme Court of India",
+      "chunk_count": 56,
+      "section_title": "",
+      "doc_id": "supreme_court_chronicle_june_2026",
+      "chunk_strategy": "fixed",
+      "chunk_index": 47,
+      "title": "Supreme Court Chronicle - Issue XXXII - June 2026",
+      "page_start": 45,
+      "ocr_used": false,
+      "page_end": 45,
+      "source_hash": "edb8043ae81d6f68425cfcd10357f4da776fadc6712a525235d25cde7015f8cd"
+    },
+    "passage_preview": "with settling this question of law due to the “ contrarian views galore ” across various high courts in india. court ’ s reasoning and key observations statutory v. contractual distinction : the court"
+  },
+  {
+    "id": "sebi_master_circular_for_registrar_and_share_transfer_agents_fixed_accf5eb9f536_120",
     "metadata": {
       "ocr_used": false,
-      "section_title": "",
-      "page_end": 214,
-      "issuer": "SEBI",
-      "issue_date": "2025-06-17",
-      "title": "Master Circular for Stock Brokers",
-      "doc_id": "sebi_master_circular_for_stock_brokers",
-      "source_hash": "e268b5a1971c4d366872c371b986f03ab7f78c5311af84ef9023605ca2e4c190",
-      "chunk_strategy": "fixed",
       "document_type": "text_native",
-      "page_start": 212
+      "chunk_strategy": "fixed",
+      "page_start": 108,
+      "chunk_index": 120,
+      "chunk_count": 262,
+      "page_end": 108,
+      "source_hash": "accf5eb9f53604e81f25ee9796ae44bf2faec81f81d6db1f375453e0c9e6b8e7",
+      "section_title": "",
+      "issuer": "SEBI",
+      "doc_id": "sebi_master_circular_for_registrar_and_share_transfer_agents",
+      "title": "Master Circular for Registrar and Share Transfer Agents",
+      "issue_date": "2024-05-07"
     },
-    "passage_preview": "and requirements of the regulator shall be mandated by the board wherever felt necessary. the intermediary shall review the financial and operational capabilities of the third party in order to assess"
+    "passage_preview": "##olio numbers ( in case of new transferees only ). it shall allocate the existing folio number in such cases where the transferee is already holding shares of the company. f. after verification of va"
   },
   {
-    "id": "sebi_master_circular_for_mutual_funds_fixed_6402ffa74560_882",
+    "id": "sebi_master_circular_for_mutual_funds_fixed_6402ffa74560_484",
     "metadata": {
-      "page_end": 748,
-      "chunk_strategy": "fixed",
-      "section_title": "",
-      "doc_id": "sebi_master_circular_for_mutual_funds",
-      "title": "Master Circular for Mutual Funds",
-      "document_type": "text_native",
       "issuer": "SEBI",
+      "chunk_strategy": "fixed",
       "issue_date": "2026-03",
-      "page_start": 747,
+      "section_title": "",
+      "document_type": "text_native",
+      "chunk_index": 484,
+      "doc_id": "sebi_master_circular_for_mutual_funds",
       "source_hash": "6402ffa74560ab58c591c736e0da02e85b7c4d8de6690d46f9da366e6e4804e3",
-      "ocr_used": false
+      "page_end": 365,
+      "ocr_used": false,
+      "chunk_count": 872,
+      "title": "Master Circular for Mutual Funds",
+      "page_start": 364
     },
-    "passage_preview": "_ _ _ _ _ _ _ unitholder ( 3 ) signature : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ name : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 543 sebi circular no. sebi / ho / imd / imd - ii dof3 / p / "
+    "passage_preview": "the management at least once on a monthly basis and to the board of amc and trustees on a quarterly basis. trustees may forward the results and steps taken to mitigate the risk along with their commen"
   }
 ]

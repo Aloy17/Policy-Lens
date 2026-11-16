@@ -1,87 +1,97 @@
 [
   {
-    "id": "gazette_1981_special_bearer_bonds_structure_7b370c8980cb_11",
+    "id": "gazette_1990_constitution_66th_amendment_structure_8c792f2de965_8",
     "metadata": {
-      "chunk_strategy": "structure",
-      "doc_id": "gazette_1981_special_bearer_bonds",
-      "ocr_used": true,
-      "title": "The Special Bearer Bonds (Immunities and Exemptions) Ordinance, 1981",
-      "source_hash": "7b370c8980cb69b66c99cbf487ec9c463d70ef9bb73bb377bf3aabe399e43b84",
+      "doc_id": "gazette_1990_constitution_66th_amendment",
       "document_type": "scanned_or_mixed",
+      "chunk_count": 11,
+      "ocr_used": true,
+      "chunk_strategy": "structure",
+      "issue_date": "1990-06-08",
       "page_end": 4,
+      "title": "Constitution (Sixty-Sixth Amendment) Act 1990",
+      "issuer": "Ministry of Law and Justice (Legislative Department)",
+      "section_title": "ACT, 1990",
+      "page_start": 3,
+      "chunk_index": 8,
+      "source_hash": "8c792f2de965c9d846624b185647b52e5aad3daf216577c1344933909228ae4d"
+    },
+    "passage_preview": "229. the madhya pradesh ceiling on agricultural holdings amendment ) act, 1984 ( madhya pradesh act 14 of 1984 ). 230. the madhya pradesh ceiling on agricultural holdings ( amendment ) act, 1989 ( mad"
+  },
+  {
+    "id": "sebi_master_circular_for_stock_brokers_structure_e268b5a1971c_6",
+    "metadata": {
+      "chunk_index": 6,
+      "ocr_used": false,
+      "document_type": "text_native",
+      "issue_date": "2025-06-17",
+      "title": "Master Circular for Stock Brokers",
+      "source_hash": "e268b5a1971c4d366872c371b986f03ab7f78c5311af84ef9023605ca2e4c190",
+      "chunk_count": 886,
+      "page_end": 3,
+      "chunk_strategy": "structure",
+      "doc_id": "sebi_master_circular_for_stock_brokers",
+      "issuer": "SEBI",
+      "page_start": 3,
+      "section_title": "REGISTRATION OF STOCK BROKERS"
+    },
+    "passage_preview": "registration of stock brokers 1. registration of brokers – verification of antecedents of the applicant 2. conversion of individual membership into corporate membership 3. additional information to be"
+  },
+  {
+    "id": "sebi_master_circular_for_credit_rating_agencies_structure_4f4d3670f9d0_15",
+    "metadata": {
+      "issuer": "SEBI",
+      "ocr_used": false,
+      "section_title": "Chapter I : REGISTRATION REQUIREMENTS",
+      "doc_id": "sebi_master_circular_for_credit_rating_agencies",
+      "chunk_count": 236,
+      "title": "Master Circular for Credit Rating Agencies",
+      "chunk_index": 15,
+      "document_type": "text_native",
+      "page_start": 5,
+      "source_hash": "4f4d3670f9d0afdd0e1735a2f72f612e0f21410039d7403ffb06edd9be871eff",
+      "chunk_strategy": "structure",
+      "page_end": 6,
+      "issue_date": "2025-07-11"
+    },
+    "passage_preview": "chapter i : registration requirements online registration mechanism for securities market intermediaries 1. 1. sebi has operationalized sebi intermediary portal ( https : / / siportal. sebi. gov. in )"
+  },
+  {
+    "id": "sebi_master_circular_for_custodians_structure_bb1b1963b22c_33",
+    "metadata": {
+      "issuer": "SEBI",
+      "ocr_used": false,
+      "page_start": 11,
+      "title": "Master Circular for Custodians",
+      "issue_date": "2024-05-10",
+      "doc_id": "sebi_master_circular_for_custodians",
+      "chunk_count": 182,
+      "chunk_index": 33,
+      "document_type": "scanned_or_mixed",
+      "page_end": 11,
+      "source_hash": "bb1b1963b22c8c68d08a171b3351ba23d24420a4dbc446083e09733dd156679b",
+      "section_title": "ANNEXURE DESCRIPTION",
+      "chunk_strategy": "structure"
+    },
+    "passage_preview": "annexure description c order and parameter of fields for the daily transaction report d daily transaction summary e daily transaction report f nature of transaction codes g stock exchange codes and se"
+  },
+  {
+    "id": "gazette_1982_central_excise_structure_173ad9b6d668_126",
+    "metadata": {
+      "chunk_strategy": "structure",
       "issuer": "Ministry of Law, Justice and Company Affairs (Legislative Department)",
-      "issue_date": "1981-01-12",
-      "section_title": "PRINTED BY THE GENERAL MANAGER, GOVERNMENT OF INDIA PRESS, MINTO ROAD",
-      "page_start": 3
+      "page_end": 36,
+      "chunk_count": 160,
+      "issue_date": "1982-09-24",
+      "page_start": 36,
+      "chunk_index": 126,
+      "ocr_used": true,
+      "doc_id": "gazette_1982_central_excise",
+      "title": "The Central Excise Laws (Amendment and Validation) Ordinance, 1982",
+      "source_hash": "173ad9b6d66836f9a7ca55812ce1c952543c867c3d1bc9d5f10832d125059a8e",
+      "section_title": "SPECIAL POWERS ORDINANCE, 10983",
+      "document_type": "scanned_or_mixed"
     },
-    "passage_preview": "printed by the general manager, government of india press, minto road new delhi and purlished by the controller of publications, delhi, 1981 amendment of act 43 of 1961. amendment of act 27 of 1957. a"
-  },
-  {
-    "id": "sebi_master_circular_for_debenture_trustees_structure_4a8ce13addf1_69",
-    "metadata": {
-      "title": "Master Circular for Debenture Trustees",
-      "source_hash": "4a8ce13addf1c5f9fb4dba3c7ab3e3a3e82660f2ae2906477b121b60b7e308f9",
-      "doc_id": "sebi_master_circular_for_debenture_trustees",
-      "chunk_strategy": "structure",
-      "issue_date": "2026-09-28",
-      "document_type": "text_native",
-      "ocr_used": false,
-      "page_end": 46,
-      "issuer": "SEBI",
-      "section_title": "Chapter III: Security and Covenant Monitoring System",
-      "page_start": 44
-    },
-    "passage_preview": "a. asset description i. asset name ii. asset details ( in case of shares, it shall also include isin, quantity, pledgee demat id, pledgee instrument id ) iii. asset location ( including address of the"
-  },
-  {
-    "id": "sebi_master_circular_for_depositories_structure_aa002c51c69a_218",
-    "metadata": {
-      "ocr_used": false,
-      "doc_id": "sebi_master_circular_for_depositories",
-      "issuer": "SEBI",
-      "source_hash": "aa002c51c69a074910643196c85d5018fee0c5ad98f70b554a17894b966e91c0",
-      "chunk_strategy": "structure",
-      "issue_date": "2023-10-06",
-      "page_start": 109,
-      "document_type": "text_native",
-      "title": "Master Circular for Depositories",
-      "section_title": "SEBI;",
-      "page_end": 110
-    },
-    "passage_preview": "prescribed in the framework. the said information shall be disseminated on website of both the indian depositories. for this purpose, the designated depository shall act as a lead depository and the o"
-  },
-  {
-    "id": "sebi_master_circular_for_mutual_funds_structure_6402ffa74560_424",
-    "metadata": {
-      "document_type": "text_native",
-      "page_start": 220,
-      "title": "Master Circular for Mutual Funds",
-      "ocr_used": false,
-      "doc_id": "sebi_master_circular_for_mutual_funds",
-      "issue_date": "2026-03",
-      "issuer": "SEBI",
-      "page_end": 221,
-      "section_title": "[TABLE 1]",
-      "source_hash": "6402ffa74560ab58c591c736e0da02e85b7c4d8de6690d46f9da366e6e4804e3",
-      "chunk_strategy": "structure"
-    },
-    "passage_preview": "market maker by rbi and exposure to a single counterparty scheme in such transactions shall not exceed 10 % of the net assets of the scheme. however, if mutual funds are transacting in irs through an "
-  },
-  {
-    "id": "sebi_master_circular_for_mutual_funds_structure_6402ffa74560_2147",
-    "metadata": {
-      "page_end": 748,
-      "ocr_used": false,
-      "document_type": "text_native",
-      "source_hash": "6402ffa74560ab58c591c736e0da02e85b7c4d8de6690d46f9da366e6e4804e3",
-      "page_start": 748,
-      "section_title": "10. REPORTING FORMATS FOR OFFSITE INSPECTION",
-      "issue_date": "2026-03",
-      "doc_id": "sebi_master_circular_for_mutual_funds",
-      "title": "Master Circular for Mutual Funds",
-      "issuer": "SEBI",
-      "chunk_strategy": "structure"
-    },
-    "passage_preview": "10. reporting formats for offsite inspection as part of the off - site inspection and surveillance of mutual funds and to monitor the compliance of the sebi ( mutual funds ) regulations, 2026 and circ"
+    "passage_preview": "any part of such state or union territory, as the case may be, is in such a disturbed or dangerous condition that the use of armed forces in aid of the civil power is necessary, the govetnor of the st"
   }
 ]
