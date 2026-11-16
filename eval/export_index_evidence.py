@@ -5,6 +5,7 @@ Example:
 """
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,31 +13,91 @@ import chromadb
 import yaml
 
 
+BOILERPLATE_PATTERNS = (
+    "printed by the general manager",
+    "published by the controller of publications",
+    "government of india press",
+    "all rights reserved",
+    "table of contents",
+    "contents",
+)
+
+
+def passage_quality(passage: str, metadata: dict) -> float:
+    """Return a conservative readability/substance score in the 0..1 range."""
+    text = " ".join(passage.split())
+    if len(text) < 250:
+        return 0.0
+
+    chars = [char for char in text if not char.isspace()]
+    if not chars:
+        return 0.0
+
+    ascii_letters = sum(char.isascii() and char.isalpha() for char in chars)
+    alphabetic = sum(char.isalpha() for char in chars)
+    tokens = re.findall(r"[A-Za-z]+", text)
+    words = re.findall(r"\b\w+\b", text)
+    if not tokens or not words:
+        return 0.0
+
+    latin_ratio = ascii_letters / max(alphabetic, 1)
+    alpha_ratio = alphabetic / len(chars)
+    token_ratio = len(tokens) / len(words)
+    long_token_ratio = sum(len(token) <= 24 for token in tokens) / len(tokens)
+
+    score = (
+        0.35 * latin_ratio
+        + 0.25 * alpha_ratio
+        + 0.25 * token_ratio
+        + 0.15 * long_token_ratio
+    )
+
+    lowered = text.lower()
+    if any(phrase in lowered for phrase in BOILERPLATE_PATTERNS):
+        score -= 0.45
+    if re.search(r"(?:\\.\\s*){8,}", text) or text.count("_") > 12:
+        score -= 0.2
+    if metadata.get("ocr_used"):
+        score -= 0.08
+    if metadata.get("document_type") == "scanned_or_mixed":
+        score -= 0.05
+
+    section = str(metadata.get("section_title") or "").strip()
+    if section and len(section) >= 8 and len(section.split()) >= 2:
+        score += 0.04
+
+    return max(0.0, min(1.0, score))
+
+
 def select_representative_records(collection, sample_size: int) -> list[dict]:
-    """Scan the full collection and select substantive passages across its page range."""
+    """Choose readable, substantive records while avoiding document duplication."""
     count = collection.count()
     batch_size = 500
-    all_records = []
+    candidates = []
 
-    # Paginate through the full collection because insertion order can cluster
-    # records from one document and hide useful examples from later documents.
     for offset in range(0, count, batch_size):
         batch = collection.get(
             limit=min(batch_size, count - offset),
             offset=offset,
             include=["metadatas", "documents"],
         )
+        metadatas = batch.get("metadatas") or []
+        documents = batch.get("documents") or []
         for index, record_id in enumerate(batch.get("ids", [])):
-            metadata = (batch.get("metadatas") or [])[index] or {}
-            document = (batch.get("documents") or [])[index] or ""
-            passage = " ".join(document.split())
+            metadata = metadatas[index] or {}
+            passage = " ".join((documents[index] or "").split())
             page_start = metadata.get("page_start")
             if len(passage) < 250 or not isinstance(page_start, (int, float)):
                 continue
 
-            all_records.append({
+            quality = passage_quality(passage, metadata)
+            if quality < 0.58 or page_start <= 2:
+                continue
+
+            candidates.append({
                 "page_start": page_start,
-                "has_section": bool(str(metadata.get("section_title") or "").strip()),
+                "doc_id": metadata.get("doc_id") or record_id,
+                "quality": quality,
                 "id": record_id,
                 "record": {
                     "id": record_id,
@@ -45,27 +106,32 @@ def select_representative_records(collection, sample_size: int) -> list[dict]:
                 },
             })
 
-    if not all_records:
+    if not candidates:
         return []
 
-    # Opening pages often contain covers, publication notices, or contents pages.
-    # Prefer later pages when enough substantive records are available.
-    later_pages = [item for item in all_records if item["page_start"] > 2]
-    page_candidates = later_pages if len(later_pages) >= sample_size else all_records
+    # Keep the strongest passage per source document before selecting the
+    # page-spread sample. This prevents long PDFs dominating the evidence.
+    best_by_document = {}
+    for item in candidates:
+        key = item["doc_id"]
+        previous = best_by_document.get(key)
+        if previous is None or (item["quality"], -item["page_start"], item["id"]) > (
+            previous["quality"], -previous["page_start"], previous["id"]
+        ):
+            best_by_document[key] = item
 
-    # Structure-aware records should expose section metadata where possible.
-    # Fixed-size records may legitimately have empty section_title values.
-    labelled = [item for item in page_candidates if item["has_section"]]
-    candidates = labelled if len(labelled) >= sample_size else page_candidates
-    candidates.sort(key=lambda item: (item["page_start"], item["id"]))
-
-    take = min(sample_size, len(candidates))
-    last = len(candidates) - 1
+    diversified = sorted(
+        best_by_document.values(),
+        key=lambda item: (item["page_start"], item["doc_id"], item["id"]),
+    )
+    take = min(sample_size, len(diversified))
+    last = len(diversified) - 1
     indices = (
         [round(i * last / (take - 1)) for i in range(take)]
         if take > 1 else [last // 2]
     )
-    return [candidates[index]["record"] for index in indices]
+    selected = [diversified[index] for index in indices]
+    return [item["record"] for item in selected]
 
 
 def main() -> None:
@@ -97,8 +163,9 @@ def main() -> None:
         "collections": {},
         "note": (
             "Read-only collection counts and representative records; no index writes performed. "
-            "Samples prefer substantive passages after page 2 and are spread across page ranges. "
-            "Section titles are preserved as stored and may be empty for fixed-size chunks."
+            "Samples prioritize readable substantive passages, exclude likely boilerplate and "
+            "low-readability OCR text, use one record per source document where possible, "
+            "and are spread across the available page range."
         ),
     }
 
