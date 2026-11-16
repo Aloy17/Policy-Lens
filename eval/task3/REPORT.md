@@ -1,6 +1,6 @@
 # PolicyLens Case Study 2 — Task 3 Retrieval Evidence Evaluation
 
-**Status:** Evidence review, visual source verification, x03 source reconciliation, scoring, local validation, and CI complete.
+**Status:** Evidence review, visual source verification, x03 source reconciliation, scoring, local validation, and CI complete. Task 3 is merged into `main`; no merge gate remains.
 
 ## 1. Scope
 
@@ -93,4 +93,4 @@ Expected validation summary: 41 questions and 820 review rows, with no schema or
 - `source_alignment_report.md` and `source_alignment_summary.json` — source-page alignment diagnostics
 - `PROGRESS.md` — detailed execution status and remaining release checks
 
-**Release gate:** local validation and scoring passed (41 questions; 820 evidence rows; 82 scores generated). GitHub Actions passed on commit `d562196`. Merge remains the final release action.
+**Release status:** local validation and scoring passed (41 questions; 820 evidence rows; 82 scores generated). GitHub Actions passed on commit `d562196` for the full test suite, selected-page extraction fidelity, and OCR accuracy. Task 3 has since been merged into `main`; there is no remaining Task 3 merge or release gate. The cited CI result is the successful run at `d562196`, not a claim that a new workflow ran on every later documentation/evidence-only commit.
