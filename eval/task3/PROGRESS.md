@@ -1,6 +1,6 @@
 # Task 3 review progress
 
-Last updated: 2026-11-15. Branch: `task3-answer-key-verification`.
+Last updated: 2026-11-16. Status: merged into `main`.
 
 ## Completed
 
@@ -37,12 +37,13 @@ Across both strategies, 44 of 82 question-strategy pairs achieved complete fact 
 - x03's gold passage was updated to the 2026 SEBI Research Analysts Master Circular (pp.69–70). The current passage specifies SCORES 2.0, the current platform URL, two-level RAASB/SEBI review, and the physical-complaint route. The older scores.gov.in URL and helpline are retained only as historical retrieval evidence, not as current facts.
 - Text alignment and semantic relevance are separate: matching page ranges do not by themselves prove that a passage supports an answer. The evidence classes and supported fact IDs are the human semantic annotations.
 
-## Release checks
+## Release status
 
-- Local validation passed: 41 questions and 820 review rows; no schema or fact-ID errors.
+- Task 3 evidence review, source verification, validation, and scoring are complete.
+- Task 3 changes are merged into the repository's `main` branch; no Task 3 merge or release gate remains open.
+- Local validation passed: 41 questions and 820 review rows, with no schema or fact-ID errors.
 - Local scoring passed: 82 question-strategy scores generated.
-- GitHub Actions passed on commit `d562196`: full test suite, selected-page extraction fidelity, and OCR accuracy.
-- Final PR review and merge remain.
+- GitHub Actions passed on commit `d562196` for the full test suite, selected-page extraction fidelity, and OCR accuracy. This records the successful run at that commit; it does not claim a fresh workflow run on every later documentation/evidence-only commit.
 
 ## Review boundary
 
