@@ -150,3 +150,10 @@ The RBI notification dated September 2, 2022 confirms that the 2022 Guidelines r
 
 
 - **q13 finalized:** the local KYC PDF page 69 begins paragraph 70, “Hiring of Employees and Employee training,” including screening, staff qualifications, and the start of the ongoing-training requirement. Page 70 continues the training provisions. The gold range is therefore **69–70**, not 70 alone.
+
+
+## Evaluation-independence / revision history
+
+The assignment preparation checklist requires questions and gold pages to be written before tuning. The earliest committed 25-question CSV is preserved as [`questions_pre_revision_2026-11-07.csv`](questions_pre_revision_2026-11-07.csv). The current `questions.csv` is the corrected canonical set, not that original snapshot. q02/q03 were separated and reworded; q13's page range was corrected/expanded; q14 was refocused on PEP controls and its gold page corrected after an earlier benchmark. See [`gold_set_history.md`](gold_set_history.md) for the commit-level chronology and reporting treatment.
+
+The initial file predates the first recorded benchmark in Git, but repository history alone cannot establish that it predates every retrieval/chunking tuning decision. Accordingly, do not call the corrected 25-question or expanded 41-usable-question results a blind holdout. Preserve the original and corrected results as separate historical evaluations.
