@@ -145,6 +145,13 @@ See [qualitative_error_analysis.md](qualitative_error_analysis.md) for the detai
 6. **No answer-generation evaluation:** this experiment measures retrieval, not whether a generated answer is correct, complete, or properly cited.
 7. **Qualitative review partial:** selected retrieved chunk text has been inspected; complete top-k reconstruction and visual source-PDF verification remain outstanding.
 
+
+## Gold-set provenance and independence
+
+The assignment checklist asks that evaluation questions and gold pages be written before retrieval tuning. The repository preserves the earliest committed 25-question snapshot in [`questions_pre_revision_2026-11-07.csv`](../questions_pre_revision_2026-11-07.csv), with its chronology and later edits documented in [`gold_set_history.md`](../gold_set_history.md).
+
+The initial 25-question file was committed before the first recorded benchmark, but the available Git history cannot prove that it predates every tuning decision. The later corrected 25-question benchmark followed edits to q02/q03 (question scope/wording), q13 (gold-page range), and q14 (question scope and gold page). Therefore, the corrected 25-question results are a post-audit rerun, not an untouched blind holdout. The November 14 41-usable-question evaluation is a later expanded evaluation and is also not a blind holdout. These results are useful retrieval measurements, but this chronology limits claims of independent generalization.
+
 ## Conclusion and next work
 
 This run shows a consistent page-overlap advantage for structure-aware chunking, but the lexical evidence proxy does not agree consistently and the paired bootstrap does not establish a significant difference. There is not enough evidence to declare either strategy superior.
