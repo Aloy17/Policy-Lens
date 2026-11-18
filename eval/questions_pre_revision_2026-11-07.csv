@@ -1,0 +1,26 @@
+id,question,expected_doc_id,expected_page_start,expected_page_end,is_table_question,is_paraphrased
+q01,"What are the requirements for customer identification and verification?",rbi_kyc_2024,22,24,false,false
+q02,"When must a regulated entity identify a customer?",rbi_kyc_2024,22,24,false,true
+q03,"What is the customer identification procedure under the KYC direction?",rbi_kyc_2024,22,24,false,false
+q04,"How should the beneficial owner of a legal person be identified?",rbi_kyc_2024,38,38,false,false
+q05,"What are the requirements for enhanced due diligence?",rbi_kyc_2024,45,47,false,true
+q06,"What confidentiality obligations apply to customer information?",rbi_kyc_2024,57,57,false,false
+q07,"How quickly must KYC records be uploaded to CKYCR after starting an account-based relationship?",rbi_kyc_2024,58,58,false,false
+q08,"What must an RE do when CKYCR provides an updated KYC record?",rbi_kyc_2024,59,59,false,true
+q09,"What information is required for cross-border wire transfers?",rbi_kyc_2024,63,66,false,false
+q10,"What are the requirements for PAN or Form 60 when carrying out applicable transactions?",rbi_kyc_2024,68,68,false,false
+q11,"What controls apply to the digital KYC application used at customer touch points?",rbi_kyc_2024,71,71,false,true
+q12,"What is the role of OTP in the digital KYC process?",rbi_kyc_2024,72,72,false,false
+q13,"What training requirements apply to staff involved in KYC and AML/CFT activities?",rbi_kyc_2024,70,70,false,false
+q14,"What enhanced due diligence is expected for customers or transactions associated with high-risk jurisdictions?",rbi_kyc_2024,56,56,false,true
+q15,"What are the requirements for maintaining secrecy of customer information?",rbi_kyc_2024,57,57,false,false
+q16,"For Category I FPIs, are constitutive documents mandatory according to the KYC table?",rbi_kyc_2024,94,94,true,false
+q17,"According to the FPI KYC table, is proof of address mandatory for Category III entities?",rbi_kyc_2024,94,95,true,false
+q18,"What does the KYC table specify about photographs for eligible FPIs?",rbi_kyc_2024,95,95,true,false
+q19,"For Category III FPIs, is proof of identity mandatory?",rbi_kyc_2024,95,95,true,true
+q20,"What does the table specify about authorized-signatory lists for eligible FPIs?",rbi_kyc_2024,95,95,true,false
+q21,"Who remains responsible for compliance when an RE uses a Lending Service Provider or Digital Lending App?",rbi_digital_lending_2022,1,4,false,true
+q22,"By what date were REs required to put systems in place for existing digital loans to comply with the 2022 guidelines?",rbi_digital_lending_2022,2,2,false,false
+q23,"Who should pay fees or charges payable to a Lending Service Provider in the digital lending process?",rbi_digital_lending_2022,4,5,false,true
+q24,"What information must be disclosed through the Key Fact Statement for a digital loan?",rbi_digital_lending_2022,5,5,false,false
+q25,"What deadline applies to the submission of audited returns under the revised filing requirements?",rbi_nbfc_filing_2024,1,1,true,true

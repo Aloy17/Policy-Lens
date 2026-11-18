@@ -66,6 +66,11 @@ Coverage of the 41 usable questions: direct 31, paraphrase 9, table 5, numeric o
 - 41 questions give wide confidence intervals; the runner writes a paired bootstrap, and small differences should not be read as superiority.
 - This evaluates retrieval only, not answer quality.
 
+
+## Gold-set provenance
+
+The assignment asks that questions and gold pages be prepared before tuning. The earliest committed 25-question snapshot is preserved in [`../questions_pre_revision_2026-11-07.csv`](../questions_pre_revision_2026-11-07.csv); later edits and the limits on evaluation independence are documented in [`../gold_set_history.md`](../gold_set_history.md). In particular, q02/q03 wording and scope, q13's page range, and q14's question/page target changed after an earlier benchmark. Treat the corrected 25-question rerun and this expanded 41-usable-question run as post-audit evidence, not as an untouched blind holdout. Git history establishes the initial file's commit before the first recorded benchmark, but cannot prove it predates every tuning decision.
+
 ## Reproduce
 
 Validate the dataset (needs the PDFs and `pymupdf`; Tesseract must be installed and working for scanned pages). Evidence extraction errors fail validation. Any skipped evidence passage also fails by default; `--allow-skipped-evidence` is an explicit opt-out and must not be described as a complete validation:
